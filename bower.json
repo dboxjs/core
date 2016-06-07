@@ -1,0 +1,27 @@
+{
+  "name": "dbox",
+  "authors": [
+    "Alecs Garza <alecs.garza@gmail.com>"
+  ],
+  "description": "DataBox - collect, import, explore, visualize & publish your data",
+  "main": "dbox.js",
+  "moduleType": [],
+  "keywords": [
+    "data",
+    "visualization",
+    "d3"
+  ],
+  "license": "MIT",
+  "homepage": "http://data4.mx",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "d3": "^3.5.17"
+  }
+}
