@@ -6,3 +6,7 @@ export {
 export {
   default as timeline,
 } from "./src/timeline";
+
+export {
+  default as stackedArea,
+} from "./src/stackedArea";
