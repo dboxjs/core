@@ -2,7 +2,8 @@
   "name": "dbox",
   "version": "0.0.1",
   "scripts": {
-    "prepublish": "rollup -c && uglifyjs ./build/dbox.js -c -m -o ./build/dbox.min.js"
+    "prepublish": "rollup -c && uglifyjs ./build/dbox.js -c -m -o ./build/dbox.min.js",
+    "dev": "rollup --config rollup.config.dev.js && uglifyjs ../d4pkg-develop/src/dbox/build/dbox.js -c -m -o ../d4pkg-develop/src/dbox//build/dbox.min.js"
   },
   "devDependencies": {
     "rollup": "^0.26.3",

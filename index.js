@@ -1,3 +1,8 @@
 export {
-  default as chart,
-} from "./src/chart";
+  default as scatter,
+} from "./src/scatter";
+
+
+export {
+  default as timeline,
+} from "./src/timeline";
