@@ -21,7 +21,7 @@ StackedArea.prototype = stackedArea.prototype = {
     q.await(function(error,data){
       if (error) throw error;   
 
-      console.log(error,data);
+      //console.log(error,data);
 
       vm.setData(data);
       vm.drawData();
@@ -35,13 +35,16 @@ StackedArea.prototype = stackedArea.prototype = {
   setScales: function(){
     var vm = this;
 
-    vm._scales.x = d3.scale.linear()
-      .range([0, vm._chart._width]);
+    vm._scales.x = d3.scale.ordinal()
+      .rangePoints([0, vm._chart._width]);
 
     vm._scales.y = d3.scale.linear()
       .range([vm._chart._height, 0]);
-
-    vm._scales.color = d3.scale.category20();
+    
+    if(vm._config.colorScale)
+      vm._scales.color = vm._config.colorScale;
+    if(!vm._config.colorScale)
+      vm._scales.color = d3.scale.category20();
   }, 
   setAxes : function(){
     var vm = this;
@@ -60,8 +63,8 @@ StackedArea.prototype = stackedArea.prototype = {
   },
   setDomains:function(){
     var vm = this;
-    vm._scales.x.domain(d3.extent(vm._data, function(d) { return d.x; })).nice();
-    vm._scales.y.domain([0, d3.max(vm._data, function(d) { return d.y0 + d.y; })]).nice();
+    vm._scales.x.domain(vm._data.map(function(d) { return d.x; }));
+    vm._scales.y.domain([0, d3.max(vm._data, function(d) { return d.y0 + d.y; })]);
   },
   drawAxes:function(){
     var vm = this;
