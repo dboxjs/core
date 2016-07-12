@@ -19,8 +19,13 @@ Timeline.prototype = timeline.prototype = {
 		q = vm._chart.loadData();
 
     q.await(function(error,data){
-      if (error) throw error;	
+      if (error) {
+        console.log(error)
+        throw error;	
+        return false; 
+      }
 
+      debugger;
       vm.setData(data);
       vm.setDomains();
       vm.drawAxes();

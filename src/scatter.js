@@ -19,14 +19,15 @@ Scatter.prototype = scatter.prototype = {
 		q = vm._chart.loadData();
 
     q.await(function(error,data){
-      if (error) throw error;	  
+      if (error) {
+        throw error;	 
+        return false;
+      } 
 
-      console.log(error,data);
-
-     /* vm.setData(data);
+      vm.setData(data);
       vm.setDomains();
       vm.drawAxes();
-      vm.drawData();*/
+      vm.drawData();
     })
 
 	},
@@ -36,14 +37,8 @@ Scatter.prototype = scatter.prototype = {
 	},
 	setScales: function(){
 		var vm = this;
-
-		vm._scales.x = d3.scale.linear()
-		  .range([0, vm._chart._width]);
-
-		vm._scales.y = d3.scale.linear()
-		  .range([vm._chart._height, 0]);
-
-		vm._scales.color = d3.scale.category10();
+    vm._scales = vm._chart.setScales();
+		
 	}, 
 	setAxes : function(){
 		var vm = this;
@@ -68,27 +63,35 @@ Scatter.prototype = scatter.prototype = {
   drawAxes:function(){
     var vm = this;
 
-    vm._chart._svg.append("g")
+    var xAxis = vm._chart._svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + vm._chart._height + ")")
-        .call(vm._axes.x)
-      .append("text")
+        .call(vm._axes.x);
+
+
+    if(vm._config.xAxis && vm._config.xAxis.text){
+      xAxis.append("text")
         .attr("class", "label")
         .attr("x", vm._chart._width)
         .attr("y", -6)
         .style("text-anchor", "end")
-        .text("Sepal Width (cm)");
+        .text(vm._config.xAxis.text);
+    }
 
-    vm._chart._svg.append("g")
+    var yAxis = vm._chart._svg.append("g")
         .attr("class", "y axis")
-        .call(vm._axes.y)
-      .append("text")
+        .call(vm._axes.y);    
+
+    if(vm._config.yAxis && vm._config.yAxis.text){
+      yAxis.append("text")
         .attr("class", "label")
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text("Sepal Length (cm)")
+        .text(vm._config.yAxis.text);
+    }
+  
   },
   drawData : function(){
     var vm = this;
@@ -104,6 +107,13 @@ Scatter.prototype = scatter.prototype = {
       .on('mouseover', function(d,i){
         vm._config.data.mouseover.call(vm, d,i);
       });
+  }, 
+  redraw: function(config){
+    var vm = this;
+    vm._chart.destroy(); 
+    vm._config = config; 
+    vm.generate();
+
   }
 
 
