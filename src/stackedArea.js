@@ -28,6 +28,9 @@ StackedArea.prototype = stackedArea.prototype = {
     })
 
   },
+  select: function(datum){
+    return d3.selectAll(".layer").data(datum);
+  },
   draw : function(){
     var vm = this
     vm._chart = chart(vm._config);
@@ -115,15 +118,17 @@ StackedArea.prototype = stackedArea.prototype = {
     vm.drawAxes();
 
     vm._chart._svg.selectAll(".layer")
-      .data(layers)
+      .data(layers, function(d){return d.key;})
     .enter().append("path")
       .attr("class", "layer")
       .attr("d", function(d) { return area(d.values); })
-      .style("fill", function(d, i) { return vm._scales.color(i); });
+      .style("fill", function(d, i) { return vm._scales.color(i); })
+      .on("click", function(d, i){
+        vm._config.onClick.call(this, d, i); });
   }
 
 }
 
-export default function stackedArea(config) {
+export default function stackedArea(config){
   return new StackedArea(arguments.length ? config : null);
 }
