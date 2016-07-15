@@ -68,6 +68,8 @@ StackedArea.prototype = stackedArea.prototype = {
     var vm = this;
     vm._scales.x.domain(vm._data.map(function(d) { return d.x; }));
     vm._scales.y.domain([0, d3.max(vm._data, function(d) { return d.y0 + d.y; })]);
+    if(vm._config.percentage)
+      vm._scales.y.domain([0, 100]);
   },
   drawAxes:function(){
     var vm = this;
@@ -80,8 +82,7 @@ StackedArea.prototype = stackedArea.prototype = {
         .attr("class", "label")
         .attr("x", vm._chart._width)
         .attr("y", -6)
-        .style("text-anchor", "end")
-        .text("Sepal Width (cm)");
+        .style("text-anchor", "end");
 
     vm._chart._svg.append("g")
         .attr("class", "y axis")
@@ -91,11 +92,16 @@ StackedArea.prototype = stackedArea.prototype = {
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
         .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("Sepal Length (cm)")
+        .style("text-anchor", "end");
   },
   drawData : function(){
     var vm = this;
+
+    var total = d3.nest()
+        .key(function(d){ return d.x; })
+        .rollup(function(leaves){ 
+          return d3.sum(leaves, function(j){ return j.y; });
+        }).entries(vm._data);
 
     var stack = d3.layout.stack()
       .offset("zero")
@@ -107,10 +113,18 @@ StackedArea.prototype = stackedArea.prototype = {
         .key(function(d) { return d.key; });
 
     var area = d3.svg.area()
-      .interpolate("cardinal")
+      .interpolate("monotone")
       .x(function(d) { return vm._scales.x(d.x); })
       .y0(function(d) { return vm._scales.y(d.y0); })
       .y1(function(d) { return vm._scales.y(d.y0 + d.y); });
+
+    if(vm._config.percentage){
+      var area = d3.svg.area()
+      .interpolate("monotone")
+      .x(function(d) { return vm._scales.x(d.x); })
+      .y0(function(d) { return vm._scales.y((d.y0) * 100 / getChild(total, d.x+'').values); })
+      .y1(function(d) { return vm._scales.y((d.y0 + d.y) * 100 / getChild(total, d.x+'').values); });
+    }
 
     var layers = stack(nest.entries(vm._data));
     
@@ -124,9 +138,23 @@ StackedArea.prototype = stackedArea.prototype = {
       .attr("d", function(d) { return area(d.values); })
       .style("fill", function(d, i) { return vm._scales.color(i); })
       .on("click", function(d, i){
-        vm._config.onClick.call(this, d, i); });
+        vm._config.data.onclick.call(this, d, i); })
+      .on("mouseover", function(d, i){
+        vm._config.data.onmouseover.call(this, d, i); })
+      .on("mouseout", function(d, i){
+        vm._config.data.onmouseout.call(this, d, i); });
   }
 
+}
+
+function getChild(data, key){
+  var obj = {};
+  data.forEach(function(d){
+    if(d.key === key){
+      obj = d;
+    }
+  });
+  return obj;
 }
 
 export default function stackedArea(config){
