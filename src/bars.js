@@ -1,4 +1,8 @@
 import chart from './chart.js';
+import columns from './bars/columns.js'; 
+import lineAndCircles from './bars/lineAndCircles.js'; 
+import quantilesAndCircles from './bars/quantilesAndCircles.js'; 
+import averageLines from './bars/utils/averageLines.js'; 
 
 function Bars(config) {
   var vm = this;
@@ -6,11 +10,13 @@ function Bars(config) {
   vm._chart; 
   vm._scales = {}; 
   vm._axes = {};
+  vm._averageLines = []; 
+  vm.quantilesAndCircles = null; 
 }
 
 Bars.prototype = bars.prototype = {
 	generate:function(){
-		var vm = this, q;
+		var vm = this, q, averageLines;
 
 		vm.init();
 		vm.setScales();
@@ -18,29 +24,28 @@ Bars.prototype = bars.prototype = {
 
 		q = vm._chart.loadData();
 
-    q.await(function(error,data){
+    q.awaitAll(function(error,data){
       if (error) {
         throw error;	 
         return false;
       } 
-
       vm.setData(data);
       vm.setDomains();
       vm.drawAxes();
       vm.drawData();
       vm._chart.dispatch.load(); 
-    })
+    });
 
 	},
 	init : function(){
 		var vm = this
 		vm._chart = chart(vm._config);
     vm._chart.dispatch.on("load.chart", vm._config.events.load(vm));
-
 	},
 	setScales: function(){
 		var vm = this;
     vm._scales = vm._chart.setScales();
+    console.log('setScales', vm._scales)
 	}, 
 	setAxes : function(){
 		var vm = this;
@@ -63,32 +68,57 @@ Bars.prototype = bars.prototype = {
             .tickSize(-vm._chart._width,0);
         break;
       }
-      
     }
-
 	},
 	setData:function(data){
     var vm = this;
-    vm._data = data;
+    
+    if(Array.isArray(data)){
+      
+      vm._data = data[0];
+
+      if(data.length > 1){
+        data.forEach(function(d,i){
+          if(i>0) {
+            if(vm._config.plotOptions.bars.averageLines[i-1].data.cartodb){
+              vm._config.plotOptions.bars.averageLines[i-1].data.raw = d[0].avg; 
+            }
+          }
+        });
+      }
+    }
   },
   setDomains:function(){
     var vm = this;
     
-
     var domains = vm._chart.getDomains(vm._data);
-    
+
     vm._scales.x.domain(domains.x);
     vm._scales.y.domain(domains.y);
+
+    //Quantile scale
+    if(vm._scales.q){ 
+      vm._scales.q.domain(domains.q);
+      console.log('Domain',vm._scales.q.domain())
+      console.log('Range',vm._scales.q.range())
+      console.log('Treshold',vm._scales.q.quantiles());      
+    }
 
   },
   drawAxes:function(){
     var vm = this;
 
+     var params ={
+      "config"  : vm._config, 
+      "chart"   : vm._chart,
+      "data"    : vm._data,
+      "scales"  : vm._scales, 
+    }
+
     var xAxis = vm._chart._svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + vm._chart._height + ")")
         .call(vm._axes.x);
-
 
     //Rotation
     xAxis.selectAll("text")  
@@ -98,6 +128,18 @@ Bars.prototype = bars.prototype = {
         .attr("transform", function(d) {
             return "rotate(-65)" 
             });
+
+    if(vm._config.style){
+      switch(vm._config.style){
+
+        case 'quantilesAndCircles':
+          if(vm.quantilesAndCircles === null ){
+            vm.quantilesAndCircles = quantilesAndCircles(params); 
+          }
+          vm.quantilesAndCircles.renameAxis(xAxis);
+        break
+      }
+    }      
 
     if(vm._config.xAxis && vm._config.xAxis.text){
       xAxis.append("text")
@@ -121,103 +163,62 @@ Bars.prototype = bars.prototype = {
         .style("text-anchor", "end")
         .text(vm._config.yAxis.text);
     }
-  
   },
   drawData : function(){
     var vm = this; 
 
+    var params ={
+      "config"  : vm._config, 
+      "chart"   : vm._chart,
+      "data"    : vm._data,
+      "scales"  : vm._scales, 
+    }
+
     if(vm._config.style){
       switch(vm._config.style){
         case 'lineAndCircles':
-          vm.lineAndCircles(); 
+          vm.lineAndCircles = lineAndCircles(params); 
+          vm.lineAndCircles.draw();
         break;
 
         case 'columns':
-          vm.columns(); 
+          vm.columns = columns(params); 
+          vm.columns.draw();
+        break
+
+        case 'quantilesAndCircles':
+          if(vm.quantilesAndCircles === null ){
+            vm.quantilesAndCircles = quantilesAndCircles(params); 
+          }
+          vm.quantilesAndCircles.draw();
         break
 
         default:
          vm.columns(); 
         break;
       }
-
-      return; 
     }
-
-    vm.columns();
+    //Draw averageLines
+    vm.averageLines = averageLines(params); 
+    vm.averageLines.draw();
+  },
+  set: function(option,value){
+    var vm = this; 
+    if(option === 'config') {
+      vm._config = value; 
+    }else{
+      vm._config[option] = value ; 
+    }
+    
   }, 
-  redraw: function(config){
+  redraw: function(){
     var vm = this;
     vm._chart.destroy(); 
-    vm._config = config; 
     vm.generate();
-
   }
-
-
+  
 }
 
-Bars.prototype.columns = function (){
-  var vm = this;
-
-  vm._chart._svg.selectAll(".bar")
-      .data(vm._data)
-    .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return vm._scales.x(d.x); })
-      .attr("width", vm._scales.x.rangeBand())
-      .attr("y", function(d) { return vm._scales.y(d.y); })
-      .attr("height", function(d) { return vm._chart._height - vm._scales.y(d.y); });
-
-}
-
-Bars.prototype.lineAndCircles = function (){
-  var vm = this;
-
-  vm._chart._svg.selectAll(".dot")
-    .data(vm._data)
-  .enter().append("circle")
-    .attr("class", "dot")
-    .attr("r", 3.5)
-    .attr("cx", function(d) { return vm._scales.x(d.x)+vm._scales.x.rangeBand()/2; })
-    .attr("cy", function(d) { return vm._scales.y(d.y); })
-    .style("fill", function(d) { return vm._scales.color(d.color); })
-    .on('mouseover', function(d,i){
-      vm._config.data.mouseover.call(vm, d,i);
-    });
-
-  vm._chart._svg.selectAll('line.stem')
-      .data(vm._data)
-    .enter()
-      .append('line')
-      .classed('stem', true)
-      .attr('x1', function(d){
-        return vm._scales.x(d.x)+vm._scales.x.rangeBand()/2;
-      })
-      .attr('x2', function(d){
-        return vm._scales.x(d.x)+vm._scales.x.rangeBand()/2;
-      })
-      .attr('y1', function(d){
-        return vm._scales.y(d.y);
-      })
-      .attr('y2', vm._chart._height)
-      .attr('stroke', '#7A7A7A')
-
-  vm._chart._svg.selectAll('circle')
-      .data(vm._data)
-    .enter()
-      .append('circle')
-      .attr('cx', function(d) {
-        return vm._scales.x(d.x);
-      })
-      .attr('cy', function(d) {
-        return vm._scales.y(d.y);
-      })
-      .attr('r', 6)
-      .attr('fill', '#ccc')
-      .style('cursor', 'pointer')
-
-}
 
 export default function bars(config) {
   return new Bars(arguments.length ? config : null);

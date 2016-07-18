@@ -4,13 +4,14 @@ function queryCarto(config, callback){
 	sql.execute(config.cartodb.sql)
 		.done(function(data){
 
-			
+			var result = data.rows
+			//console.log('queryCarto',result);
 
-			//var dataParsed = data.rows.map(config.paser)
-			var dataParsed = data.rows;
-			console.log('isArray', Array.isArray(dataParsed));
-			dataParsed = dataParsed.map(config.parser)
-			callback(null, dataParsed);
+			if( config.parser ){
+				result = data.rows.map(config.parser)
+			}
+
+			callback(null, result);
 		})
   		.error(function(error){
 			callback(error, null);
@@ -54,29 +55,37 @@ Chart.prototype = chart.prototype = {
 		if(vm._config.data.tsv){
 			var q = d3.queue()
 			          .defer(d3.tsv, vm._config.data.tsv, vm._config.data.parser);
-			return q;
 		} 
 
 		if(vm._config.data.csv){
-		  var q = d3.queue()
+		  	var q = d3.queue()
 		            .defer(d3.csv, vm._config.data.csv, vm._config.data.parser);
-		  return q;
 		}
 
 		if(vm._config.data.data){
-		  var q = d3.queue()
+		  	var q = d3.queue()
 		            .defer(mapData, vm._config.data.data, vm._config.data.parser);
-		  return q;
 		}
 
 		if(vm._config.data.cartodb){
-			
 			var q = d3.queue()
 					  .defer(queryCarto,vm._config.data)
-
-			return q; 
-
 		}
+
+
+		if(vm._config.plotOptions && vm._config.plotOptions.bars 
+			&& vm._config.plotOptions.bars.averageLines && Array.isArray(vm._config.plotOptions.bars.averageLines) 
+			&& vm._config.plotOptions.bars.averageLines.length >0 ){
+			
+			vm._config.plotOptions.bars.averageLines.forEach(function(l){
+				if(l.data.cartodb){
+					q.defer(queryCarto, l.data)
+				}
+			})
+		}
+
+
+		return q;
 	}, 
 	setScales:function(){
 		var vm = this; 
@@ -100,6 +109,14 @@ Chart.prototype = chart.prototype = {
 					scales.x = d3.scale.ordinal()
 						.rangeBands([0, vm._width], 0.1)
 				break;
+
+        case 'quantile':
+          scales.x = d3.scale.ordinal()
+            .rangeBands([0, vm._width], 0.1)
+
+          scales.q = d3.scale.quantile()
+            .range(d3.range(vm._config.xAxis.buckets) )
+        break;
 
 				default:
 					scales.x = d3.scale.linear()
@@ -129,6 +146,14 @@ Chart.prototype = chart.prototype = {
 						.rangeBands([vm._height, 0], 0.1)
 				break;
 
+        case 'quantile':
+          scales.y = d3.scale.ordinal()
+            .rangeBands([0, vm._width], 0.1)
+
+          scales.q = d3.scale.quantile()
+            .range(d3.range(vm._config.yAxis.buckets) )
+        break;
+
 				default:
 					scales.y = d3.scale.linear()
 		  				.range([vm._height, 0]);
@@ -149,7 +174,30 @@ Chart.prototype = chart.prototype = {
 
 		var domains = {}; 
 		var minMax = [];
+    var sorted = ''; 
+
+
+    //Default ascending function 
+    var sortFunctionY = function(a, b) { return d3.ascending(a.y,b.y); }; 
+    var sortFunctionX = function(a, b) { return d3.ascending(a.x,b.x); }; 
 		
+
+    //if applying sort
+    if(vm._config.data.sort && vm._config.data.sort.order){
+      switch(vm._config.data.sort.order){
+        case 'asc':
+          sortFunctionY = function(a, b) { return d3.ascending(a.y,b.y); };
+          sortFunctionX = function(a, b) { return d3.ascending(a.x,b.x); }; 
+        break;
+
+        case 'desc':
+          sortFunctionY = function(a, b) { return d3.descending(a.y,b.y); };
+          sortFunctionX = function(a, b) { return d3.descending(a.x,b.x); }; 
+        break;
+      }
+    }
+
+
 		//xAxis
 		if(vm._config.xAxis && vm._config.xAxis.scale){
 			switch(vm._config.xAxis.scale){
@@ -163,10 +211,39 @@ Chart.prototype = chart.prototype = {
 				break;
 
 				case 'ordinal':
-					domains.x = d3.map(data, function(d) {
-							    	return d.x;
-							    }).keys().sort(function(a, b) { return d3.ascending(a,b); });
+				  
+          //If the xAxis' order depends on the yAxis values 
+          if(vm._config.data.sort && vm._config.data.sort.axis === 'y'){ 
+            sorted = data.sort(sortFunctionY);
+          }else { 
+            sorted = data.sort(sortFunctionX);
+          }
+
+          domains.x = [];
+          sorted.forEach(function(d){
+            domains.x.push(d.x);
+          })
+
 				break;
+
+        case 'quantile':
+          
+          //The xAxis order depends on the yAxis values 
+          if(vm._config.data.sort && vm._config.data.sort.axis === 'y'){ 
+            sorted = data.sort(sortFunctionY);
+          }else { 
+            sorted = data.sort(sortFunctionX);
+          }
+
+          domains.q = [];
+          sorted.forEach(function(d){
+            domains.q.push(d.x);
+          })
+
+          domains.x = d3.range(vm._config.xAxis.buckets);
+
+        break;
+
 
 				default:
 					minMax = d3.extent(data, function(d) { return d.x; })
@@ -191,9 +268,20 @@ Chart.prototype = chart.prototype = {
 				break;
 
 				case 'ordinal':
-					domains.y = d3.map(data, function(d) {
-							    	return d.y;
-							    }).keys().sort(function(a, b) { return d3.ascending(a,b); });
+          if(vm._config.data.sort && vm._config.data.sort.axis === 'y'){
+
+            var sorted = data.sort(function(a, b) { return d3.ascending(a.y,b.y); });
+            domains.y = [];
+            sorted.forEach(function(d){
+              domains.y.push(d.x);
+            })
+
+          }else{
+            domains.y = d3.map(data, function(d) {
+              return d.y;
+            }).keys().sort(function(a, b) { return d3.ascending(a,b); });
+          }
+					
 				break;
 
 				default:
@@ -208,6 +296,10 @@ Chart.prototype = chart.prototype = {
 
 
 		return domains; 		
+	}, 
+	destroy:function(){
+		var vm = this;
+		d3.select(vm._config.bindTo).html("");
 	}
 }
 
