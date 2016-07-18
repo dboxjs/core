@@ -62,9 +62,9 @@ Chart.prototype = chart.prototype = {
 		            .defer(d3.csv, vm._config.data.csv, vm._config.data.parser);
 		}
 
-		if(vm._config.data.data){
+		if(vm._config.data.raw){
 		  	var q = d3.queue()
-		            .defer(mapData, vm._config.data.data, vm._config.data.parser);
+		            .defer(mapData, vm._config.data.raw, vm._config.data.parser);
 		}
 
 		if(vm._config.data.cartodb){
