@@ -20,7 +20,7 @@ Timeline.prototype = timeline.prototype = {
 
     q.await(function(error,data){
       if (error) {
-        console.log(error)
+        //console.log(error)
         throw error;	
         return false; 
       }
