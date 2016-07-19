@@ -30,6 +30,7 @@ function Chart(config) {
   vm._widht;
   vm._height;
 
+  vm._tip = d3.tip().attr('class', 'd3-tip').html(vm._config.data.tip);
   vm.draw();
 }
 
@@ -37,6 +38,8 @@ Chart.prototype = chart.prototype = {
 	'dispatch': d3.dispatch("load", "change"),
 	'draw' : function(){
 		var vm = this;
+
+		d3.select(vm._config.bindTo).html("");
 
 		vm._margin = vm._config.size.margin,
 		vm._width = vm._config.size.width - vm._margin.left - vm._margin.right,
@@ -46,7 +49,8 @@ Chart.prototype = chart.prototype = {
 			.attr("width", vm._width + vm._margin.left + vm._margin.right)
 			.attr("height", vm._height + vm._margin.top + vm._margin.bottom)
 		.append("g")
-			.attr("transform", "translate(" + vm._margin.left + "," + vm._margin.top + ")");
+			.attr("transform", "translate(" + vm._margin.left + "," + vm._margin.top + ")")
+			.call(vm._tip);
 
 	},
 	loadData:function(){
@@ -110,13 +114,13 @@ Chart.prototype = chart.prototype = {
 						.rangeBands([0, vm._width], 0.1)
 				break;
 
-        case 'quantile':
-          scales.x = d3.scale.ordinal()
-            .rangeBands([0, vm._width], 0.1)
+		        case 'quantile':
+		          scales.x = d3.scale.ordinal()
+		            .rangeBands([0, vm._width], 0.1)
 
-          scales.q = d3.scale.quantile()
-            .range(d3.range(vm._config.xAxis.buckets) )
-        break;
+		          scales.q = d3.scale.quantile()
+		            .range(d3.range(vm._config.xAxis.buckets) )
+		        break;
 
 				default:
 					scales.x = d3.scale.linear()
