@@ -73,7 +73,8 @@ Scatter.prototype = scatter.prototype = {
       xAxis.append("text")
         .attr("class", "label")
         .attr("x", vm._chart._width)
-        .attr("y", -6)
+        .attr("y", 10)
+        .attr("x", -100)
         .style("text-anchor", "end")
         .text(vm._config.xAxis.text);
     }
@@ -86,7 +87,8 @@ Scatter.prototype = scatter.prototype = {
       yAxis.append("text")
         .attr("class", "label")
         .attr("transform", "rotate(-90)")
-        .attr("y", 6)
+        .attr("y", -40)
+        .attr("x", -100)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .text(vm._config.yAxis.text);
