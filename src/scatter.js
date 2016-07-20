@@ -117,15 +117,33 @@ Scatter.prototype = scatter.prototype = {
       .attr("cy", function(d) { return vm._scales.y(d.y); })
       .style("fill", function(d) { return vm._scales.color(d.color); })
       .on('mouseover', function(d,i){
-        vm._config.data.mouseover.call(this, d,i);
+        vm._config.data.mouseover.call(vm, d,i);
+        vm._chart._tip.show(d, d3.select(this).node())
       })
       .on('mouseout', function(d,i){
         vm._config.data.mouseout.call(this, d,i);
+        vm._chart._tip.hide();
       })
       .on("click", function(d,i){
         vm._config.data.onclick.call(this, d, i);
       });
   }, 
+  select:function(selector){
+    var vm = this; 
+   
+    vm._chart._svg.selectAll('circle')
+      .data(vm._data)
+      .attr('r', function(d){
+        if(d.x === selector || d.y === selector || d.z === selector){
+          vm._chart._tip.show(d,d3.select(this).node())
+          return 10;
+        }else{
+          return 3.5;
+        }
+      })
+      .style('fill', '#ccc')
+      .style('cursor', 'pointer')
+  },
   redraw: function(config){
     var vm = this;
     vm._chart.destroy(); 

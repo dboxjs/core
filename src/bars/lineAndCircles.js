@@ -19,8 +19,13 @@ LineAndCircles.prototype.draw = function (){
     .attr("cy", function(d) { return vm._scales.y(d.y); })
     .style("fill", function(d) { return vm._scales.color(d.color); })
     .on('mouseover', function(d,i){
-      vm._config.data.mouseover.call(vm, d,i);
-    });
+      vm._config.data.mouseover.call(vm, d,i)
+    })
+    .on('mouseover', function(d){
+      vm._chart._tip.show(d, d3.select(this).node())
+    })
+    .on('mouseout', vm._chart._tip.hide)
+    
 
   vm._chart._svg.selectAll('line.stem')
       .data(vm._data)
@@ -53,6 +58,23 @@ LineAndCircles.prototype.draw = function (){
       .attr('fill', '#ccc')
       .style('cursor', 'pointer')
 
+}
+
+LineAndCircles.prototype.select = function(selector){
+  var vm = this; 
+   
+  vm._chart._svg.selectAll('circle')
+    .data(vm._data)
+    .attr('r', function(d){
+      if(d.x === selector || d.y === selector){
+        vm._chart._tip.show(d,d3.select(this).node())
+        return 10;
+      }else{
+        return 3.5;
+      }
+    })
+    .style('fill', '#ccc')
+    .style('cursor', 'pointer')
 }
 
 

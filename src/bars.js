@@ -11,6 +11,8 @@ function Bars(config) {
   vm._scales = {}; 
   vm._axes = {};
   vm._averageLines = []; 
+  vm.columns = null; 
+  vm.lineAndCircles = null; 
   vm.quantilesAndCircles = null; 
 }
 
@@ -45,7 +47,6 @@ Bars.prototype = bars.prototype = {
 	setScales: function(){
 		var vm = this;
     vm._scales = vm._chart.setScales();
-    console.log('setScales', vm._scales)
 	}, 
 	setAxes : function(){
 		var vm = this;
@@ -177,12 +178,16 @@ Bars.prototype = bars.prototype = {
     if(vm._config.style){
       switch(vm._config.style){
         case 'lineAndCircles':
-          vm.lineAndCircles = lineAndCircles(params); 
+          if(vm.quantilesAndCircles === null ){
+            vm.lineAndCircles = lineAndCircles(params); 
+          }
           vm.lineAndCircles.draw();
         break;
 
         case 'columns':
-          vm.columns = columns(params); 
+          if(vm.quantilesAndCircles === null ){
+            vm.columns = columns(params); 
+          }
           vm.columns.draw();
         break
 
@@ -194,7 +199,10 @@ Bars.prototype = bars.prototype = {
         break
 
         default:
-         vm.columns(); 
+         if(vm.quantilesAndCircles === null ){
+            vm.columns = columns(params); 
+          }
+          vm.columns.draw();
         break;
       }
     }
@@ -211,6 +219,41 @@ Bars.prototype = bars.prototype = {
     }
     
   }, 
+  select:function(selector){
+    var vm = this; 
+
+    if(vm._config.style){
+      switch(vm._config.style){
+        case 'lineAndCircles':
+          if(vm.lineAndCircles === null ){
+            vm.lineAndCircles = lineAndCircles(params); 
+          }
+          vm.lineAndCircles.select(selector);
+        break;
+
+        case 'columns':
+          if(vm.columns === null ){
+            vm.columns = columns(params); 
+          }
+          vm.columns.draw();
+        break
+
+        case 'quantilesAndCircles':
+          if(vm.quantilesAndCircles === null ){
+            vm.quantilesAndCircles = quantilesAndCircles(params); 
+          }
+          vm.quantilesAndCircles.draw();
+        break
+
+        default:
+         if(vm.columns === null ){
+            vm.columns = columns(params); 
+          }
+          vm.columns.draw();
+        break;
+      }
+    }
+  },
   redraw: function(){
     var vm = this;
     vm._chart.destroy(); 
