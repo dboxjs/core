@@ -28,6 +28,7 @@ Scatter.prototype = scatter.prototype = {
       vm.setDomains();
       vm.drawAxes();
       vm.drawData();
+      vm.draw45Line();
     })
 
 	},
@@ -73,8 +74,8 @@ Scatter.prototype = scatter.prototype = {
       xAxis.append("text")
         .attr("class", "label")
         .attr("x", vm._chart._width)
-        .attr("y", 10)
-        .attr("x", -100)
+        .attr("y", 30)
+        .attr("x", 470)
         .style("text-anchor", "end")
         .text(vm._config.xAxis.text);
     }
@@ -95,11 +96,20 @@ Scatter.prototype = scatter.prototype = {
     }
   
   },
+  draw45Line: function(){
+    var vm = this;
+    vm._chart._svg.append('line')
+      .attr("x1", vm._scales.x(0))
+      .attr("y1", vm._scales.y(0))
+      .attr("x2", vm._scales.x(vm._scales.x.domain()[1]))
+      .attr("y2", vm._scales.y(vm._scales.y.domain()[1]))
+      .style("stroke-dasharray", ("10,3"))
+      .attr("stroke","#bbb");
+  },
   drawData : function(){
     var vm = this;
-
     vm._chart._svg.selectAll(".dot")
-      .data(vm._data)
+      .data(vm._data, function(d){ return d.key})
     .enter().append("circle")
       .attr("class", "dot")
       .attr("r", 3.5)
@@ -107,7 +117,13 @@ Scatter.prototype = scatter.prototype = {
       .attr("cy", function(d) { return vm._scales.y(d.y); })
       .style("fill", function(d) { return vm._scales.color(d.color); })
       .on('mouseover', function(d,i){
-        vm._config.data.mouseover.call(vm, d,i);
+        vm._config.data.mouseover.call(this, d,i);
+      })
+      .on('mouseout', function(d,i){
+        vm._config.data.mouseout.call(this, d,i);
+      })
+      .on("click", function(d,i){
+        vm._config.data.onclick.call(this, d, i);
       });
   }, 
   redraw: function(config){
