@@ -78,7 +78,16 @@ QuantilesAndCircles.prototype.draw = function (){
       })
       .style("fill", '#ffcd32');
 
-    
+          /*.text(function(d){
+            console.log(d);
+            return d.country
+          })
+          .style("fill", '#000');*/
+
+ 
+
+
+
     vm._chart._svg.selectAll(".dot")
       .data(vm._data,function(d){
         return d.key;
