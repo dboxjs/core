@@ -62,7 +62,7 @@ QuantilesAndCircles.prototype.draw = function (){
       .attr("y", function(d){
         return vm._scales.y(d.y);
       })
-      .attr("width",120)
+      .attr("width",vm._scales.x.rangeBand())
       .attr("height",function(d){
         return vm._scales.y(0) - vm._scales.y(d.y);       
       })
@@ -83,7 +83,7 @@ QuantilesAndCircles.prototype.draw = function (){
       .attr("y", function(d){
         return vm._scales.y(d.y);
       })
-      .attr("width",120)
+      .attr("width",vm._scales.x.rangeBand())
       .attr("height",function(d){
         return 5;       
       })

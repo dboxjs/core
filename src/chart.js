@@ -50,8 +50,7 @@ Chart.prototype = chart.prototype = {
 			.attr("height", vm._height + vm._margin.top + vm._margin.bottom)
 		.append("g")
 			.attr("transform", "translate(" + vm._margin.left + "," + vm._margin.top + ")")
-			.call(vm._tip)
-      .call(vm._tip2);
+			.call(vm._tip);
 
 	},
 	loadData:function(){
