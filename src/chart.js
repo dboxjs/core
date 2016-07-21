@@ -30,7 +30,7 @@ function Chart(config) {
   vm._widht;
   vm._height;
 
-  vm._tip = d3.tip().attr('class', 'd3-tip').html(vm._config.data.tip);
+  vm._tip = d3.tip().attr('class', 'd3-tip').html(vm._config.data.tip);  
   vm.draw();
 }
 
@@ -50,7 +50,8 @@ Chart.prototype = chart.prototype = {
 			.attr("height", vm._height + vm._margin.top + vm._margin.bottom)
 		.append("g")
 			.attr("transform", "translate(" + vm._margin.left + "," + vm._margin.top + ")")
-			.call(vm._tip);
+			.call(vm._tip)
+      .call(vm._tip2);
 
 	},
 	loadData:function(){
