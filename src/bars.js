@@ -127,7 +127,7 @@ Bars.prototype = bars.prototype = {
         .attr("dx", "-.8em")
         .attr("dy", ".15em")
         .attr("transform", function(d) {
-            return "rotate(-65)" 
+            return "translate(0,8)rotate(-65)" 
             });
 
     if(vm._config.style){
