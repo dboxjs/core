@@ -73,10 +73,9 @@ Scatter.prototype = scatter.prototype = {
     if(vm._config.xAxis && vm._config.xAxis.text){
       xAxis.append("text")
         .attr("class", "label")
-        .attr("x", vm._chart._width)
+        .attr("x", vm._chart._width/2)
         .attr("y", 30)
-        .attr("x", 470)
-        .style("text-anchor", "end")
+        .style("text-anchor", "middle")
         .text(vm._config.xAxis.text);
     }
 
