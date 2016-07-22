@@ -13,7 +13,17 @@ QuantilesAndCircles.prototype.getAverages = function(){
     var idx = 0;
     var averageArray = [];
       vm._data.forEach(function(d){
-        if(vm._scales.q(d.x) == idx){
+
+        auxArray2.push(d.y);
+        auxArray[idx] = auxArray2;
+
+        if(vm._scales.q(d.x) != idx){
+          auxArray2 = [];
+          idx = vm._scales.q(d.x);
+        }       
+
+
+       /* if(vm._scales.q(d.x) == idx){
           auxArray2.push(d.y);
           auxArray[idx] = auxArray2;
         }else{        
@@ -22,6 +32,7 @@ QuantilesAndCircles.prototype.getAverages = function(){
           auxArray2 = [];
           idx = vm._scales.q(d.x)         
         }       
+      */
       })
 
       //console.log(auxArray);
@@ -46,12 +57,12 @@ QuantilesAndCircles.prototype.draw = function (){
     .enter().append("rect")
       .attr("class", "recta")
       .attr("x", function(d) {
-        return vm._scales.x ( d.x ) + vm._scales.x.rangeBand()/3; 
+        return vm._scales.x ( d.x ) + vm._scales.x.rangeBand()/16; 
       })
       .attr("y", function(d){
         return vm._scales.y(d.y);
       })
-      .attr("width",50)
+      .attr("width",vm._scales.x.rangeBand())
       .attr("height",function(d){
         return vm._scales.y(0) - vm._scales.y(d.y);       
       })
@@ -66,19 +77,29 @@ QuantilesAndCircles.prototype.draw = function (){
       .attr("class", "recta2")
       .attr("x", function(d) {
         //console.log("x",d.x)
-        return vm._scales.x ( d.x ) + vm._scales.x.rangeBand()/3; 
+        return vm._scales.x ( d.x ) + vm._scales.x.rangeBand()/16; 
       })
 
       .attr("y", function(d){
         return vm._scales.y(d.y);
       })
-      .attr("width",50)
+      .attr("width",vm._scales.x.rangeBand())
       .attr("height",function(d){
         return 5;       
       })
       .style("fill", '#ffcd32');
 
-    
+
+          /*.text(function(d){
+            console.log(d);
+            return d.country
+          })
+          .style("fill", '#000');*/
+
+ 
+
+
+
     vm._chart._svg.selectAll(".dot")
       .data(vm._data,function(d){
         return d.key;
