@@ -29,7 +29,7 @@ function Chart(config) {
   vm._widht;
   vm._height;
 
-  vm._tip = d3.tip().attr('class', 'd3-tip').html(vm._config.data.tip);
+  vm._tip = d3.tip().attr('class', 'd3-tip').html(vm._config.data.tip);  
   vm.draw();
 }
 

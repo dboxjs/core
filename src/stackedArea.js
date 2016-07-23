@@ -125,8 +125,8 @@ StackedArea.prototype = stackedArea.prototype = {
       .y0(function(d) { return vm._scales.y((d.y0) * 100 / getChild(total, d.x+'').values); })
       .y1(function(d) { return vm._scales.y((d.y0 + d.y) * 100 / getChild(total, d.x+'').values); });
     }
-
-    var layers = stack(nest.entries(vm._data));
+    var nestedData = nest.entries(vm._data).sort(function(a,b){ return a.values[a.values.length - 1].y > b.values[b.values.length -1].y ? -1 : 1;});
+    var layers = stack(nestedData);
     
     vm.setDomains();
     vm.drawAxes();
