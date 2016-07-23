@@ -86,10 +86,9 @@ Scatter.prototype = scatter.prototype = {
     if(vm._config.xAxis && vm._config.xAxis.text){
       xAxis.append("text")
         .attr("class", "label")
-        .attr("x", vm._chart._width)
+        .attr("x", vm._chart._width/2)
         .attr("y", 30)
-        .attr("x", 470)
-        .style("text-anchor", "end")
+        .style("text-anchor", "middle")
         .text(vm._config.xAxis.text);
     }
 
@@ -113,13 +112,14 @@ Scatter.prototype = scatter.prototype = {
     var vm = this;
 
     if(vm._config.plotOptions && vm._config.plotOptions.scatter && vm._config.plotOptions.scatter.draw45Line === true){
+      var size = d3.min([vm._scales.x.domain()[1], vm._scales.y.domain()[1]])
       vm._chart._svg.append('line')
-      .attr("x1", vm._scales.x(0))
-      .attr("y1", vm._scales.y(0))
-      .attr("x2", vm._scales.x(vm._scales.x.domain()[1]))
-      .attr("y2", vm._scales.y(vm._scales.y.domain()[1]))
-      .style("stroke-dasharray", ("10,3"))
-      .attr("stroke","#bbb");
+        .attr("x1", vm._scales.x(0))
+        .attr("y1", vm._scales.y(0))
+        .attr("x2", vm._scales.x(size))
+        .attr("y2", vm._scales.y(size))
+        .style("stroke-dasharray", ("10,3"))
+        .attr("stroke","#bbb");
     }
     
   },
