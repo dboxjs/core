@@ -5,7 +5,8 @@
     "prepublish": "rollup -c && uglifyjs ./build/dbox.js -c -m -o ./build/dbox.min.js",
     "dev": "rollup --config rollup.config.dev.js && uglifyjs ../d4pkg-develop/src/dbox/build/dbox.js -c -m -o ../d4pkg-develop/src/dbox/build/dbox.min.js",
     "pk": "rollup --config rollup.config.pk.js && uglifyjs ../../aws/pnud-pk-vppd/src/dbox/build/dbox.js -c -m -o ../../aws/pnud-pk-vppd/src/dbox/build/dbox.min.js",
-    "mt": "rollup --config rollup.config.mt.js && uglifyjs ../mt-sociodemograficos-olimpicos/src/dbox/build/dbox.js -c -m -o ../mt-sociodemograficos-olimpicos/src/dbox/build/dbox.min.js"
+    "mt": "rollup --config rollup.config.mt.js && uglifyjs ../mt-sociodemograficos-olimpicos/src/dbox/build/dbox.js -c -m -o ../mt-sociodemograficos-olimpicos/src/dbox/build/dbox.min.js",
+    "pb": "rollup --config rollup.config.pb.js && uglifyjs ../frente-pobreza-mapa/src/dbox/build/dbox.js -c -m -o ../frente-pobreza-mapa/src/dbox/build/dbox.min.js"
   },
   "devDependencies": {
     "rollup": "^0.26.3",

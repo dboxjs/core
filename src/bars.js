@@ -33,6 +33,7 @@ Bars.prototype = bars.prototype = {
       } 
       vm.setData(data);
       vm.setDomains();
+      vm._setChartType(); 
       vm.drawAxes();
       vm.drawData();
       vm._chart.dispatch.load(); 
@@ -42,7 +43,6 @@ Bars.prototype = bars.prototype = {
 	init : function(){
 		var vm = this
 		vm._chart = chart(vm._config);
-    vm._chart.dispatch.on("load.chart", vm._config.events.load(vm));
 	},
 	setScales: function(){
 		var vm = this;
@@ -99,22 +99,40 @@ Bars.prototype = bars.prototype = {
 
     //Quantile scale
     if(vm._scales.q){ 
-      vm._scales.q.domain(domains.q);
-      console.log('Domain',vm._scales.q.domain())
-      console.log('Range',vm._scales.q.range())
-      console.log('Treshold',vm._scales.q.quantiles());      
+      vm._scales.q.domain(domains.q);    
     }
 
   },
-  drawAxes:function(){
-    var vm = this;
+  _setChartType:function(){
+    var vm = this; 
 
-     var params ={
+    var params ={
       "config"  : vm._config, 
       "chart"   : vm._chart,
       "data"    : vm._data,
       "scales"  : vm._scales, 
     }
+
+    if(vm._config.style){
+      switch(vm._config.style){
+        case 'lineAndCircles':
+          vm.lineAndCircles = lineAndCircles(params); 
+        break;
+        case 'columns':
+          vm.columns = columns(params); 
+        break;
+        case 'quantilesAndCircles':
+          vm.quantilesAndCircles = quantilesAndCircles(params); 
+        break;
+      }
+    }
+
+    //Set averageLines
+    vm.averageLines = averageLines(params);  
+
+  },
+  drawAxes:function(){
+    var vm = this;
 
     var xAxis = vm._chart._svg.append("g")
         .attr("class", "x axis")
@@ -132,11 +150,7 @@ Bars.prototype = bars.prototype = {
 
     if(vm._config.style){
       switch(vm._config.style){
-
         case 'quantilesAndCircles':
-          if(vm.quantilesAndCircles === null ){
-            vm.quantilesAndCircles = quantilesAndCircles(params); 
-          }
           vm.quantilesAndCircles.renameAxis(xAxis);
         break
       }
@@ -168,47 +182,26 @@ Bars.prototype = bars.prototype = {
   drawData : function(){
     var vm = this; 
 
-    var params ={
-      "config"  : vm._config, 
-      "chart"   : vm._chart,
-      "data"    : vm._data,
-      "scales"  : vm._scales, 
-    }
-
     if(vm._config.style){
       switch(vm._config.style){
         case 'lineAndCircles':
-          if(vm.quantilesAndCircles === null ){
-            vm.lineAndCircles = lineAndCircles(params); 
-          }
           vm.lineAndCircles.draw();
         break;
-
         case 'columns':
-          if(vm.quantilesAndCircles === null ){
-            vm.columns = columns(params); 
-          }
           vm.columns.draw();
         break
-
         case 'quantilesAndCircles':
-          if(vm.quantilesAndCircles === null ){
-            vm.quantilesAndCircles = quantilesAndCircles(params); 
-          }
           vm.quantilesAndCircles.draw();
         break
-
         default:
-         if(vm.quantilesAndCircles === null ){
-            vm.columns = columns(params); 
-          }
           vm.columns.draw();
         break;
       }
     }
-    //Draw averageLines
-    vm.averageLines = averageLines(params); 
+    
     vm.averageLines.draw();
+
+    vm._chart.dispatch.on("load.chart", vm._config.events.load(vm));
   },
   set: function(option,value){
     var vm = this; 
@@ -217,42 +210,47 @@ Bars.prototype = bars.prototype = {
     }else{
       vm._config[option] = value ; 
     }
-    
   }, 
   select:function(selector){
     var vm = this; 
-
+    var select = false; 
     if(vm._config.style){
       switch(vm._config.style){
         case 'lineAndCircles':
-          if(vm.lineAndCircles === null ){
-            vm.lineAndCircles = lineAndCircles(params); 
-          }
-          vm.lineAndCircles.select(selector);
+          select = vm.lineAndCircles.select(selector);
         break;
-
         case 'columns':
-          if(vm.columns === null ){
-            vm.columns = columns(params); 
-          }
-          vm.columns.draw();
+          select = vm.columns.select(selector);
         break
-
         case 'quantilesAndCircles':
-          if(vm.quantilesAndCircles === null ){
-            vm.quantilesAndCircles = quantilesAndCircles(params); 
-          }
-          vm.quantilesAndCircles.draw();
+          select = vm.quantilesAndCircles.select(selector);
         break
-
         default:
-         if(vm.columns === null ){
-            vm.columns = columns(params); 
-          }
-          vm.columns.draw();
+          select = vm.columns.select(selector);
         break;
       }
     }
+
+    return select; 
+  },
+  triggerMouseOver:function(selector){
+    var vm = this; 
+   
+    vm._chart._svg.selectAll('circle')
+      .each(function(d){
+        if(d.x === selector || d.y === selector){
+          vm._chart._tip.show(d,d3.select(this).node())
+        }
+      })
+  },
+  triggerMouseOut:function(selector){
+    var vm = this; 
+    vm._chart._svg.selectAll('circle')
+      .each(function(d){
+        if(d.x === selector || d.y === selector){
+          vm._chart._tip.hide(d,d3.select(this).node())
+        }
+      })
   },
   redraw: function(){
     var vm = this;

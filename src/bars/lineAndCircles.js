@@ -14,17 +14,23 @@ LineAndCircles.prototype.draw = function (){
     .data(vm._data)
   .enter().append("circle")
     .attr("class", "dot")
-    .attr("r", 3.5)
+    .attr("r", 5)
     .attr("cx", function(d) { return vm._scales.x(d.x)+vm._scales.x.rangeBand()/2; })
     .attr("cy", function(d) { return vm._scales.y(d.y); })
-    .style("fill", function(d) { return vm._scales.color(d.color); })
+    .style("fill", function(d) { return d.color; })
+    .style("stroke", function(d) { return d.color; })
     .on('mouseover', function(d,i){
-      vm._config.data.mouseover.call(vm, d,i)
-    })
-    .on('mouseover', function(d){
+      if(vm._config.data.mouseover){
+        vm._config.data.mouseover.call(vm, d,i)
+      }
       vm._chart._tip.show(d, d3.select(this).node())
     })
-    .on('mouseout', vm._chart._tip.hide)
+    .on('mouseout',function(d,i){
+      if(vm._config.data.mouseout){
+        vm._config.data.mouseout.call(vm, d,i)
+      }
+      vm._chart._tip.hide(d, d3.select(this).node())
+    })
     
 
   vm._chart._svg.selectAll('line.stem')
@@ -42,9 +48,11 @@ LineAndCircles.prototype.draw = function (){
         return vm._scales.y(d.y);
       })
       .attr('y2', vm._chart._height)
-      .attr('stroke', '#7A7A7A')
+      .attr('stroke', function(d){
+        return d.color;
+      })
 
-  vm._chart._svg.selectAll('circle')
+  /*vm._chart._svg.selectAll('circle')
       .data(vm._data)
     .enter()
       .append('circle')
@@ -55,26 +63,26 @@ LineAndCircles.prototype.draw = function (){
         return vm._scales.y(d.y);
       })
       .attr('r', 6)
-      .attr('fill', '#ccc')
-      .style('cursor', 'pointer')
+      .attr('fill', function(d){
+        return d.color;
+      })
+      .style('cursor', 'pointer')*/
 
 }
 
 LineAndCircles.prototype.select = function(selector){
-  var vm = this; 
+  var vm = this;
+  var select = false; 
    
-  vm._chart._svg.selectAll('circle')
-    .data(vm._data)
-    .attr('r', function(d){
+  vm._chart._svg.selectAll('.dot')
+    .each(function(d){
       if(d.x === selector || d.y === selector){
-        vm._chart._tip.show(d,d3.select(this).node())
-        return 10;
-      }else{
-        return 3.5;
+        select = d3.select(this); 
       }
     })
-    .style('fill', '#ccc')
-    .style('cursor', 'pointer')
+    
+  return select; 
+    
 }
 
 

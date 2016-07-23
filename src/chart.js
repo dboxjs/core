@@ -1,4 +1,3 @@
-
 function queryCarto(config, callback){
 	var sql = new cartodb.SQL({ user: config.cartodb.user });
 	sql.execute(config.cartodb.sql)
@@ -41,6 +40,16 @@ Chart.prototype = chart.prototype = {
 
 		d3.select(vm._config.bindTo).html("");
 
+		if(vm._config.template){
+			d3.select(vm._config.bindTo).classed(vm._config.template, true)
+		}
+		
+
+		if(vm._config.chart && vm._config.chart.title){
+			d3.select(vm._config.bindTo).append("div")
+				.attr("class", "chart-title")
+				.html(vm._config.chart.title)
+		}
 		vm._margin = vm._config.size.margin,
 		vm._width = vm._config.size.width - vm._margin.left - vm._margin.right,
 		vm._height = vm._config.size.height - vm._margin.top - vm._margin.bottom;
@@ -51,6 +60,18 @@ Chart.prototype = chart.prototype = {
 		.append("g")
 			.attr("transform", "translate(" + vm._margin.left + "," + vm._margin.top + ")")
 			.call(vm._tip);
+
+
+		if(vm._config.plotOptions && vm._config.plotOptions.bars 
+			&& vm._config.plotOptions.bars.averageLines && Array.isArray(vm._config.plotOptions.bars.averageLines) 
+			&& vm._config.plotOptions.bars.averageLines.length >0 ){
+
+			d3.select(vm._config.bindTo).append("div")
+				.attr("class", "average-lines")
+			  .append('div')
+			  	.attr("class", "legend")
+				.html('Average Lines Controller')
+		}
 
 	},
 	loadData:function(){
@@ -178,28 +199,28 @@ Chart.prototype = chart.prototype = {
 
 		var domains = {}; 
 		var minMax = [];
-    var sorted = ''; 
+	    var sorted = ''; 
 
 
-    //Default ascending function 
-    var sortFunctionY = function(a, b) { return d3.ascending(a.y,b.y); }; 
-    var sortFunctionX = function(a, b) { return d3.ascending(a.x,b.x); }; 
-		
+	    //Default ascending function 
+	    var sortFunctionY = function(a, b) { return d3.ascending(a.y,b.y); }; 
+	    var sortFunctionX = function(a, b) { return d3.ascending(a.x,b.x); }; 
+			
 
-    //if applying sort
-    if(vm._config.data.sort && vm._config.data.sort.order){
-      switch(vm._config.data.sort.order){
-        case 'asc':
-          sortFunctionY = function(a, b) { return d3.ascending(a.y,b.y); };
-          sortFunctionX = function(a, b) { return d3.ascending(a.x,b.x); }; 
-        break;
+	    //if applying sort
+	    if(vm._config.data.sort && vm._config.data.sort.order){
+	      switch(vm._config.data.sort.order){
+	        case 'asc':
+	          sortFunctionY = function(a, b) { return d3.ascending(a.y,b.y); };
+	          sortFunctionX = function(a, b) { return d3.ascending(a.x,b.x); }; 
+	        break;
 
-        case 'desc':
-          sortFunctionY = function(a, b) { return d3.descending(a.y,b.y); };
-          sortFunctionX = function(a, b) { return d3.descending(a.x,b.x); }; 
-        break;
-      }
-    }
+	        case 'desc':
+	          sortFunctionY = function(a, b) { return d3.descending(a.y,b.y); };
+	          sortFunctionX = function(a, b) { return d3.descending(a.x,b.x); }; 
+	        break;
+	      }
+	    }
 
 
 		//xAxis
