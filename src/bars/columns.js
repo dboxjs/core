@@ -19,10 +19,25 @@ Columns.prototype.draw = function (){
       .attr("width", vm._scales.x.rangeBand())
       .attr("y", function(d) { return vm._scales.y(d.y); })
       .attr("height", function(d) { return vm._chart._height - vm._scales.y(d.y); })
+      .attr("fill", function(d){return d.color;})
       .on('mouseover', function(d,i){
 	      vm._config.data.mouseover.call(vm, d,i);
 	    });
 
+}
+
+Columns.prototype.select = function (selector){
+  var vm = this;
+  var select = false; 
+   
+  vm._chart._svg.selectAll('.bar')
+    .each(function(d){
+      if(d.x === selector || d.y === selector){
+        select = d3.select(this); 
+      }
+    })
+    
+  return select; 
 }
 
 export default function columns(options) {
