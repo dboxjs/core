@@ -11,9 +11,12 @@ export {
 } from "./src/stackedArea";
 
 export {
+  default as treemap,
+} from "./src/treemap";
+
+export {
   default as bars,
 } from "./src/bars";
-
 
 export {
   default as map,
