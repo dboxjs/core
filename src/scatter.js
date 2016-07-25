@@ -51,6 +51,19 @@ Scatter.prototype = scatter.prototype = {
 		vm._axes.y = d3.svg.axis()
 		  .scale(vm._scales.y)
 		  .orient("left");
+
+
+    if(vm._config.yAxis && vm._config.yAxis.ticks 
+        && vm._config.yAxis.ticks.enabled === true && vm._config.yAxis.ticks.style ){
+
+      switch(vm._config.yAxis.ticks.style){
+        case 'straightLine':
+          vm._axes.y
+            .tickSize(-vm._chart._width,0);
+        break;
+      }
+    }
+    
 	},
 	setData:function(data){
     var vm = this;
@@ -97,57 +110,95 @@ Scatter.prototype = scatter.prototype = {
   },
   draw45Line: function(){
     var vm = this;
-    var size = d3.min([vm._scales.x.domain()[1], vm._scales.y.domain()[1]])
-    vm._chart._svg.append('line')
-      .attr("x1", vm._scales.x(0))
-      .attr("y1", vm._scales.y(0))
-      .attr("x2", vm._scales.x(size))
-      .attr("y2", vm._scales.y(size))
-      .style("stroke-dasharray", ("10,3"))
-      .attr("stroke","#bbb");
+
+    if(vm._config.plotOptions && vm._config.plotOptions.scatter && vm._config.plotOptions.scatter.draw45Line === true){
+      var size = d3.min([vm._scales.x.domain()[1], vm._scales.y.domain()[1]])
+      vm._chart._svg.append('line')
+        .attr("x1", vm._scales.x(0))
+        .attr("y1", vm._scales.y(0))
+        .attr("x2", vm._scales.x(size))
+        .attr("y2", vm._scales.y(size))
+        .style("stroke-dasharray", ("10,3"))
+        .attr("stroke","#bbb");
+    }
+    
   },
   drawData : function(){
     var vm = this;
-    vm._chart._svg.selectAll(".dot")
-      .data(vm._data, function(d){ return d.key})
+    var circles = vm._chart._svg.selectAll(".dot")
+      .data(vm._data)
+      //.data(vm._data, function(d){ return d.key})
     .enter().append("circle")
       .attr("class", "dot")
-      .attr("r", 3.5)
+      .attr("r", 5)
       .attr("cx", function(d) { return vm._scales.x(d.x); })
       .attr("cy", function(d) { return vm._scales.y(d.y); })
-      .style("fill", function(d) { return vm._scales.color(d.color); })
+      .style("fill", function(d) { return d.color; })
+
       .on('mouseover', function(d,i){
-        vm._config.data.mouseover.call(vm, d,i);
+        if(vm._config.data.mouseover){
+          vm._config.data.mouseover.call(vm, d,i);
+        }
+        vm._chart._tip.show(d, d3.select(this).node());
       })
       .on('mouseout', function(d,i){
-        vm._config.data.mouseout.call(this, d,i);
+        if(vm._config.data.mouseout){
+          vm._config.data.mouseout.call(this, d,i);
+        }
+        vm._chart._tip.hide();
       })
       .on("click", function(d,i){
-        vm._config.data.onclick.call(this, d, i);
+        if(vm._config.data.onclick){
+          vm._config.data.onclick.call(this, d, i);
+        }
       });
   }, 
+  set: function(option,value){
+    var vm = this; 
+    if(option === 'config') {
+      vm._config = value; 
+    }else{
+      vm._config[option] = value ; 
+    }
+  }, 
   select:function(selector){
+    var vm = this;
+    var select = false; 
+
+    vm._chart._svg.selectAll('.dot')
+      .each(function(d){
+        if(d.x === selector || d.y === selector){
+          select = d3.select(this); 
+        }
+      });
+
+    return select; 
+  },
+  triggerMouseOver:function(selector){
     var vm = this; 
    
     vm._chart._svg.selectAll('circle')
-      .data(vm._data)
-      .attr('r', function(d){
+      .each(function(d){
         if(d.x === selector || d.y === selector || d.z === selector){
           vm._chart._tip.show(d,d3.select(this).node())
-          return 10;
-        }else{
-          return 3.5;
         }
       })
-      .style('fill', '#ccc')
-      .style('cursor', 'pointer')
   },
-  redraw: function(config){
+  triggerMouseOut:function(selector){
+    console.log(selector)
+    var vm = this; 
+   
+    vm._chart._svg.selectAll('circle')
+      .each(function(d){
+        if(d.x === selector || d.y === selector || d.z === selector){
+          vm._chart._tip.hide(d,d3.select(this).node())
+        }
+      })
+  },
+  redraw: function(){
     var vm = this;
     vm._chart.destroy(); 
-    vm._config = config; 
     vm.generate();
-
   }
 
 

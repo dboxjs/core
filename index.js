@@ -13,3 +13,8 @@ export {
 export {
   default as bars,
 } from "./src/bars";
+
+
+export {
+  default as map,
+} from "./src/map";
