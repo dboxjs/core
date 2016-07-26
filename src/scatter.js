@@ -80,7 +80,11 @@ Scatter.prototype = scatter.prototype = {
     var xAxis = vm._chart._svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + vm._chart._height + ")")
-        .call(vm._axes.x);
+        .call(vm._axes.x)
+        .selectAll('text')
+        .on("click",function(d,i){
+          vm._config.xAxis.onclick.call(this, d, i);
+        });
 
 
     if(vm._config.xAxis && vm._config.xAxis.text){
@@ -92,19 +96,21 @@ Scatter.prototype = scatter.prototype = {
         .text(vm._config.xAxis.text);
     }
 
-    var yAxis = vm._chart._svg.append("g")
-        .attr("class", "y axis")
-        .call(vm._axes.y);    
+    if(vm._config.yAxis.visible){
+      var yAxis = vm._chart._svg.append("g")
+          .attr("class", "y axis")
+          .call(vm._axes.y);    
 
-    if(vm._config.yAxis && vm._config.yAxis.text){
-      yAxis.append("text")
-        .attr("class", "label")
-        .attr("transform", "rotate(-90)")
-        .attr("y", -40)
-        .attr("x", -100)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text(vm._config.yAxis.text);
+      if(vm._config.yAxis && vm._config.yAxis.text){
+        yAxis.append("text")
+          .attr("class", "label")
+          .attr("transform", "rotate(-90)")
+          .attr("y", -40)
+          .attr("x", -100)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text(vm._config.yAxis.text);
+      } 
     }
   
   },
@@ -125,33 +131,64 @@ Scatter.prototype = scatter.prototype = {
   },
   drawData : function(){
     var vm = this;
-    var circles = vm._chart._svg.selectAll(".dot")
-      .data(vm._data)
-      //.data(vm._data, function(d){ return d.key})
-    .enter().append("circle")
-      .attr("class", "dot")
-      .attr("r", 5)
-      .attr("cx", function(d) { return vm._scales.x(d.x); })
-      .attr("cy", function(d) { return vm._scales.y(d.y); })
-      .style("fill", function(d) { return d.color; })
+    if(vm._config.values){
+      var scale = d3.scale.linear().range([5, vm._config.size.width / vm._scales.x.domain().length - 20]).domain(d3.extent(vm._data, function(d){ return d.value; }));
+      var circles = vm._chart._svg.selectAll(".dot")
+        .data(vm._data)
+        //.data(vm._data, function(d){ return d.key})
+      .enter().append("rect")
+        .attr("class", "square")
+        .attr("x", function(d) { return vm._scales.x(d.x) - scale(d.value) / 2; })
+        .attr("y", function(d) { return vm._scales.y(d.y) - scale(d.value) / 2; })
+        .attr("width", function(d){ return scale(d.value); })
+        .attr("height", function(d){ return scale(d.value); })
 
-      .on('mouseover', function(d,i){
-        if(vm._config.data.mouseover){
-          vm._config.data.mouseover.call(vm, d,i);
-        }
-        vm._chart._tip.show(d, d3.select(this).node());
-      })
-      .on('mouseout', function(d,i){
-        if(vm._config.data.mouseout){
-          vm._config.data.mouseout.call(this, d,i);
-        }
-        vm._chart._tip.hide();
-      })
-      .on("click", function(d,i){
-        if(vm._config.data.onclick){
-          vm._config.data.onclick.call(this, d, i);
-        }
-      });
+        .on('mouseover', function(d,i){
+          if(vm._config.data.mouseover){
+            vm._config.data.mouseover.call(vm, d,i);
+          }
+          vm._chart._tip.show(d, d3.select(this).node());
+        })
+        .on('mouseout', function(d,i){
+          if(vm._config.data.mouseout){
+            vm._config.data.mouseout.call(this, d,i);
+          }
+          vm._chart._tip.hide();
+        })
+        .on("click", function(d,i){
+          if(vm._config.data.onclick){
+            vm._config.data.onclick.call(this, d, i);
+          }
+        });
+      } else {
+        var circles = vm._chart._svg.selectAll(".dot")
+        .data(vm._data)
+        //.data(vm._data, function(d){ return d.key})
+      .enter().append("circle")
+        .attr("class", "dot")
+        .attr("r", 5)
+        .attr("cx", function(d) { return vm._scales.x(d.x); })
+        .attr("cy", function(d) { return vm._scales.y(d.y); })
+        .style("fill", function(d) { return d.color; })
+
+        .on('mouseover', function(d,i){
+          if(vm._config.data.mouseover){
+            vm._config.data.mouseover.call(vm, d,i);
+          }
+          vm._chart._tip.show(d, d3.select(this).node());
+        })
+        .on('mouseout', function(d,i){
+          if(vm._config.data.mouseout){
+            vm._config.data.mouseout.call(this, d,i);
+          }
+          vm._chart._tip.hide();
+        })
+        .on("click", function(d,i){
+          if(vm._config.data.onclick){
+            vm._config.data.onclick.call(this, d, i);
+          }
+        });
+      }
   }, 
   set: function(option,value){
     var vm = this; 
