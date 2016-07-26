@@ -57,10 +57,15 @@ Chart.prototype = chart.prototype = {
 		vm._svg = d3.select(vm._config.bindTo).append("svg")
 			.attr("width", vm._width + vm._margin.left + vm._margin.right)
 			.attr("height", vm._height + vm._margin.top + vm._margin.bottom)
-		.append("g")
+		  .append("g")
 			.attr("transform", "translate(" + vm._margin.left + "," + vm._margin.top + ")")
 			.call(vm._tip);
 
+		//Apply background color
+		if(vm._config.chart && vm._config.chart.background && vm._config.chart.background.color){
+			d3.select(vm._config.bindTo+" svg").style('background-color', vm._config.chart.background.color )
+		}
+		
 
 		if(vm._config.plotOptions && vm._config.plotOptions.bars 
 			&& vm._config.plotOptions.bars.averageLines && Array.isArray(vm._config.plotOptions.bars.averageLines) 
