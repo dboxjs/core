@@ -25,7 +25,6 @@ Timeline.prototype = timeline.prototype = {
         return false; 
       }
 
-      debugger;
       vm.setData(data);
       vm.setDomains();
       vm.drawAxes();
@@ -46,7 +45,7 @@ Timeline.prototype = timeline.prototype = {
 		vm._scales.y = d3.scale.linear()
 		  .range([vm._chart._height, 0]);
 
-		vm._scales.color = d3.scale.category10();
+    vm._scales.color = d3.scale.category20c();
 	}, 
 	setAxes : function(){
 		var vm = this;
@@ -58,6 +57,18 @@ Timeline.prototype = timeline.prototype = {
 		vm._axes.y = d3.svg.axis()
 		  .scale(vm._scales.y)
 		  .orient("left");
+
+
+    if(vm._config.yAxis && vm._config.yAxis.ticks 
+        && vm._config.yAxis.ticks.enabled === true && vm._config.yAxis.ticks.style ){
+
+      switch(vm._config.yAxis.ticks.style){
+        case 'straightLine':
+          vm._axes.y
+            .tickSize(-vm._chart._width,0);
+        break;
+      }
+    }
 	},
 	setData:function(data){
     var vm = this;
@@ -103,7 +114,7 @@ Timeline.prototype = timeline.prototype = {
         .attr("x", vm._chart._width)
         .attr("y", -6)
         .style("text-anchor", "end")
-        .text("Time");
+        .text("");
 
     vm._chart._svg.append("g")
         .attr("class", "y axis")
@@ -120,26 +131,49 @@ Timeline.prototype = timeline.prototype = {
     var vm = this;
 
     var line = d3.svg.line()
-        .interpolate("basis")
+        .interpolate("line")
         .x(function(d) { return vm._scales.x(d.x); })
         .y(function(d) { return vm._scales.y(d.y); });
       
     var series = vm._chart._svg.selectAll(".series")
         .data(vm._data)
       .enter().append("g")
-        .attr("class", "series");
+        .attr("class", "series")
 
     series.append("path")
         .attr("class", "line")
         .attr("d", function(d) { return line(d.values); })
-        .style("stroke", function(d) { return vm._scales.color(d.name); })
+        .style("stroke", function(d) { return d.color;}) //return vm._scales.color(d.name); })
+
+
+    series.selectAll('circles')
+        .data(function(d){return d.values})
+      .enter().append("circle")
+        .attr("class", "dot")
+        .attr("r", 5)
+        .attr("cx", function(d) { return vm._scales.x(d.x); })
+        .attr("cy", function(d) { return vm._scales.y(d.y); })
+        .style("fill", function(d) { return d.color; })//return vm._scales.color(d.name); })
+        .style("stroke", function(d) { return d.color;}) // return vm._scales.color(d.name); })
+        .on('mouseover', function(d,i){
+          if(vm._config.data.mouseover){
+            vm._config.data.mouseover.call(vm, d,i)
+          }
+          vm._chart._tip.show(d, d3.select(this).node())
+        })
+        .on('mouseout',function(d,i){
+          if(vm._config.data.mouseout){
+            vm._config.data.mouseout.call(vm, d,i)
+          }
+          vm._chart._tip.hide(d, d3.select(this).node())
+        })
         
-    series.append("text")
+   /* series.append("text")
         .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
         .attr("transform", function(d) { return "translate(" + vm._scales.x(d.value.x) + "," + vm._scales.y(d.value.y) + ")"; })
         .attr("x", 3)
         .attr("dy", ".35em")
-        .text(function(d) { return d.name; });
+        .text(function(d) { return d.name; });*/
   }
 
 
