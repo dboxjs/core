@@ -35,7 +35,8 @@ svg{
 }
 
 .dbox-gray .axis path.domain{
-  stroke:white;
+  stroke: #aeadb3;
+  stroke-width: 2;
 }
 
 .dbox-gray .chart-title{
