@@ -259,7 +259,7 @@ Map.prototype = map.prototype = {
         })
         .attr("data-geotype", 'states')
         .attr("fill", "#808080")
-        .style("stroke", "white")
+        .attr('stroke', '#a0a0a0')
         .style('stroke-width','1px')
         .on('mouseover', function(d,i){
           if(vm._config.data.mouseover){
@@ -294,7 +294,7 @@ Map.prototype = map.prototype = {
             return d.z;
           })
           .attr('stroke-width', 1 )
-          .attr('stroke', '#ff0000');
+          .attr('stroke', '#a0a0a0');
 
       //Resets the map "Estados" path data to topojson
       vm.states.selectAll("path").data(vm.statesDefault, function(d){ return d.id; });
@@ -421,7 +421,7 @@ Map.prototype = map.prototype = {
             return d.z;
           })
           .attr('stroke-width', 1 )
-          .attr('stroke', '#ff0000');
+          .attr('stroke', '#a0a0a0');
 
       //Resets the map "Estados" path data to topojson
       vm.states.selectAll("path").data(vm.statesDefault, function(d){ return d.id; });
