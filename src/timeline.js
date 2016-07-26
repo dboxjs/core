@@ -143,14 +143,18 @@ Timeline.prototype = timeline.prototype = {
     series.append("path")
         .attr("class", "line")
         .attr("d", function(d) { return line(d.values); })
+        .style("stroke-dasharray",function(d){ if(d.name == "Nacional"){
+            return ("3,3");
+          }})
         .style("stroke", function(d) { return d.color;}) //return vm._scales.color(d.name); })
+        .style("stroke-width", 6);
 
 
-    series.selectAll('circles')
+    series.selectAll('.dot')
         .data(function(d){return d.values})
       .enter().append("circle")
         .attr("class", "dot")
-        .attr("r", 5)
+        .attr("r", 10)
         .attr("cx", function(d) { return vm._scales.x(d.x); })
         .attr("cy", function(d) { return vm._scales.y(d.y); })
         .style("fill", function(d) { return d.color; })//return vm._scales.color(d.name); })
@@ -167,6 +171,28 @@ Timeline.prototype = timeline.prototype = {
           }
           vm._chart._tip.hide(d, d3.select(this).node())
         })
+
+        series.selectAll('.dot-inside')
+          .data(function(d){return d.values})
+        .enter().append("circle")
+          .attr("class", "dot-inside")
+          .attr("r", 4)
+          .attr("cx", function(d) { return vm._scales.x(d.x); })
+          .attr("cy", function(d) { return vm._scales.y(d.y); })
+          .style("fill", 'black')//return vm._scales.color(d.name); })
+          .style("stroke", function(d) { return d.color;}) // return vm._scales.color(d.name); })
+          .on('mouseover', function(d,i){
+            if(vm._config.data.mouseover){
+              vm._config.data.mouseover.call(vm, d,i)
+            }
+            vm._chart._tip.show(d, d3.select(this).node())
+          })
+          .on('mouseout',function(d,i){
+            if(vm._config.data.mouseout){
+              vm._config.data.mouseout.call(vm, d,i)
+            }
+            vm._chart._tip.hide(d, d3.select(this).node())
+          })
         
    /* series.append("text")
         .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })

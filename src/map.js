@@ -332,10 +332,20 @@ Map.prototype = map.prototype = {
       ];
     }
 
+    vm._chart._legend.selectAll('.back-rect')
+        .data(quantiles)
+      .enter().append('rect')
+        .attr('class','back-rect')
+        .attr('x', 5)
+        .attr('y', 275)
+        .attr('width', 255)
+        .attr('height', 140)
+        .style('fill', 'white');
 
-    vm._chart._legend.selectAll('rect')
+    vm._chart._legend.selectAll('.rect-info')
       .data(quantiles)
     .enter().append('rect')
+      .attr('class','rect-info')
       .attr('x', 10)
       .attr('y', function(d,i){
         i++;
@@ -358,6 +368,10 @@ Map.prototype = map.prototype = {
        return d.text ;
 
       })
+      .attr("font-family", "Roboto")
+      .attr("font-size", "12pts")
+      .style("fill","#aeadb3")
+      .style("font-weight", "bold")
       .attr('x', 30)
       .attr('y', function(d,i){
         i++;
