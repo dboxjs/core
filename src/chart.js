@@ -53,11 +53,11 @@ Chart.prototype = chart.prototype = {
 				.attr("class", "chart-title")
 				.html(vm._config.chart.title)
 		}
-    if(vm._config.size.margin){
-		  vm._margin = vm._config.size.margin;
-    } else {
-      vm._margin = {left: 0, right: 0, top: 0, bottom: 0};
-    }
+	    if(vm._config.size.margin){
+			  vm._margin = vm._config.size.margin;
+	    } else {
+	      vm._margin = {left: 0, right: 0, top: 0, bottom: 0};
+	    }
 		vm._width = vm._config.size.width - vm._margin.left - vm._margin.right,
 		vm._height = vm._config.size.height - vm._margin.top - vm._margin.bottom;
     

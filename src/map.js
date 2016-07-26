@@ -367,10 +367,10 @@ Map.prototype = map.prototype = {
   }, 
   update :function(config){
 
-    console.log('update')
     var vm = this, q;
 
     vm._config = config; 
+    vm._chart._config = config; 
     
     vm.setScales();
     vm.setAxes();
@@ -393,7 +393,6 @@ Map.prototype = map.prototype = {
   redrawData: function (){
     
     var vm = this; 
-    console.log('redraw', vm._data)
 
     if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoType == 'states'){
       vm.states.selectAll("path").attr("stroke","#333").attr('stroke-width', 0.2);
@@ -432,7 +431,6 @@ Map.prototype = map.prototype = {
 
     vm._chart._svg.selectAll('path')
       .each(function(d){
-        console.log(d)
         if(d.id === selector){
           select = d3.select(this); 
         }
@@ -482,7 +480,6 @@ Map.prototype.resetStates = function(){
 Map.prototype.clickedEstado = function(d) {
     var vm = this; 
 
-    console.log(vm);
 
     var x, y, k;
     if (d && vm.centered !== d) {
