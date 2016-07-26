@@ -391,10 +391,10 @@ Map.prototype = map.prototype = {
     
   }, 
   redrawData: function (){
-    console.log('redraw')
+    
     var vm = this; 
+    console.log('redraw', vm._data)
 
-    debugger
     if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoType == 'states'){
       vm.states.selectAll("path").attr("stroke","#333").attr('stroke-width', 0.2);
       vm.states.selectAll("path").attr("fill", "red");
