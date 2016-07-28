@@ -120,6 +120,7 @@ Treemap.prototype = treemap.prototype = {
         .sticky(true)
         .value(vm._config.accessor)
         .children(vm._config.children)
+        .ratio(1)
         .sort(function(a,b) {
           return a.value - b.value;
         });

@@ -25,10 +25,10 @@ Timeline.prototype = timeline.prototype = {
         return false; 
       }
 
-      debugger;
       vm.setData(data);
       vm.setDomains();
       vm.drawAxes();
+      console.log("generate", vm._data);
       vm.drawData();
     })
 
@@ -118,10 +118,15 @@ Timeline.prototype = timeline.prototype = {
   },
   drawData : function(){
     var vm = this;
+    vm._data = d3.nest()
+          .key(function(d){ return d.name; })
+          .entries(vm._data);
 
+    console.log("drawData", vm._data);
     var line = d3.svg.line()
-        .interpolate("basis")
-        .x(function(d) { return vm._scales.x(d.x); })
+        .interpolate(vm._config.data.interpolation)
+        .defined(function(d) { return d; })
+        .x(function(d) { console.log('x', vm._scales.x.domain(), d.x, vm._scales.x(d.x+'')); return vm._scales.x(d.x); })
         .y(function(d) { return vm._scales.y(d.y); });
       
     var series = vm._chart._svg.selectAll(".series")
@@ -131,8 +136,8 @@ Timeline.prototype = timeline.prototype = {
 
     series.append("path")
         .attr("class", "line")
-        .attr("d", function(d) { return line(d.values); })
-        .style("stroke", function(d) { return vm._scales.color(d.name); })
+        .attr("d", function(d) { console.log(d.key, line(d.values)); return line(d.values); })
+        .style("stroke", function(d) { return vm._scales.color(d.key); })
         
     series.append("text")
         .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })

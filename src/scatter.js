@@ -147,13 +147,11 @@ Scatter.prototype = scatter.prototype = {
           if(vm._config.data.mouseover){
             vm._config.data.mouseover.call(vm, d,i);
           }
-          vm._chart._tip.show(d, d3.select(this).node());
         })
         .on('mouseout', function(d,i){
           if(vm._config.data.mouseout){
             vm._config.data.mouseout.call(this, d,i);
           }
-          vm._chart._tip.hide();
         })
         .on("click", function(d,i){
           if(vm._config.data.onclick){
