@@ -1,4 +1,4 @@
-import chart from './chart.js';
+ import chart from './chart.js';
 
 function Scatter(config) {
   var vm = this;
@@ -6,6 +6,15 @@ function Scatter(config) {
   vm._chart; 
   vm._scales = {}; 
   vm._axes = {};
+}
+
+function getChild(data, key){
+  var obj = {};
+  data.forEach(function(d){
+    if(d.key === key)
+      obj = d;
+  });
+  return obj;
 }
 
 Scatter.prototype = scatter.prototype = {
@@ -62,6 +71,11 @@ Scatter.prototype = scatter.prototype = {
             .tickSize(-vm._chart._width,0);
         break;
       }
+    }
+
+    if( vm._config.yAxis.ticks.format){
+      console.log('Set tick format');
+      vm._axes.y.tickFormat(vm._config.yAxis.ticks.format); 
     }
     
 	},
@@ -132,16 +146,24 @@ Scatter.prototype = scatter.prototype = {
   drawData : function(){
     var vm = this;
     if(vm._config.values){
-      var scale = d3.scale.linear().range([5, vm._config.size.width / vm._scales.x.domain().length - 20]).domain(d3.extent(vm._data, function(d){ return d.value; }));
+      var scale = d3.scale.linear().range([5, (vm._config.size.width / vm._scales.x.domain().length) - 20]);
+      var nested = d3.nest().key(function(d){ return d.x; }).entries(vm._data);
       var circles = vm._chart._svg.selectAll(".dot")
         .data(vm._data)
-        //.data(vm._data, function(d){ return d.key})
       .enter().append("rect")
         .attr("class", "square")
-        .attr("x", function(d) { return vm._scales.x(d.x) - scale(d.value) / 2; })
-        .attr("y", function(d) { return vm._scales.y(d.y) - scale(d.value) / 2; })
-        .attr("width", function(d){ return scale(d.value); })
-        .attr("height", function(d){ return scale(d.value); })
+        .attr("x", function(d) { 
+          scale.domain(d3.extent(getChild(nested, d.x).values, function(d){ return d.value; }));
+          return vm._scales.x(d.x) - scale(d.value) / 2; })
+        .attr("y", function(d) { 
+          scale.domain(d3.extent(getChild(nested, d.x).values, function(d){ return d.value; }));
+          return vm._scales.y(d.y) - scale(d.value) / 2; })
+        .attr("width", function(d){ 
+          scale.domain(d3.extent(getChild(nested, d.x).values, function(d){ return d.value; }));
+          return scale(d.value); })
+        .attr("height", function(d){ 
+          scale.domain(d3.extent(getChild(nested, d.x).values, function(d){ return d.value; }));
+          return scale(d.value); })
 
         .on('mouseover', function(d,i){
           if(vm._config.data.mouseover){
@@ -235,8 +257,6 @@ Scatter.prototype = scatter.prototype = {
     vm._chart.destroy(); 
     vm.generate();
   }
-
-
 }
 
 export default function scatter(config) {

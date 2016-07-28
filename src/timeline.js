@@ -11,7 +11,7 @@ function Timeline(config) {
 Timeline.prototype = timeline.prototype = {
 	generate:function(){
 		var vm = this, q;
-		
+
 		vm.draw();
     vm.setScales();
 		vm.setAxes();
@@ -46,7 +46,7 @@ Timeline.prototype = timeline.prototype = {
 		vm._scales.y = d3.scale.linear()
 		  .range([vm._chart._height, 0]);
 
-		vm._scales.color = d3.scale.category10();
+    vm._scales.color = d3.scale.category20c();
 	}, 
 	setAxes : function(){
 		var vm = this;
@@ -58,6 +58,24 @@ Timeline.prototype = timeline.prototype = {
 		vm._axes.y = d3.svg.axis()
 		  .scale(vm._scales.y)
 		  .orient("left");
+
+
+    if(vm._config.yAxis && vm._config.yAxis.ticks 
+        && vm._config.yAxis.ticks.enabled === true && vm._config.yAxis.ticks.style ){
+
+      switch(vm._config.yAxis.ticks.style){
+        case 'straightLine':
+          vm._axes.y
+            .tickSize(-vm._chart._width,0);
+        break;
+      }
+
+    }
+   
+    if( vm._config.yAxis.ticks.format){
+      console.log('Set tick format');
+      vm._axes.y.tickFormat(vm._config.yAxis.ticks.format); 
+    }
 	},
 	setData:function(data){
     var vm = this;
@@ -103,18 +121,25 @@ Timeline.prototype = timeline.prototype = {
         .attr("x", vm._chart._width)
         .attr("y", -6)
         .style("text-anchor", "end")
-        .text("Time");
+        .text("");
 
-    vm._chart._svg.append("g")
+    var yAxis = vm._chart._svg.append("g")
         .attr("class", "y axis")
         .call(vm._axes.y)
-      .append("text")
+
+
+    if(vm._config.yAxis && vm._config.yAxis.text){
+      yAxis.append("text")
         .attr("class", "label")
         .attr("transform", "rotate(-90)")
-        .attr("y", 6)
+        .attr("x", -vm._chart._height/2)
+        .attr("y", -vm._config.size.margin.left)
         .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("")
+        .style("text-anchor", "middle")
+        .style("font-size","14px")
+        .text(vm._config.yAxis.text);
+    }
+
   },
   drawData : function(){
     var vm = this;
@@ -126,25 +151,75 @@ Timeline.prototype = timeline.prototype = {
     var line = d3.svg.line()
         .interpolate(vm._config.data.interpolation)
         .defined(function(d) { return d; })
-        .x(function(d) { console.log('x', vm._scales.x.domain(), d.x, vm._scales.x(d.x+'')); return vm._scales.x(d.x); })
+        .x(function(d) { return vm._scales.x(d.x); })
         .y(function(d) { return vm._scales.y(d.y); });
       
     var series = vm._chart._svg.selectAll(".series")
         .data(vm._data)
       .enter().append("g")
-        .attr("class", "series");
+        .attr("class", "series")
 
     series.append("path")
         .attr("class", "line")
-        .attr("d", function(d) { console.log(d.key, line(d.values)); return line(d.values); })
-        .style("stroke", function(d) { return vm._scales.color(d.key); })
+        .attr("d", function(d) { return line(d.values); })
+        .style("stroke-dasharray",function(d){ if(d.name == "Nacional"){
+            return ("10,5");
+          }})
+        .style("stroke", function(d) { return vm._scales.color(d.key); }) //return vm._scales.color(d.name); })
+        .style("stroke-width", 3);
+
+
+    series.selectAll('.dot')
+        .data(function(d){return d.values})
+      .enter().append("circle")
+        .attr("class", "dot")
+        .attr("r", 3)
+        .attr("cx", function(d) { return vm._scales.x(d.x); })
+        .attr("cy", function(d) { return vm._scales.y(d.y); })
+        .style("fill", function(d) { return vm._scales.color(d.key); })//return vm._scales.color(d.name); })
+        .style("stroke", function(d) { return vm._scales.color(d.key);}) // return vm._scales.color(d.name); })
+        .on('mouseover', function(d,i){
+          if(vm._config.data.mouseover){
+            vm._config.data.mouseover.call(vm, d,i)
+          }
+          vm._chart._tip.show(d, d3.select(this).node())
+        })
+        .on('mouseout',function(d,i){
+          if(vm._config.data.mouseout){
+            vm._config.data.mouseout.call(vm, d,i)
+          }
+          vm._chart._tip.hide(d, d3.select(this).node())
+        });
+        /*
+        series.selectAll('.dot-inside')
+          .data(function(d){return d.values})
+        .enter().append("circle")
+          .attr("class", "dot-inside")
+          .attr("r", 4)
+          .attr("cx", function(d) { return vm._scales.x(d.x); })
+          .attr("cy", function(d) { return vm._scales.y(d.y); })
+          .style("fill", 'black')//return vm._scales.color(d.name); })
+          .style("stroke", function(d) { return d.color;}) // return vm._scales.color(d.name); })
+          .on('mouseover', function(d,i){
+            if(vm._config.data.mouseover){
+              vm._config.data.mouseover.call(vm, d,i)
+            }
+            vm._chart._tip.show(d, d3.select(this).node())
+          })
+          .on('mouseout',function(d,i){
+            if(vm._config.data.mouseout){
+              vm._config.data.mouseout.call(vm, d,i)
+            }
+            vm._chart._tip.hide(d, d3.select(this).node())
+          });
+          */
         
-    series.append("text")
+   /* series.append("text")
         .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
         .attr("transform", function(d) { return "translate(" + vm._scales.x(d.value.x) + "," + vm._scales.y(d.value.y) + ")"; })
         .attr("x", 3)
         .attr("dy", ".35em")
-        .text(function(d) { return d.name; });
+        .text(function(d) { return d.name; });*/
   }
 
 
