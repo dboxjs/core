@@ -486,7 +486,7 @@ Map.prototype.resetStates = function(){
   vm.states.transition()
       .duration(750)
       .attr("transform", function(){
-        return "translate("+(vm._chart._width*.2) +",100) scale("+vm._config.size.scale+")"      
+        return "translate("+(vm._config.size.translateX) +",100) scale("+vm._config.size.scale+")"      
       });
 }
 
@@ -520,7 +520,7 @@ Map.prototype.clickedEstado = function(d) {
     vm.states.transition()
         .duration(750)
         .attr("transform", function(){
-            if(vm.centered === null) return "translate("+(vm._chart._width*.2) +",100) scale("+vm._config.size.scale+")"
+            if(vm.centered === null) return "translate("+(vm._config.size.translateX) +",100) scale("+vm._config.size.scale+")"
             return "translate(" + vm._chart._width / 2 + "," + vm._chart._height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")";
         
         });

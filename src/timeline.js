@@ -11,7 +11,7 @@ function Timeline(config) {
 Timeline.prototype = timeline.prototype = {
 	generate:function(){
 		var vm = this, q;
-		
+
 		vm.draw();
     vm.setScales();
 		vm.setAxes();
@@ -68,6 +68,12 @@ Timeline.prototype = timeline.prototype = {
             .tickSize(-vm._chart._width,0);
         break;
       }
+
+    }
+   
+    if( vm._config.yAxis.ticks.format){
+      console.log('Set tick format');
+      vm._axes.y.tickFormat(vm._config.yAxis.ticks.format); 
     }
 	},
 	setData:function(data){
@@ -116,16 +122,23 @@ Timeline.prototype = timeline.prototype = {
         .style("text-anchor", "end")
         .text("");
 
-    vm._chart._svg.append("g")
+    var yAxis = vm._chart._svg.append("g")
         .attr("class", "y axis")
         .call(vm._axes.y)
-      .append("text")
+
+
+    if(vm._config.yAxis && vm._config.yAxis.text){
+      yAxis.append("text")
         .attr("class", "label")
         .attr("transform", "rotate(-90)")
-        .attr("y", 6)
+        .attr("x", -vm._chart._height/2)
+        .attr("y", -vm._config.size.margin.left)
         .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("")
+        .style("text-anchor", "middle")
+        .style("font-size","14px")
+        .text(vm._config.yAxis.text);
+    }
+
   },
   drawData : function(){
     var vm = this;
@@ -144,7 +157,7 @@ Timeline.prototype = timeline.prototype = {
         .attr("class", "line")
         .attr("d", function(d) { return line(d.values); })
         .style("stroke-dasharray",function(d){ if(d.name == "Nacional"){
-            return ("3,3");
+            return ("10,5");
           }})
         .style("stroke", function(d) { return d.color;}) //return vm._scales.color(d.name); })
         .style("stroke-width", 6);
