@@ -91,6 +91,19 @@ Scatter.prototype = scatter.prototype = {
   drawAxes:function(){
     var vm = this;
 
+    if(vm._config.xAxis.bars){
+      vm._chart._svg.selectAll('.bar')
+          .data(vm._scales.x.domain())
+          .enter().append('rect')
+          .attr('class','bar')
+          .attr('x', function(d){ return vm._scales.x(d);})
+          .attr('y', -10)
+          .attr('width', vm._config.size.width / vm._scales.x.domain().length)
+          .attr('height', vm._config.size.height - 30)
+          .attr('fill',function(d,i){ return i % 2 ? '#eee' : 'transparent'; })
+          .attr('transform','translate(-' + (vm._config.size.width / vm._scales.x.domain().length) / 2 +',-10)');
+    }
+
     var xAxis = vm._chart._svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + vm._chart._height + ")")
