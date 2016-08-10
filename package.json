@@ -6,7 +6,8 @@
     "dev": "rollup --config rollup.config.dev.js && uglifyjs ../d4pkg-develop/src/dbox/build/dbox.js -c -m -o ../d4pkg-develop/src/dbox/build/dbox.min.js",
     "pk": "rollup --config rollup.config.pk.js && uglifyjs ../../aws/pnud-pk-vppd/src/dbox/build/dbox.js -c -m -o ../../aws/pnud-pk-vppd/src/dbox/build/dbox.min.js",
     "mt": "rollup --config rollup.config.mt.js && uglifyjs ../mt-delegados/src/dbox/build/dbox.js -c -m -o ../mt-delegados/src/dbox/build/dbox.min.js",
-    "pb": "rollup --config rollup.config.pb.js && uglifyjs ../frente-pobreza-mapa/src/dbox/build/dbox.js -c -m -o ../frente-pobreza-mapa/src/dbox/build/dbox.min.js"
+    "pb": "rollup --config rollup.config.pb.js && uglifyjs ../frente-pobreza-mapa/src/dbox/build/dbox.js -c -m -o ../frente-pobreza-mapa/src/dbox/build/dbox.min.js",
+    "conade": "rollup --config rollup.config.conade.js"
   },
   "devDependencies": {
     "rollup": "^0.26.3",

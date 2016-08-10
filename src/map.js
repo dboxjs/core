@@ -1,5 +1,5 @@
 import chart from './chart.js';
-import mxStates from './map/mxStates.js';
+import geoMexico from './map/geoMexico.js';
 
 function Map(config) {
   var vm = this;
@@ -90,6 +90,7 @@ function Map(config) {
   vm.format.percentage = function(d){return d3.format(",.1f")(d) + '%';}
   vm.format.change =  d3.format(",.1f");
 
+  vm.geoMexico = null;
 
 }
 
@@ -97,9 +98,7 @@ Map.prototype = map.prototype = {
 	generate:function(){
 		var vm = this, q;
 		
-		vm.draw();
-		vm.setScales();
-		vm.setAxes();
+		vm.init();
 
 		q = vm._chart.loadData();
 
@@ -109,25 +108,41 @@ Map.prototype = map.prototype = {
         return false;
       } 
 
+      // @TODO DRAW SVG UNTIL CHART FINISHED LOADING DATA 
+      //vm.draw();
+      vm._setChartType(); 
       vm.setData(data);
-      vm.setDomains();
-      vm.drawAxes();
       vm.drawData();
+      vm._chart.dispatch.on("load.chart", vm._config.events.load(vm));
+
     })
 
 	},
-	draw : function(){
+  init : function(){
+    var vm = this
+    vm._chart = chart(vm._config);
+  },
+	/* @TODO DRAW SVG UNTIL CHART FINISHED LOADING DATA 
+    draw : function(){
 		var vm = this
-		vm._chart = chart(vm._config);
-	},
-	setScales: function(){
-		var vm = this;
-    vm._scales = vm._chart.setScales();
-		
-	}, 
-	setAxes : function(){
-		
-	},
+		vm._chart.draw();
+	},*/
+  _setChartType:function(){
+    var vm = this; 
+
+    var params ={
+      "config"  : vm._config, 
+      "chart"   : vm._chart,
+    }
+
+    if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geo){
+      switch(vm._config.plotOptions.map.geo){
+        case 'mexico':
+          vm.geo = geoMexico(params);
+        break;
+      }
+    }
+  },
 	setData:function(data){
     var vm = this;
     
@@ -136,9 +151,14 @@ Map.prototype = map.prototype = {
     }
   
     vm._data = data;
-    
     vm.quantiles = vm._setQuantile(data);
     vm.minMax = d3.extent(data, function(d) { return d.z; })
+
+    vm.geo._data = data;
+    vm.geo.quantiles = vm.quantiles;
+    vm.geo.minMax = vm.minMax
+    vm.geo._getQuantileColor = vm._getQuantileColor; 
+
   },
   _setQuantile: function(data){
     var vm = this; 
@@ -220,95 +240,28 @@ Map.prototype = map.prototype = {
     }
 
   },
-  setDomains:function(){
-    var vm = this;
-  },
-  drawAxes:function(){
-    var vm = this;
-  },
   drawData : function(){
     var vm = this;
-    var tran = [2580, 700];
-
-    vm.projection = d3.geo.mercator()
-        .scale(1300)
-        .translate(tran);
-
-    vm.path = d3.geo.path()
-      .projection(vm.projection);
-
-    if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoType == 'states'){
-      vm.states = vm._chart._svg.append("g")
-        .attr("id", "states")
-        .style('display','true')
-        .attr("transform", function(){
-          //return "translate("+(vm._chart._width*.2) +",100) scale(0.9,0.9)"
-          return "translate("+(vm._config.size.translateX) +",100) scale("+vm._config.size.scale+")"
-        });
-
-      var mx = mxStates();    
-      vm.states.selectAll("path")
-        .data(topojson.feature(mx, mx.objects.states).features, function(d){
-            d.id = parseInt(d.properties.state_code);
-            return d.id;
-        })
-        .enter().append("path")
-        .attr("d", d3.geo.path().projection(vm.projection))
-        .attr("id", function(d){
-            return "state-"+d.id;
-        })
-        .attr("data-geotype", 'states')
-        .attr("fill", "#808080")
-        .attr('stroke', '#a0a0a0')
-        .style('stroke-width','1px')
-        .on('mouseover', function(d,i){
-          if(vm._config.data.mouseover){
-            vm._config.data.mouseover.call(this, d,i)
-          }
-          vm._chart._tip.show(d, d3.select(this).node())
-        })
-        .on('mouseout',function(d,i){
-          if(vm._config.data.mouseout){
-            vm._config.data.mouseout.call(this,d,i)
-          }
-          vm._chart._tip.hide(d, d3.select(this).node())
-        })
-        .on("click", function(d,i){
-          //Marco
-          if(vm._config.data.click){
-            vm._config.data.click.call(this, d,i)
-          }
-          vm.clickedEstado(d);
-        })
-
-      vm.statesDefault = vm.states.selectAll("path").data();
-
-      vm.states.selectAll("path").attr("stroke","#333").attr('stroke-width', 0.2);
-      vm.states.selectAll("path").attr("fill", "red");
-      vm.states.selectAll("path").attr('data-total', null);
-      vm.states.selectAll("path")
-          .data(vm._data, function(d){ return d.id; })
-          .attr('fill', function(d){
-            return vm._getQuantileColor(d);
-          })
-          .attr('data-total', function(d){
-            return d.z;
-          })
-          .attr('stroke-width', 1 )
-          .attr('stroke', '#a0a0a0');
-
-      //Resets the map "Estados" path data to topojson
-      vm.states.selectAll("path").data(vm.statesDefault, function(d){ return d.id; });
-
-      vm._drawLegend(); 
-
-      vm._chart.dispatch.on("load.chart", vm._config.events.load(vm));
+    
+    if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoDivision == 'states'){
+      vm.geo.drawStates(); 
     }
+
+    if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoDivision == 'municipalities'){
+      vm.geo.drawMunicipalities(); 
+    }
+
+    vm._drawLegend(); 
 
   },
   _drawLegend: function(){
     var vm = this; 
-    var quantiles = [];
+    var quantiles = [], legendWidth, legendFill;
+
+    if(typeof vm._config.legend === 'object'){
+      legendWidth = vm._config.legend.width ? vm._config.legend.width  : 150; 
+      legendFill  = vm._config.legend.fill ? vm._config.legend.fill  : 'white'; 
+    }
 
     vm._chart._svg.select('.legend').remove();
     vm._chart._legend = vm._chart._svg.append('g')
@@ -323,7 +276,7 @@ Map.prototype = map.prototype = {
     //@Todo - Make it dynamic according to the buckets number in the config
     if(vm.quantiles.length>2){
       quantiles = [
-        {color: vm._config.plotOptions.map.quantiles.outOfRangeColor, value: 'Fuera de rango seleccionado', text: 'Fuera de rango seleccionado' },
+        //{color: vm._config.plotOptions.map.quantiles.outOfRangeColor, value: 'Fuera de rango seleccionado', text: 'Fuera de rango seleccionado' },
         //@TODO - ADD NA VALUES --- {color: '#808080', value: 'N/A' },
         {color: vm._config.plotOptions.map.quantiles.colors[0], value: vm.quantiles[1], text: vm.quantilesWithFormat[0] +' a '+ vm.quantilesWithFormat[1] },
         {color: vm._config.plotOptions.map.quantiles.colors[1], value: vm.quantiles[2], text: vm.quantilesWithFormat[1] +' a '+ vm.quantilesWithFormat[2] },
@@ -333,15 +286,16 @@ Map.prototype = map.prototype = {
       ];
     }
 
-    vm._chart._legend.selectAll('.back-rect')
-        .data(quantiles)
-      .enter().append('rect')
+    vm._chart._legend
+      .append('rect')
         .attr('class','back-rect')
         .attr('x', 5)
-        .attr('y', 275)
-        .attr('width', 255)
-        .attr('height', 140)
-        .style('fill', 'white');
+        .attr('y', (vm._chart._height - (20 * quantiles.length)+ 10))
+        .attr('width', legendWidth)
+        .attr('height', (20 * quantiles.length) + 15 )
+        .style('fill', legendFill)
+        .attr('rx', 5)
+        .attr('ry', 5)
 
     vm._chart._legend.selectAll('.rect-info')
       .data(quantiles)
@@ -387,8 +341,6 @@ Map.prototype = map.prototype = {
     vm._config = config; 
     vm._chart._config = config; 
     
-    vm.setScales();
-    vm.setAxes();
 
     q = vm._chart.loadData();
 
@@ -396,12 +348,10 @@ Map.prototype = map.prototype = {
       if (error) {
         throw error;   
         return false;
-      } 
-
+      }  
       vm.setData(data);
-      vm.setDomains();
-      vm.drawAxes();
       vm.redrawData();
+      vm._chart.dispatch.on("load.chart", vm._config.events.load(vm));
     })
     
   }, 
@@ -409,28 +359,15 @@ Map.prototype = map.prototype = {
     
     var vm = this; 
 
-    if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoType == 'states'){
-      vm.states.selectAll("path").attr("stroke","#333").attr('stroke-width', 0.2);
-      vm.states.selectAll("path").attr("fill", "red");
-      vm.states.selectAll("path").attr('data-total', null);
-      vm.states.selectAll("path")
-          .data(vm._data, function(d){ return d.id; })
-          .attr('fill', function(d){
-            return vm._getQuantileColor(d);
-          })
-          .attr('data-total', function(d){
-            return d.z;
-          })
-          .attr('stroke-width', 1 )
-          .attr('stroke', '#a0a0a0');
-
-      //Resets the map "Estados" path data to topojson
-      vm.states.selectAll("path").data(vm.statesDefault, function(d){ return d.id; });
-
-      vm._drawLegend(); 
-
-      vm._chart.dispatch.on("load.chart", vm._config.events.load(vm));
+    if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoDivision == 'states'){
+      vm.geo.redrawStates(); 
     }
+
+    if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoDivision == 'municipalities'){
+      vm.geo.redrawMunicipalities(); 
+    }
+
+    vm._drawLegend(); 
   },
   set: function(option,value){
     var vm = this; 
@@ -491,42 +428,7 @@ Map.prototype.resetStates = function(){
       });
 }
 
-//@Todo - upgrade to a general function for all geotypes; Upgrade from pnud.data4.mx
-Map.prototype.clickedEstado = function(d) {
-    var vm = this; 
 
-
-    var x, y, k;
-    if (d && vm.centered !== d) {
-      var centroid = vm.path.centroid(d);
-      x = centroid[0];
-      y = centroid[1];
-      k = vm.edo_zoom[d.properties.state_code];
-      //k = 5;
-      vm.centered = d;
-    } else {
-      x = vm.width / 2;
-      y = vm.height / 2;
-      k = 0.7;
-
-      // if (ancho < 600){
-      //   k = 0.3500000238418579;
-      // }
-      vm.centered = null;
-    }
-
-    vm.states.selectAll("path")
-        .classed("active", vm.centered && function(d) { return d === vm.centered; });
-
-    vm.states.transition()
-        .duration(750)
-        .attr("transform", function(){
-            if(vm.centered === null) return "translate("+(vm._config.size.translateX) +",100) scale("+vm._config.size.scale+")"
-            return "translate(" + vm._chart._width / 2 + "," + vm._chart._height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")";
-        
-        });
-
-}
 
 export default function map(config) {
   return new Map(arguments.length ? config : null);

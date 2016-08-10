@@ -10,32 +10,40 @@ function Scatter(config) {
 
 Scatter.prototype = scatter.prototype = {
 	generate:function(){
+
 		var vm = this, q;
-		
-		vm.draw();
-		vm.setScales();
-		vm.setAxes();
+	  vm.init();
+    vm.setScales();
+    vm.setAxes();
+
 
 		q = vm._chart.loadData();
 
     q.await(function(error,data){
+
       if (error) {
         throw error;	 
         return false;
       } 
 
+      vm.draw();
       vm.setData(data);
       vm.setDomains();
+
       vm.drawAxes();
       vm.drawData();
       vm.draw45Line();
     })
 
 	},
-	draw : function(){
-		var vm = this
+	init : function(){
+		var vm = this;
 		vm._chart = chart(vm._config);
 	},
+  draw:function(){
+    var vm = this;
+    vm._chart.draw();
+  },
 	setScales: function(){
 		var vm = this;
     vm._scales = vm._chart.setScales();
@@ -96,7 +104,7 @@ Scatter.prototype = scatter.prototype = {
         .text(vm._config.xAxis.text);
     }
 
-    if(vm._config.yAxis.visible){
+    if(vm._config.yAxis && vm._config.yAxis.visible){
       var yAxis = vm._chart._svg.append("g")
           .attr("class", "y axis")
           .call(vm._axes.y);    
