@@ -41,7 +41,8 @@ Chart.prototype = chart.prototype = {
 	'draw' : function(){
 		var vm = this;
 
-		d3.select(vm._config.bindTo).html("");
+		d3.select(vm._config.bindTo).select('svg').remove();
+		d3.select(vm._config.bindTo).html('');
 
 		if(vm._config.template){
 			d3.select(vm._config.bindTo).classed(vm._config.template, true)
