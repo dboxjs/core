@@ -232,7 +232,6 @@ GeoMexico.prototype.drawMunicipalities = function() {
 
     var mx = mxStates();
     vm.statesDefault = topojson.feature(mx, mx.objects.states).features;
-    console.log("statesDefault", vm.statesDefault);
     vm.drawStatesCountouring(vm.statesDefault);
 }
 
