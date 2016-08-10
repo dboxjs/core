@@ -66,8 +66,10 @@ Chart.prototype = chart.prototype = {
 			.attr("width", vm._width + vm._margin.left + vm._margin.right)
 			.attr("height", vm._height + vm._margin.top + vm._margin.bottom)
 		  .append("g")
-			.attr("transform", "translate(" + vm._margin.left + "," + vm._margin.top + ")")
-			.call(vm._tip);
+			.attr("transform", "translate(" + vm._margin.left + "," + vm._margin.top + ")");
+
+    if(vm._config.data.tip)
+			vm._svg.call(vm._tip);
 
 		//Apply background color
 		if(vm._config.chart && vm._config.chart.background && vm._config.chart.background.color){
