@@ -274,6 +274,7 @@ Map.prototype = map.prototype = {
           vm._chart._tip.hide(d, d3.select(this).node())
         })
         .on("click", function(d,i){
+          //Marco
           if(vm._config.data.click){
             vm._config.data.click.call(this, d,i)
           }
