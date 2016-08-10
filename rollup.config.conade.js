@@ -5,5 +5,5 @@ export default {
   format: "umd",
   moduleName: "dbox",
   plugins: [npm({jsnext: true})],
-  dest: "../../aws/conade-admin/src/dbox/build/dbox.js"
+  dest: "../conade-admin/src/dbox/build/dbox.js"
 };

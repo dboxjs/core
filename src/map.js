@@ -81,6 +81,7 @@ function Map(config) {
 
 
   vm.formatWithZeroDecimals  = d3.format(",.0f");
+  vm.formatWithOneDecimal    = d3.format(",.1f");
   vm.formatWithTwoDecimals   = d3.format(",.2f");
   vm.formatWithThreeDecimals = d3.format(",.3f");
 
