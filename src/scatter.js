@@ -1,4 +1,4 @@
-import chart from './chart.js';
+ import chart from './chart.js';
 
 function Scatter(config) {
   var vm = this;
@@ -6,6 +6,15 @@ function Scatter(config) {
   vm._chart; 
   vm._scales = {}; 
   vm._axes = {};
+}
+
+function getChild(data, key){
+  var obj = {};
+  data.forEach(function(d){
+    if(d.key === key)
+      obj = d;
+  });
+  return obj;
 }
 
 Scatter.prototype = scatter.prototype = {
@@ -71,6 +80,11 @@ Scatter.prototype = scatter.prototype = {
         break;
       }
     }
+
+    if( vm._config.yAxis.ticks.format){
+      console.log('Set tick format');
+      vm._axes.y.tickFormat(vm._config.yAxis.ticks.format); 
+    }
     
 	},
 	setData:function(data){
@@ -84,6 +98,19 @@ Scatter.prototype = scatter.prototype = {
   },
   drawAxes:function(){
     var vm = this;
+
+    if(vm._config.xAxis.bars){
+      vm._chart._svg.selectAll('.bar')
+          .data(vm._scales.x.domain())
+          .enter().append('rect')
+          .attr('class','bar')
+          .attr('x', function(d){ return vm._scales.x(d);})
+          .attr('y', -10)
+          .attr('width', vm._config.size.width / vm._scales.x.domain().length)
+          .attr('height', vm._config.size.height - 30)
+          .attr('fill',function(d,i){ return i % 2 ? '#eee' : 'transparent'; })
+          .attr('transform','translate(-' + (vm._config.size.width / vm._scales.x.domain().length) / 2 +',-10)');
+    }
 
     var xAxis = vm._chart._svg.append("g")
         .attr("class", "x axis")
@@ -140,28 +167,34 @@ Scatter.prototype = scatter.prototype = {
   drawData : function(){
     var vm = this;
     if(vm._config.values){
-      var scale = d3.scale.linear().range([5, vm._config.size.width / vm._scales.x.domain().length - 20]).domain(d3.extent(vm._data, function(d){ return d.value; }));
+      var scale = d3.scale.linear().range([5, (vm._config.size.width / vm._scales.x.domain().length) - 20]);
+      var nested = d3.nest().key(function(d){ return d.x; }).entries(vm._data);
       var circles = vm._chart._svg.selectAll(".dot")
         .data(vm._data)
-        //.data(vm._data, function(d){ return d.key})
       .enter().append("rect")
         .attr("class", "square")
-        .attr("x", function(d) { return vm._scales.x(d.x) - scale(d.value) / 2; })
-        .attr("y", function(d) { return vm._scales.y(d.y) - scale(d.value) / 2; })
-        .attr("width", function(d){ return scale(d.value); })
-        .attr("height", function(d){ return scale(d.value); })
+        .attr("x", function(d) { 
+          scale.domain(d3.extent(getChild(nested, d.x).values, function(d){ return d.value; }));
+          return vm._scales.x(d.x) - scale(d.value) / 2; })
+        .attr("y", function(d) { 
+          scale.domain(d3.extent(getChild(nested, d.x).values, function(d){ return d.value; }));
+          return vm._scales.y(d.y) - scale(d.value) / 2; })
+        .attr("width", function(d){ 
+          scale.domain(d3.extent(getChild(nested, d.x).values, function(d){ return d.value; }));
+          return scale(d.value); })
+        .attr("height", function(d){ 
+          scale.domain(d3.extent(getChild(nested, d.x).values, function(d){ return d.value; }));
+          return scale(d.value); })
 
         .on('mouseover', function(d,i){
           if(vm._config.data.mouseover){
             vm._config.data.mouseover.call(vm, d,i);
           }
-          vm._chart._tip.show(d, d3.select(this).node());
         })
         .on('mouseout', function(d,i){
           if(vm._config.data.mouseout){
             vm._config.data.mouseout.call(this, d,i);
           }
-          vm._chart._tip.hide();
         })
         .on("click", function(d,i){
           if(vm._config.data.onclick){
@@ -245,8 +278,6 @@ Scatter.prototype = scatter.prototype = {
     vm._chart.destroy(); 
     vm.generate();
   }
-
-
 }
 
 export default function scatter(config) {

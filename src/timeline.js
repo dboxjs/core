@@ -28,6 +28,7 @@ Timeline.prototype = timeline.prototype = {
       vm.setData(data);
       vm.setDomains();
       vm.drawAxes();
+      console.log("generate", vm._data);
       vm.drawData();
     })
 
@@ -142,9 +143,14 @@ Timeline.prototype = timeline.prototype = {
   },
   drawData : function(){
     var vm = this;
+    vm._data = d3.nest()
+          .key(function(d){ return d.name; })
+          .entries(vm._data);
 
+    console.log("drawData", vm._data);
     var line = d3.svg.line()
-        .interpolate("line")
+        .interpolate(vm._config.data.interpolation)
+        .defined(function(d) { return d; })
         .x(function(d) { return vm._scales.x(d.x); })
         .y(function(d) { return vm._scales.y(d.y); });
       
@@ -159,19 +165,19 @@ Timeline.prototype = timeline.prototype = {
         .style("stroke-dasharray",function(d){ if(d.name == "Nacional"){
             return ("10,5");
           }})
-        .style("stroke", function(d) { return d.color;}) //return vm._scales.color(d.name); })
-        .style("stroke-width", 6);
+        .style("stroke", function(d) { return vm._scales.color(d.key); }) //return vm._scales.color(d.name); })
+        .style("stroke-width", 3);
 
 
     series.selectAll('.dot')
         .data(function(d){return d.values})
       .enter().append("circle")
         .attr("class", "dot")
-        .attr("r", 10)
+        .attr("r", 3)
         .attr("cx", function(d) { return vm._scales.x(d.x); })
         .attr("cy", function(d) { return vm._scales.y(d.y); })
-        .style("fill", function(d) { return d.color; })//return vm._scales.color(d.name); })
-        .style("stroke", function(d) { return d.color;}) // return vm._scales.color(d.name); })
+        .style("fill", function(d) { return vm._scales.color(d.key); })//return vm._scales.color(d.name); })
+        .style("stroke", function(d) { return vm._scales.color(d.key);}) // return vm._scales.color(d.name); })
         .on('mouseover', function(d,i){
           if(vm._config.data.mouseover){
             vm._config.data.mouseover.call(vm, d,i)
@@ -183,8 +189,8 @@ Timeline.prototype = timeline.prototype = {
             vm._config.data.mouseout.call(vm, d,i)
           }
           vm._chart._tip.hide(d, d3.select(this).node())
-        })
-
+        });
+        /*
         series.selectAll('.dot-inside')
           .data(function(d){return d.values})
         .enter().append("circle")
@@ -205,7 +211,8 @@ Timeline.prototype = timeline.prototype = {
               vm._config.data.mouseout.call(vm, d,i)
             }
             vm._chart._tip.hide(d, d3.select(this).node())
-          })
+          });
+          */
         
    /* series.append("text")
         .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
