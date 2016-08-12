@@ -4,7 +4,7 @@ function queryCarto(config, callback){
 		.done(function(data){
 
 			var result = data.rows
-			//console.log('queryCarto',result);
+			console.log('queryCarto',result);
 
 			if( config.parser ){
 				result = data.rows.map(config.parser)
@@ -247,7 +247,9 @@ Chart.prototype = chart.prototype = {
 				break;
 
 				case 'time':
-					
+          minMax = d3.extent(data, function(d) { return d.x; })
+          domains.x = minMax;
+          
 				break;
 
 				case 'ordinal':
@@ -304,7 +306,8 @@ Chart.prototype = chart.prototype = {
 				break;
 
 				case 'time':
-					
+					minMax = d3.extent(data, function(d) { return d.y; })
+          domains.y = minMax;
 				break;
 
 				case 'ordinal':
