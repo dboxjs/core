@@ -5,5 +5,5 @@ export default {
   format: "umd",
   moduleName: "dbox",
   plugins: [npm({jsnext: true})],
-  dest: "../../aws/pnud-pk-vppd/src/dbox/build/dbox.js"
+  dest: "../pnud-pk-vppd/src/dbox/build/dbox.js"
 };
