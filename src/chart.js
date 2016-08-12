@@ -29,7 +29,7 @@ function Chart(config) {
   vm._config = config; 
   vm._svg;
   vm._margin;
-  vm._widht;
+  vm._width;
   vm._height;
 
   vm._tip = d3.tip().attr('class', 'd3-tip').html(vm._config.data.tip);  
@@ -249,7 +249,6 @@ Chart.prototype = chart.prototype = {
 				case 'time':
           minMax = d3.extent(data, function(d) { return d.x; })
           domains.x = minMax;
-          
 				break;
 
 				case 'ordinal':
