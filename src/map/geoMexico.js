@@ -321,8 +321,27 @@ GeoMexico.prototype.clickedMunicipality = function(d) {
 
 }
 
-export
-default
-function geoMexico(options) {
-    return new GeoMexico(arguments.length ? options : null);
+GeoMexico.prototype.filterByMinMaxMunicipalities = function() {
+  var vm = this; 
+
+  vm.municipalities.selectAll("path").attr("stroke","#333").attr('stroke-width', 0.2);
+  vm.municipalities.selectAll("path").attr("fill", "red");
+  vm.municipalities.selectAll("path").attr('data-total', null);
+  vm.municipalities.selectAll("path")
+    .data(vm._data, function(d){ return d.id; })
+    .attr('fill', function(d){
+      return vm._getQuantileColor(d);
+    })
+    .attr('data-total', function(d){
+      return d.z;
+    })
+
+  //Resets the map "Municipios" path data to topojson
+  vm.municipalities.selectAll("path").data(vm.municipalitiesDefault, function(d){ return d.id; });
+
+}
+
+export default function geoMexico(options) {
+  return new GeoMexico(arguments.length ? options : null);
+
 }
