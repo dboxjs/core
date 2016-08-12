@@ -277,7 +277,7 @@ Map.prototype = map.prototype = {
     //@Todo - Make it dynamic according to the buckets number in the config
     if(vm.quantiles.length>2){
       quantiles = [
-        //{color: vm._config.plotOptions.map.quantiles.outOfRangeColor, value: 'Fuera de rango seleccionado', text: 'Fuera de rango seleccionado' },
+        {color: vm._config.plotOptions.map.quantiles.outOfRangeColor, value: 'Fuera de rango seleccionado', text: 'Fuera de rango seleccionado' },
         //@TODO - ADD NA VALUES --- {color: '#808080', value: 'N/A' },
         {color: vm._config.plotOptions.map.quantiles.colors[0], value: vm.quantiles[1], text: vm.quantilesWithFormat[0] +' a '+ vm.quantilesWithFormat[1] },
         {color: vm._config.plotOptions.map.quantiles.colors[1], value: vm.quantiles[2], text: vm.quantilesWithFormat[1] +' a '+ vm.quantilesWithFormat[2] },
@@ -369,6 +369,21 @@ Map.prototype = map.prototype = {
     }
 
     vm._drawLegend(); 
+  },
+  filterByMinMax: function(minMax){
+    var vm = this; 
+
+    vm._config.plotOptions.map.min = minMax[0];
+    vm._config.plotOptions.map.max = minMax[1];
+
+
+    if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoDivision == 'states'){
+      vm.geo.filterByMinMaxStates(); 
+    }
+
+    if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoDivision == 'municipalities'){
+      vm.geo.filterByMinMaxMunicipalities(); 
+    }
   },
   set: function(option,value){
     var vm = this; 
