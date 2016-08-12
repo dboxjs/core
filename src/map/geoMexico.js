@@ -72,13 +72,13 @@ GeoMexico.prototype.drawStates = function (){
   vm.states.selectAll("path").attr("fill", "red");
   vm.states.selectAll("path").attr('data-total', null);
   vm.states.selectAll("path")
-      .data(vm._data, function(d){ return d.id; })
-      .attr('fill', function(d){
-        return vm._getQuantileColor(d);
-      })
-      .attr('data-total', function(d){
-        return d.z;
-      })
+    .data(vm._data, function(d){ return d.id; })
+    .attr('fill', function(d){
+      return vm._getQuantileColor(d);
+    })
+    .attr('data-total', function(d){
+      return d.z;
+    })
 
   //Resets the map "Estados" path data to topojson
   vm.states.selectAll("path").data(vm.statesDefault, function(d){ return d.id; });
@@ -254,6 +254,28 @@ GeoMexico.prototype.clickedMunicipality = function(d){
         if(vm.centeredMunicipality === null) return "translate("+(vm._config.size.translateX) +",100) scale("+vm._config.size.scale+")"
         return "translate(" + vm._chart._width / 2 + "," + vm._chart._height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")";
       });
+
+}
+
+
+
+GeoMexico.prototype.filterByMinMaxMunicipalities = function() {
+  var vm = this; 
+
+  vm.municipalities.selectAll("path").attr("stroke","#333").attr('stroke-width', 0.2);
+  vm.municipalities.selectAll("path").attr("fill", "red");
+  vm.municipalities.selectAll("path").attr('data-total', null);
+  vm.municipalities.selectAll("path")
+    .data(vm._data, function(d){ return d.id; })
+    .attr('fill', function(d){
+      return vm._getQuantileColor(d);
+    })
+    .attr('data-total', function(d){
+      return d.z;
+    })
+
+  //Resets the map "Municipios" path data to topojson
+  vm.municipalities.selectAll("path").data(vm.municipalitiesDefault, function(d){ return d.id; });
 
 }
 
