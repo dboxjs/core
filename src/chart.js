@@ -4,7 +4,7 @@ function queryCarto(config, callback){
 		.done(function(data){
 
 			var result = data.rows
-			//console.log('queryCarto',result);
+			console.log('queryCarto',result);
 
 			if( config.parser ){
 				result = data.rows.map(config.parser)
@@ -29,7 +29,7 @@ function Chart(config) {
   vm._config = config; 
   vm._svg;
   vm._margin;
-  vm._widht;
+  vm._width;
   vm._height;
 
   vm._tip = d3.tip().attr('class', 'd3-tip').html(vm._config.data.tip);  
@@ -247,7 +247,8 @@ Chart.prototype = chart.prototype = {
 				break;
 
 				case 'time':
-					
+          minMax = d3.extent(data, function(d) { return d.x; })
+          domains.x = minMax;
 				break;
 
 				case 'ordinal':
@@ -304,7 +305,8 @@ Chart.prototype = chart.prototype = {
 				break;
 
 				case 'time':
-					
+					minMax = d3.extent(data, function(d) { return d.y; })
+          domains.y = minMax;
 				break;
 
 				case 'ordinal':
