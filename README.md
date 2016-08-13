@@ -2,8 +2,31 @@
 
 ## Installation
 
+## config 
+---
+### config.bindTo
+HTML id of the div where the chart will be drawn    
+```javascript
+config.bindTo = '#id'
+```
 
-## Working example
+### config.size
+Object for specifing the following properties of the chart
+* width
+* height
+* margin
+
+```javascript
+'size':{
+  'width':  d3.select('#map').node().getBoundingClientRect().width ? d3.select('#map').node().getBoundingClientRect().width : 555,
+  'height':500,
+  'margin':{top: 20, right: 50, bottom: 100, left: 40},
+},
+```
+
+
+
+## Complete example
 ```javascript
 var config = {
 	'bindTo': '#map',
@@ -88,15 +111,6 @@ var config = {
 
 	}
 ```
-
-## config 
-
-
-[#](###config.bindTo ) ###config.bindTo 
-```javascript
-
-```
-
 
 ### Bars
 ```javascript
