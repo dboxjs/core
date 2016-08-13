@@ -10,13 +10,23 @@ function Columns(options) {
 
 Columns.prototype.draw = function (){
   var vm = this;
+  var width = vm._scales.x.range()[1];
+  var dates = vm._data.map(function(d){
+      return d.x;
+    });
+  var bandWidth = d3.scale.ordinal()
+            .domain(dates)
+            .rangeRoundBands(vm._scales.x.range(), 0.1)
+            .rangeBand(); 
+
+  console.log(vm._scales.x.range(), vm._scales.x.domain());
 
   vm._chart._svg.selectAll(".bar")
       .data(vm._data)
     .enter().append("rect")
       .attr("class", "bar")
       .attr("x", function(d) { return vm._scales.x(d.x); })
-      .attr("width", vm._scales.x.rangeBand())
+      .attr("width", bandWidth)
       .attr("y", function(d) { return vm._scales.y(d.y); })
       .attr("height", function(d) { return vm._chart._height - vm._scales.y(d.y); })
       .attr("fill", function(d){return d.color;})

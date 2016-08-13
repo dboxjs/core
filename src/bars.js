@@ -73,6 +73,7 @@ Bars.prototype = bars.prototype = {
 	},
 	setData:function(data){
     var vm = this;
+    console.log(data);
     
     if(Array.isArray(data)){
       
