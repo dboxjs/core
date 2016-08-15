@@ -10,29 +10,37 @@ function Columns(options) {
 
 Columns.prototype.draw = function (){
   var vm = this;
-  var width = vm._scales.x.range()[1];
+  /*var width = vm._scales.x.range()[1];
   var dates = vm._data.map(function(d){
       return d.x;
     });
+
   var bandWidth = d3.scale.ordinal()
             .domain(dates)
             .rangeRoundBands(vm._scales.x.range(), 0.1)
-            .rangeBand(); 
-
-  console.log(vm._scales.x.range(), vm._scales.x.domain());
+            .rangeBand(); */
 
   vm._chart._svg.selectAll(".bar")
       .data(vm._data)
     .enter().append("rect")
       .attr("class", "bar")
       .attr("x", function(d) { return vm._scales.x(d.x); })
-      .attr("width", bandWidth)
+      .attr("width", vm._scales.x.rangeBand())
       .attr("y", function(d) { return vm._scales.y(d.y); })
       .attr("height", function(d) { return vm._chart._height - vm._scales.y(d.y); })
       .attr("fill", function(d){return d.color;})
       .on('mouseover', function(d,i){
-	      vm._config.data.mouseover.call(vm, d,i);
-	    });
+	      if(vm._config.data.mouseover){
+          vm._config.data.mouseover.call(vm, d,i)
+        }
+        vm._chart._tip.show(d, d3.select(this).node())
+	    })
+      .on('mouseout',function(d,i){
+        if(vm._config.data.mouseout){
+          vm._config.data.mouseout.call(vm, d,i)
+        }
+        vm._chart._tip.hide(d, d3.select(this).node())
+      });
 
 }
 

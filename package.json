@@ -8,7 +8,7 @@
     "mt": "rollup --config rollup.config.mt.js && uglifyjs ../mt-delegados/src/dbox/build/dbox.js -c -m -o ../mt-delegados/src/dbox/build/dbox.min.js",
     "pb": "rollup --config rollup.config.pb.js && uglifyjs ../frente-pobreza-mapa/src/dbox/build/dbox.js -c -m -o ../frente-pobreza-mapa/src/dbox/build/dbox.min.js",
     "conade": "rollup --config rollup.config.conade.js && uglifyjs ../conade-admin/src/dbox/build/dbox.js -c -m -o ../conade-admin/src/dbox/build/dbox.min.js",
-    "gire-mapa": "rollup --config rollup.config.gire-mapa.js && uglifyjs ../../aws/gire-mapa-muerte-materna/src/dbox/build/dbox.js -c -m -o ../../aws/gire-mapa-muerte-materna/src/dbox/build/dbox.min.js"
+    "gire-mapa": "rollup --config rollup.config.gire-mapa.js && uglifyjs ../gire-mapa-muerte-materna/src/dbox/build/dbox.js -c -m -o ../gire-mapa-muerte-materna/src/dbox/build/dbox.min.js"
   },
   "devDependencies": {
     "rollup": "^0.26.3",

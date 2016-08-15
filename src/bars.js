@@ -10,6 +10,7 @@ function Bars(config) {
   vm._chart; 
   vm._scales = {}; 
   vm._axes = {};
+  vm._stats = {}; 
   vm._averageLines = []; 
   vm.columns = null; 
   vm.lineAndCircles = null; 
@@ -22,7 +23,7 @@ Bars.prototype = bars.prototype = {
 
 		vm.init();
 		vm.setScales();
-		vm.setAxes();
+		
 
 		q = vm._chart.loadData();
 
@@ -31,12 +32,19 @@ Bars.prototype = bars.prototype = {
         throw error;	 
         return false;
       } 
+      vm.setStats(data);  
+      vm.setAxes(data);
       vm.setData(data);
       vm.setDomains();
       vm._setChartType(); 
       vm.drawAxes();
       vm.drawData();
-      vm._chart.dispatch.load(); 
+
+      //Trigger load chart event
+      if( vm._config.events && vm._config.events.load){
+        vm._chart.dispatch.on("load.chart", vm._config.events.load(vm));
+      }
+      
     });
 
 	},
@@ -48,7 +56,18 @@ Bars.prototype = bars.prototype = {
 		var vm = this;
     vm._scales = vm._chart.setScales();
 	}, 
-	setAxes : function(){
+  setStats: function(data){
+
+    var vm = this; 
+
+    if(Array.isArray(data)){
+      vm._stats.x = {};
+      vm._stats.x.minMax = d3.extent(data[0], function(d){return d.x});
+    }
+
+    console.log('setStats', vm._stats, data)
+  },
+	setAxes : function(data){
 		var vm = this;
 
 		vm._axes.x = d3.svg.axis()
@@ -73,7 +92,6 @@ Bars.prototype = bars.prototype = {
 	},
 	setData:function(data){
     var vm = this;
-    console.log(data);
     
     if(Array.isArray(data)){
       
@@ -143,11 +161,11 @@ Bars.prototype = bars.prototype = {
     //Rotation
     xAxis.selectAll("text")  
         .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
+        .attr("dx", "0em")
+        .attr("dy", "0em")
         .attr("transform", function(d) {
-            return "translate(0,8)rotate(-65)" 
-            });
+          return "translate(0,8)rotate(-65)" 
+        });
 
     if(vm._config.style){
       switch(vm._config.style){
@@ -201,8 +219,6 @@ Bars.prototype = bars.prototype = {
     }
     
     vm.averageLines.draw();
-
-    vm._chart.dispatch.on("load.chart", vm._config.events.load(vm));
   },
   set: function(option,value){
     var vm = this; 
