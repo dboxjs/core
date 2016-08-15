@@ -108,7 +108,7 @@ svg{
   color: #4b4b4b;
 }
 
-.dbox-gray .average-lines {
+.dbox-gray .cotainer-average-lines {
   min-height: 40px;
   margin: -2px 0 0 0;
   background-color: white;
@@ -118,7 +118,7 @@ svg{
   color: #4b4b4b;
 }
 
-.dbox-gray .average-lines .legend {
+.dbox-gray .cotainer-average-lines .legend-average-lines {
   min-height: 20px;
   width: 90%;
   margin: 0px auto 10px auto;

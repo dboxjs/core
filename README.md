@@ -1,16 +1,22 @@
 # Let's get started
 
 ## Installation
+```javascript
+bower install d3 d3-queue topojson d3-tip --save
+```
 
 ## config 
 ---
+
 ### config.bindTo
+---
 HTML id of the div where the chart will be drawn    
 ```javascript
 config.bindTo = '#id'
 ```
 
 ### config.size
+---
 Object for specifing the following properties of the chart
 * width
 * height
@@ -27,6 +33,7 @@ Object for specifing the following properties of the chart
 
 
 ## Complete example
+---
 ```javascript
 var config = {
 	'bindTo': '#map',
