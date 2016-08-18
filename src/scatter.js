@@ -153,12 +153,13 @@ Scatter.prototype = scatter.prototype = {
     var vm = this;
 
     if(vm._config.plotOptions && vm._config.plotOptions.scatter && vm._config.plotOptions.scatter.draw45Line === true){
-      var size = d3.min([vm._scales.x.domain()[1], vm._scales.y.domain()[1]])
+      var x2 = vm._scales.x(d3.max(vm._scales.x.domain()));
+      var y2 = vm._scales.y(d3.max(vm._scales.y.domain()));
       vm._chart._svg.append('line')
         .attr("x1", vm._scales.x(0))
         .attr("y1", vm._scales.y(0))
-        .attr("x2", vm._scales.x(size))
-        .attr("y2", vm._scales.y(size))
+        .attr("x2", x2)
+        .attr("y2", y2)
         .style("stroke-dasharray", ("10,3"))
         .attr("stroke","#bbb");
     }
