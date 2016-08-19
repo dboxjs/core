@@ -103,20 +103,21 @@ Scatter.prototype = scatter.prototype = {
       vm._chart._svg.selectAll('.bar')
           .data(vm._scales.x.domain())
           .enter().append('rect')
-          .attr('class','bar')
+          .attr('class',function(d,i){ return i % 2 ? 'bar' : 'bar colored';})
           .attr('x', function(d){ return vm._scales.x(d);})
           .attr('y', -10)
           .attr('width', vm._config.size.width / vm._scales.x.domain().length)
           .attr('height', vm._config.size.height - 30)
-          .attr('fill',function(d,i){ return i % 2 ? '#eee' : 'transparent'; })
+          .attr('fill',function(d,i){ return i % 2 ? 'transparent' : '#fafafa'; })
           .attr('transform','translate(-' + (vm._config.size.width / vm._scales.x.domain().length) / 2 +',-10)');
     }
 
     var xAxis = vm._chart._svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + vm._chart._height + ")")
-        .call(vm._axes.x)
-        .selectAll('text')
+        .call(vm._axes.x);
+
+    xAxis.selectAll('text')
         .on("click",function(d,i){
           vm._config.xAxis.onclick.call(this, d, i);
         });
@@ -124,7 +125,7 @@ Scatter.prototype = scatter.prototype = {
 
     if(vm._config.xAxis && vm._config.xAxis.text){
       xAxis.append("text")
-        .attr("class", "label")
+        .attr("class", "label title")
         .attr("x", vm._chart._width/2)
         .attr("y", 30)
         .style("text-anchor", "middle")
@@ -138,10 +139,10 @@ Scatter.prototype = scatter.prototype = {
 
       if(vm._config.yAxis && vm._config.yAxis.text){
         yAxis.append("text")
-          .attr("class", "label")
+          .attr("class", "label title")
           .attr("transform", "rotate(-90)")
-          .attr("y", -40)
-          .attr("x", -100)
+          .attr("y", -30)
+          .attr("x", -150)
           .attr("dy", ".71em")
           .style("text-anchor", "end")
           .text(vm._config.yAxis.text);
