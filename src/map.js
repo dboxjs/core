@@ -158,8 +158,6 @@ Map.prototype = map.prototype = {
     vm._config.plotOptions.map.min = vm.minMax [0];
     vm._config.plotOptions.map.max = vm.minMax [1];
 
-    debugger;
-
     vm.geo._config = vm._config; 
     vm.geo._data = data;
     vm.geo.quantiles = vm.quantiles;
@@ -248,17 +246,15 @@ Map.prototype = map.prototype = {
   },
   drawData : function(){
     var vm = this;
-    
+
     if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoDivision == 'states'){
       vm.geo.drawStates(); 
     }
-
     if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoDivision == 'municipalities'){
       vm.geo.drawMunicipalities(); 
     }
 
     vm._drawLegend(); 
-
   },
   _drawLegend: function(){
     var vm = this; 
@@ -320,14 +316,11 @@ Map.prototype = map.prototype = {
       })
       .style('stroke', '#333');
 
-
     vm._chart._legend.selectAll('text')
        .data(quantiles)
     .enter().append('text')
       .text(function(d, i){
-
        return d.text ;
-
       })
       .attr("font-family", "Roboto")
       .attr("font-size", "12pts")
@@ -346,8 +339,7 @@ Map.prototype = map.prototype = {
 
     vm._config = config; 
     vm._chart._config = config; 
-    
-
+  
     q = vm._chart.loadData();
 
     q.await(function(error,data){
@@ -384,12 +376,10 @@ Map.prototype = map.prototype = {
     vm.geo._config.plotOptions.map.min = minMax[0];
     vm.geo._config.plotOptions.map.max = minMax[1];
 
-
     if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoDivision == 'states'){
       vm.geo.filterByMinMaxStates(); 
     }
 
-    debugger
     if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoDivision == 'municipalities'){
       vm.geo.filterByMinMaxMunicipalities(); 
     }
@@ -402,16 +392,33 @@ Map.prototype = map.prototype = {
       vm._config[option] = value ; 
     }
   }, 
+  selectAll:function(selector){
+    var vm = this;
+    return vm._chart._svg.selectAll(selector);
+  },
   select:function(selector){
     var vm = this;
     var select = false; 
 
-    vm._chart._svg.selectAll('path')
-      .each(function(d){
-        if(d.id === selector){
-          select = d3.select(this); 
-        }
-      });
+    if(selector instanceof RegExp){
+      vm._chart._svg.selectAll('path')
+        .each(function(d){
+
+          if(selector.test(d.id)){
+            select = d3.selectAll(this); 
+          }
+        });
+
+    }else{
+      vm._chart._svg.selectAll('path')
+        .each(function(d){
+          if(d.id === selector){
+            select = d3.select(this); 
+          }
+        });
+    }
+
+    
 
     return select; 
   },

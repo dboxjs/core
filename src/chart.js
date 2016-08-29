@@ -48,34 +48,56 @@ Chart.prototype = chart.prototype = {
 		}
 		
 
+		//Add title to the chart
 		if(vm._config.chart && vm._config.chart.title){
 			d3.select(vm._config.bindTo).append("div")
 				.attr("class", "chart-title")
 				.html(vm._config.chart.title)
 		}
+
+		//Add Legend to the chart
+		if(vm._config.legend && vm._config.legend.enable === true && vm._config.legend.position === 'top'){
+			var html = ''; 
+			var legend = d3.select(vm._config.bindTo).append("div")
+				.attr("class", "chart-legend")
+
+			vm._config.legend.categories.forEach(function(c){
+				html +="<div class='dbox-legend-category-title'><span class='dbox-legend-category-color' style='background-color:"+c.color+";'> </span>"+c.title+"</div>";
+			})
+			legend.html(html)
+		}
+
+
+		//Define the margins
 	    if(vm._config.size.margin){
-			  vm._margin = vm._config.size.margin;
+			vm._margin = vm._config.size.margin;
 	    } else {
-	      vm._margin = {left: 0, right: 0, top: 0, bottom: 0};
+	      	vm._margin = {left: 0, right: 0, top: 0, bottom: 0};
 	    }
+
+	    //Define width and height
 		vm._width = vm._config.size.width - vm._margin.left - vm._margin.right,
 		vm._height = vm._config.size.height - vm._margin.top - vm._margin.bottom;
-    
+    	
+    	//Create the svg
 		vm._svg = d3.select(vm._config.bindTo).append("svg")
 			.attr("width", vm._width + vm._margin.left + vm._margin.right)
 			.attr("height", vm._height + vm._margin.top + vm._margin.bottom)
 		  .append("g")
 			.attr("transform", "translate(" + vm._margin.left + "," + vm._margin.top + ")");
 
-    if(vm._config.data.tip)
+    	
+    	//Call the tip function
+    	if(vm._config.data.tip){
 			vm._svg.call(vm._tip);
+    	}
 
 		//Apply background color
 		if(vm._config.chart && vm._config.chart.background && vm._config.chart.background.color){
 			d3.select(vm._config.bindTo+" svg").style('background-color', vm._config.chart.background.color )
 		}
 		
-
+		//Legend for average lines
 		if(vm._config.plotOptions && vm._config.plotOptions.bars 
 			&& vm._config.plotOptions.bars.averageLines && Array.isArray(vm._config.plotOptions.bars.averageLines) 
 			&& vm._config.plotOptions.bars.averageLines.length >0 ){

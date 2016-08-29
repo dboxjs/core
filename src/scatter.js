@@ -131,6 +131,22 @@ Scatter.prototype = scatter.prototype = {
         .text(vm._config.xAxis.text);
     }
 
+    if(vm._config.xAxis && vm._config.xAxis.dropdown && vm._config.xAxis.dropdown.enable === true){
+      var xAxisDropDown = d3.select(vm._config.bindTo).append("div").attr('class','dbox-xAxis-select')
+                            .append("select")
+                            .on("change", function(){
+                              vm.updateAxis('x', this.value)
+                            });
+
+      xAxisDropDown.selectAll("option")
+        .data(vm._config.xAxis.dropdown.options)
+        .enter().append("option")
+        .attr("value", function (d) { return d.value; })
+        .text(function (d) { return d.title; })
+        .property("selected", function(d){ return d.selected  })
+
+    }
+
     if(vm._config.yAxis && vm._config.yAxis.visible){
       var yAxis = vm._chart._svg.append("g")
           .attr("class", "y axis")
@@ -146,6 +162,27 @@ Scatter.prototype = scatter.prototype = {
           .style("text-anchor", "end")
           .text(vm._config.yAxis.text);
       } 
+    }
+
+    if(vm._config.yAxis && vm._config.yAxis.dropdown && vm._config.yAxis.dropdown.enable === true){
+      var yAxisDropDown = d3.select(vm._config.bindTo).append("div").attr('class','dbox-yAxis-select')
+                            .attr('style', function(){
+                              var x = -1*d3.select(vm._config.bindTo).node().getBoundingClientRect().width/2+ vm._chart._margin.left/4;
+                              var y = -1*d3.select(vm._config.bindTo).node().getBoundingClientRect().height/2;
+                              return 'transform: translate('+x+'px,'+y+'px) rotate(-90deg);'
+                            })
+                            .append("select")
+                            .on("change", function(){
+                              vm.updateAxis('y', this.value)
+                            });
+
+      yAxisDropDown.selectAll("option")
+        .data(vm._config.yAxis.dropdown.options)
+        .enter().append("option")
+        .attr("value", function (d) { return d.value; })
+        .text(function (d) { return d.title; })
+        .property("selected", function(d){ return d.selected  })
+
     }
   
   },
@@ -272,6 +309,63 @@ Scatter.prototype = scatter.prototype = {
           vm._chart._tip.hide(d,d3.select(this).node())
         }
       })
+  },
+  updateAxis:function(axis, value){
+    var vm = this; 
+
+    vm._config.data.parser = function(d) {
+      var n = {};
+     
+      if(axis === 'x'){
+        //Set the new value as selected in the dropdown
+        vm._config.xAxis.dropdown.options.forEach(function(o){
+          if(o.value === value){
+            o.selected = true; 
+          }else{
+            o.selected = false; 
+          }
+        })
+        n.x = +d[value];
+      }else{
+        vm._config.xAxis.dropdown.options.forEach(function(o){
+          if(o.selected === true) n.x = +d[o.value]
+        })
+      }
+
+      if(axis === 'y'){
+        //Set the new value as selected in the dropdown
+        vm._config.yAxis.dropdown.options.forEach(function(o){
+          if(o.value === value){
+            o.selected = true; 
+          }else{
+            o.selected = false; 
+          }
+        })
+        n.y = +d[value];
+      }else{  
+        vm._config.yAxis.dropdown.options.forEach(function(o){
+          if(o.selected === true) n.y = +d[o.value]
+        })
+      }
+      
+      n.z = d.Entidad;
+
+      if(d.Entidad.trim() === 'Nacional'){
+        n.color = '#009942';
+      }else{
+        n.color = '#ccc';
+      }
+
+      return n;
+    }
+
+    
+            
+
+
+    vm.redraw();
+
+
   },
   redraw: function(){
     var vm = this;
