@@ -55,25 +55,23 @@ Chart.prototype = chart.prototype = {
 				.html(vm._config.chart.title)
 		}
 
+		var legend = d3.select(vm._config.bindTo).append("div")
+				.attr("class", "chart-legend-top");
 		//Add Legend to the chart
 		if(vm._config.legend && vm._config.legend.enable === true && vm._config.legend.position === 'top'){
 			var html = ''; 
-			var legend = d3.select(vm._config.bindTo).append("div")
-				.attr("class", "chart-legend")
-
 			vm._config.legend.categories.forEach(function(c){
 				html +="<div class='dbox-legend-category-title'><span class='dbox-legend-category-color' style='background-color:"+c.color+";'> </span>"+c.title+"</div>";
 			})
 			legend.html(html)
 		}
 
-
 		//Define the margins
-	    if(vm._config.size.margin){
-			vm._margin = vm._config.size.margin;
-	    } else {
-	      	vm._margin = {left: 0, right: 0, top: 0, bottom: 0};
-	    }
+    if(vm._config.size.margin){
+		vm._margin = vm._config.size.margin;
+    } else {
+      	vm._margin = {left: 0, right: 0, top: 0, bottom: 0};
+    }
 
 	    //Define width and height
 		vm._width = vm._config.size.width - vm._margin.left - vm._margin.right,
@@ -97,7 +95,10 @@ Chart.prototype = chart.prototype = {
 			d3.select(vm._config.bindTo+" svg").style('background-color', vm._config.chart.background.color )
 		}
 		
+		var legendBottom = d3.select(vm._config.bindTo).append("div")
+				.attr("class", "chart-legend-bottom");
 		//Legend for average lines
+		/*
 		if(vm._config.plotOptions && vm._config.plotOptions.bars 
 			&& vm._config.plotOptions.bars.averageLines && Array.isArray(vm._config.plotOptions.bars.averageLines) 
 			&& vm._config.plotOptions.bars.averageLines.length >0 ){
@@ -108,6 +109,7 @@ Chart.prototype = chart.prototype = {
 			  	.attr("class", "legend-average-lines")
 				.html('Average Lines Controller')
 		}
+		*/
 
 	},
 	loadData:function(){
