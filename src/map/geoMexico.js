@@ -261,7 +261,7 @@ GeoMexico.prototype.drawStatesCountouring = function(data){
 
 GeoMexico.prototype.redrawMunicipalities = function() {
     var vm = this;
-
+    debugger
     vm.municipalities.selectAll("path").attr("stroke", "#333").attr('stroke-width', 0.2);
     vm.municipalities.selectAll("path").attr("fill", "red");
     vm.municipalities.selectAll("path").attr('data-total', null);
