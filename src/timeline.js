@@ -143,11 +143,11 @@ Timeline.prototype = timeline.prototype = {
   },
   drawData : function(){
     var vm = this;
-    vm._data = d3.nest()
-          .key(function(d){ return d.name; })
-          .entries(vm._data);
-
-    console.log("drawData", vm._data);
+    /* @Deprecated - data manipulation should only happen on the setData method
+      vm._data = d3.nest()
+        .key(function(d){ return d.name; })
+        .entries(vm._data);
+    */
     var line = d3.svg.line()
         .interpolate(vm._config.data.interpolation)
         .defined(function(d) { return d; })
@@ -165,7 +165,10 @@ Timeline.prototype = timeline.prototype = {
         .style("stroke-dasharray",function(d){ if(d.name == "Nacional"){
             return ("10,5");
           }})
-        .style("stroke", function(d) { return vm._scales.color(d.key); }) //return vm._scales.color(d.name); })
+        .style("stroke", function(d) { 
+          if(d.color){ return d.color; }
+          else { return vm._scales.color(d.key); }
+        }) //return vm._scales.color(d.name); })
         .style("stroke-width", 3);
 
 
@@ -176,8 +179,14 @@ Timeline.prototype = timeline.prototype = {
         .attr("r", 3)
         .attr("cx", function(d) { return vm._scales.x(d.x); })
         .attr("cy", function(d) { return vm._scales.y(d.y); })
-        .style("fill", function(d) { return vm._scales.color(d.key); })//return vm._scales.color(d.name); })
-        .style("stroke", function(d) { return vm._scales.color(d.key);}) // return vm._scales.color(d.name); })
+        .style("fill", function(d) { 
+          if(d.color){ return d.color; }
+          else { return vm._scales.color(d.key); }
+        })//return vm._scales.color(d.name); })
+        .style("stroke", function(d) { 
+          if(d.color){ return d.color; }
+          else { return vm._scales.color(d.key); }
+        }) // return vm._scales.color(d.name); })
         .on('mouseover', function(d,i){
           if(vm._config.data.mouseover){
             vm._config.data.mouseover.call(vm, d,i)

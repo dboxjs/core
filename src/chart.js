@@ -4,7 +4,6 @@ function queryCarto(config, callback){
 		.done(function(data){
 
 			var result = data.rows
-			console.log('queryCarto',result);
 
 			if( config.parser ){
 				result = data.rows.map(config.parser)
@@ -82,9 +81,9 @@ Chart.prototype = chart.prototype = {
 			&& vm._config.plotOptions.bars.averageLines.length >0 ){
 
 			d3.select(vm._config.bindTo).append("div")
-				.attr("class", "average-lines")
+				.attr("class", "container-average-lines")
 			  .append('div')
-			  	.attr("class", "legend")
+			  	.attr("class", "legend-average-lines")
 				.html('Average Lines Controller')
 		}
 
@@ -247,43 +246,43 @@ Chart.prototype = chart.prototype = {
 				break;
 
 				case 'time':
-          minMax = d3.extent(data, function(d) { return d.x; })
-          domains.x = minMax;
+		          minMax = d3.extent(data, function(d) { return d.x; })
+		          domains.x = minMax;
 				break;
 
 				case 'ordinal':
 				  
-          //If the xAxis' order depends on the yAxis values 
-          if(vm._config.data.sort && vm._config.data.sort.axis === 'y'){ 
-            sorted = data.sort(sortFunctionY);
-          }else { 
-            sorted = data.sort(sortFunctionX);
-          }
+		          //If the xAxis' order depends on the yAxis values 
+		          if(vm._config.data.sort && vm._config.data.sort.axis === 'y'){ 
+		            sorted = data.sort(sortFunctionY);
+		          }else { 
+		            sorted = data.sort(sortFunctionX);
+		          }
 
-          domains.x = [];
-          sorted.forEach(function(d){
-            domains.x.push(d.x);
-          })
+		          domains.x = [];
+		          sorted.forEach(function(d){
+		            domains.x.push(d.x);
+		          })
 
 				break;
 
-        case 'quantile':
-          
-          //The xAxis order depends on the yAxis values 
-          if(vm._config.data.sort && vm._config.data.sort.axis === 'y'){ 
-            sorted = data.sort(sortFunctionY);
-          }else { 
-            sorted = data.sort(sortFunctionX);
-          }
+		        case 'quantile':
+		          
+		          //The xAxis order depends on the yAxis values 
+		          if(vm._config.data.sort && vm._config.data.sort.axis === 'y'){ 
+		            sorted = data.sort(sortFunctionY);
+		          }else { 
+		            sorted = data.sort(sortFunctionX);
+		          }
 
-          domains.q = [];
-          sorted.forEach(function(d){
-            domains.q.push(d.x);
-          })
+		          domains.q = [];
+		          sorted.forEach(function(d){
+		            domains.q.push(d.x);
+		          })
 
-          domains.x = d3.range(vm._config.xAxis.buckets);
+		          domains.x = d3.range(vm._config.xAxis.buckets);
 
-        break;
+		        break;
 
 
 				default:
@@ -301,28 +300,34 @@ Chart.prototype = chart.prototype = {
 			switch(vm._config.yAxis.scale){
 				case 'linear':
 					minMax = d3.extent(data, function(d) { return d.y; })
+
+					//Adjust for min values greater than zero
+					//set the min value to -10% 
+					if(minMax[0] > 0 ){
+						minMax[0] = minMax[0] - (minMax[1]- minMax[0])*.1
+					} 
 					domains.y = minMax;
 				break;
 
 				case 'time':
 					minMax = d3.extent(data, function(d) { return d.y; })
-          domains.y = minMax;
+          			domains.y = minMax;
 				break;
 
 				case 'ordinal':
-          if(vm._config.data.sort && vm._config.data.sort.axis === 'y'){
+		          if(vm._config.data.sort && vm._config.data.sort.axis === 'y'){
 
-            var sorted = data.sort(function(a, b) { return d3.ascending(a.y,b.y); });
-            domains.y = [];
-            sorted.forEach(function(d){
-              domains.y.push(d.x);
-            })
+		            var sorted = data.sort(function(a, b) { return d3.ascending(a.y,b.y); });
+		            domains.y = [];
+		            sorted.forEach(function(d){
+		              domains.y.push(d.x);
+		            })
 
-          }else{
-            domains.y = d3.map(data, function(d) {
-              return d.y;
-            }).keys().sort(function(a, b) { return d3.ascending(a,b); });
-          }
+		          }else{
+		            domains.y = d3.map(data, function(d) {
+		              return d.y;
+		            }).keys().sort(function(a, b) { return d3.ascending(a,b); });
+		          }
 					
 				break;
 

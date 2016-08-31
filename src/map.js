@@ -155,6 +155,12 @@ Map.prototype = map.prototype = {
     vm.quantiles = vm._setQuantile(data);
     vm.minMax = d3.extent(data, function(d) { return d.z; })
 
+    vm._config.plotOptions.map.min = vm.minMax [0];
+    vm._config.plotOptions.map.max = vm.minMax [1];
+
+    debugger;
+
+    vm.geo._config = vm._config; 
     vm.geo._data = data;
     vm.geo.quantiles = vm.quantiles;
     vm.geo.minMax = vm.minMax
@@ -195,7 +201,6 @@ Map.prototype = map.prototype = {
   _getQuantileColor: function(d){
     var vm = this; 
     var total = parseFloat(d.z);
-
 
     //@TODO use quantile scale instead of manual calculations 
     if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.quantiles && vm._config.plotOptions.map.quantiles.colors){
@@ -336,7 +341,7 @@ Map.prototype = map.prototype = {
       });
   }, 
   update :function(config){
-
+    debugger
     var vm = this, q;
 
     vm._config = config; 
@@ -376,11 +381,15 @@ Map.prototype = map.prototype = {
     vm._config.plotOptions.map.min = minMax[0];
     vm._config.plotOptions.map.max = minMax[1];
 
+    vm.geo._config.plotOptions.map.min = minMax[0];
+    vm.geo._config.plotOptions.map.max = minMax[1];
+
 
     if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoDivision == 'states'){
       vm.geo.filterByMinMaxStates(); 
     }
 
+    debugger
     if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoDivision == 'municipalities'){
       vm.geo.filterByMinMaxMunicipalities(); 
     }
