@@ -59,7 +59,7 @@ AverageLines.prototype.draw = function (){
           return size; 
         })
         .text(function(d){
-          return d.data.raw;
+          return d.data.raw.toFixed(1);
         })
         .style('display', function(d){
           if(d.enabled) return 'block';

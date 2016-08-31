@@ -292,7 +292,7 @@ Bars.prototype = bars.prototype = {
         .enter().append('div')
         .attr("class","legend-content")
         .style("float","left")
-        .style('margin-right','5px');
+        .style('margin-right','10px');
 
       legendContent.append("div")
         .style('width','10px')
