@@ -2,6 +2,7 @@ import chart from './chart.js';
 import geoMexico from './map/geoMexico.js';
 
 function Map(config) {
+  console.log(config);
   var vm = this;
   vm._config = config; 
   vm._chart; 
@@ -96,16 +97,16 @@ function Map(config) {
 }
 
 Map.prototype = map.prototype = {
-	generate:function(){
-		var vm = this, q;
-		
-		vm.init();
+  generate:function(){
+    var vm = this, q;
+    
+    vm.init();
 
-		q = vm._chart.loadData();
+    q = vm._chart.loadData();
 
     q.await(function(error,data){
       if (error) {
-        throw error;	 
+        throw error;   
         return false;
       } 
 
@@ -118,16 +119,16 @@ Map.prototype = map.prototype = {
 
     })
 
-	},
+  },
   init : function(){
     var vm = this
     vm._chart = chart(vm._config);
   },
-	/* @TODO DRAW SVG UNTIL CHART FINISHED LOADING DATA 
+  /* @TODO DRAW SVG UNTIL CHART FINISHED LOADING DATA 
     draw : function(){
-		var vm = this
-		vm._chart.draw();
-	},*/
+    var vm = this
+    vm._chart.draw();
+  },*/
   _setChartType:function(){
     var vm = this; 
 
@@ -144,7 +145,7 @@ Map.prototype = map.prototype = {
       }
     }
   },
-	setData:function(data){
+  setData:function(data){
     var vm = this;
     
     if(vm._config.data.filter){
@@ -158,7 +159,7 @@ Map.prototype = map.prototype = {
     vm._config.plotOptions.map.min = vm.minMax [0];
     vm._config.plotOptions.map.max = vm.minMax [1];
 
-    debugger;
+    
 
     vm.geo._config = vm._config; 
     vm.geo._data = data;
@@ -172,24 +173,44 @@ Map.prototype = map.prototype = {
     var values = [];
     var quantile = []; 
 
-    data.forEach(function(d){
+    data.forEach(function(d){      
       values.push(d.z);
     });
 
     values.sort(d3.ascending);
-
+    
     //@TODO use quantile scale instead of manual calculations 
     if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.quantiles && vm._config.plotOptions.map.quantiles.buckets){
+
+      if(vm._config.plotOptions.map.quantiles.ignoreZeros === true){
+        var aux = _.dropWhile(values, function(o) { return o <= 0 });
+        //aux.unshift(values[0]);  
+
+        quantile.push(values[0]);
+        quantile.push(aux[0]);
+        
+        for(var i = 1; i <= vm._config.plotOptions.map.quantiles.buckets - 1; i++ ){        
+          quantile.push( d3.quantile(aux,  i* 1/(vm._config.plotOptions.map.quantiles.buckets - 1) ) )
+        }
+
+      }else{
         quantile.push( d3.quantile(values, 0) )
-      for(var i = 1; i <= vm._config.plotOptions.map.quantiles.buckets; i++ ){
-        quantile.push( d3.quantile(values,  i* 1/vm._config.plotOptions.map.quantiles.buckets ) )
+        for(var i = 1; i <= vm._config.plotOptions.map.quantiles.buckets; i++ ){        
+          quantile.push( d3.quantile(values,  i* 1/vm._config.plotOptions.map.quantiles.buckets ) )
+        }
       }
+
+
+        
     }else{
       quantile = [ d3.quantile(values, 0), d3.quantile(values, 0.2), d3.quantile(values, 0.4), d3.quantile(values, 0.6), d3.quantile(values, 0.8), d3.quantile(values,1) ];
     }
    
     //@TODO - VALIDATE WHEN ZEROS NEED TO BE PUT ON QUANTILE 1 AND RECALCULATE NON ZERO VALUES INTO THE REST OF THE BUCKETS
     if( vm._config.plotOptions.map.quantiles.buckets === 5){
+
+      
+
       if( quantile[1] === quantile[2] && quantile[2] === quantile[3] && quantile[3] === quantile[4] && quantile[4] === quantile[5]){
         quantile = [ d3.quantile(values, 0), d3.quantile(values, 0.2) ];
       }
@@ -305,7 +326,15 @@ Map.prototype = map.prototype = {
 
     vm._chart._legend.selectAll('.rect-info')
       .data(quantiles)
-    .enter().append('rect')
+    .enter().append('circle')
+      .attr('cx', 20)
+      .attr('cy', function(d,i){
+        i++;
+        var y = (vm._chart._height - (20 * quantiles.length)) + (i*20);
+        return y + 10;
+      })
+      .attr('r', 9)  
+    /*.enter().append('rect')
       .attr('class','rect-info')
       .attr('x', 10)
       .attr('y', function(d,i){
@@ -314,11 +343,11 @@ Map.prototype = map.prototype = {
         return y;
       })
       .attr('width', 18)
-      .attr('height', 18)
+      .attr('height', 18)*/
       .style('fill', function(d){
         return d.color;
       })
-      .style('stroke', '#333');
+      .style('stroke', '#A7A7A7');
 
 
     vm._chart._legend.selectAll('text')
@@ -333,7 +362,7 @@ Map.prototype = map.prototype = {
       .attr("font-size", "12pts")
       .style("fill","#aeadb3")
       .style("font-weight", "bold")
-      .attr('x', 30)
+      .attr('x', 30 + 5)
       .attr('y', function(d,i){
         i++;
         var y = 15 + (vm._chart._height - (20 * quantiles.length))  + (i*20);
@@ -341,7 +370,7 @@ Map.prototype = map.prototype = {
       });
   }, 
   update :function(config){
-    debugger
+    
     var vm = this, q;
 
     vm._config = config; 
@@ -389,7 +418,7 @@ Map.prototype = map.prototype = {
       vm.geo.filterByMinMaxStates(); 
     }
 
-    debugger
+    
     if(vm._config.plotOptions && vm._config.plotOptions.map && vm._config.plotOptions.map.geoDivision == 'municipalities'){
       vm.geo.filterByMinMaxMunicipalities(); 
     }
