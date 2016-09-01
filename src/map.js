@@ -187,7 +187,7 @@ Map.prototype = map.prototype = {
         //aux.unshift(values[0]);  
 
         quantile.push(values[0]);
-        quantile.push(aux[0]);
+        quantile.push(0);
         
         for(var i = 1; i <= vm._config.plotOptions.map.quantiles.buckets - 1; i++ ){        
           quantile.push( d3.quantile(aux,  i* 1/(vm._config.plotOptions.map.quantiles.buckets - 1) ) )
@@ -475,11 +475,9 @@ Map.prototype = map.prototype = {
 Map.prototype.resetStates = function(){
   var vm = this; 
 
-  vm.states.transition()
-      .duration(750)
-      .attr("transform", function(){
-        return "translate("+(vm._config.size.translateX) +",100) scale("+vm._config.size.scale+")"      
-      });
+  vm.geo.resetStates(); 
+
+  
 }
 
 

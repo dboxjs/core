@@ -145,6 +145,15 @@ GeoMexico.prototype.clickedEstado = function(d) {
         });
 }
 
+GeoMexico.prototype.resetStates = function(){
+    var vm = this;
+    vm.states.transition()
+      .duration(750)
+      .attr("transform", function(){
+        return "translate("+(vm._config.size.translateX) +",100) scale("+vm._config.size.scale+")"      
+      });
+}
+
 GeoMexico.prototype.drawMunicipalities = function() {
     var vm = this;
     var tran = [2580, 700];
