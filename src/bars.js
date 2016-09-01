@@ -39,6 +39,7 @@ Bars.prototype = bars.prototype = {
       vm._setChartType(); 
       vm.drawAxes();
       vm.drawData();
+      vm.drawLegends();
 
       //Trigger load chart event
       if( vm._config.events && vm._config.events.load){
@@ -217,7 +218,6 @@ Bars.prototype = bars.prototype = {
         break;
       }
     }
-    
     vm.averageLines.draw();
   },
   set: function(option,value){
@@ -273,6 +273,55 @@ Bars.prototype = bars.prototype = {
     var vm = this;
     vm._chart.destroy(); 
     vm.generate();
+  },
+  drawLegends: function(){
+    var vm = this;
+    if(vm._config.plotOptions && vm._config.plotOptions.bars 
+      && vm._config.plotOptions.bars.averageLines && Array.isArray(vm._config.plotOptions.bars.averageLines) 
+      && vm._config.plotOptions.bars.averageLines.length >0 ){
+
+      var avgLinesLegend = d3.select(vm._config.bindTo + ' .chart-legend-top').append("div")
+        .attr("class", "container-average-lines")
+        .append('div')
+          .attr("class", "legend-average-lines")
+          .style('padding-left','15px')
+          .style('padding-right','15px');
+      
+      var legendContent = avgLinesLegend.selectAll('.legend-content')
+        .data(vm._config.plotOptions.bars.averageLines)
+        .enter().append('div')
+        .attr("class","legend-content")
+        .style("float","left")
+        .style('margin-right','10px');
+
+      legendContent.append("div")
+        .style('width','10px')
+        .style('height', '10px')
+        .style('float', 'left')
+        .style('margin-right','3px')
+        .style('margin-bottom','3px')
+        .style("background", function(d){ console.log(d); return d.color; })
+        .style('color','white')
+        .style('font-weight','bold')
+        .style('cursor','pointer')
+        .text(function(d){
+          return d.enabled ? '✓' : '';
+        })
+        .on('click',function(d){
+          //d.enabled = d.enabled ? false : true;
+          d3.select(this).text(d.enabled ? '✓' : '');
+          for(var i = 0; i < vm._config.plotOptions.bars.averageLines.length; i++){
+            if(vm._config.plotOptions.bars.averageLines[i] === d){
+              vm._config.plotOptions.bars.averageLines[i].enabled = vm._config.plotOptions.bars.averageLines[i].enabled ? false : true;
+              break;
+            }
+          }
+          vm.redraw();
+        });
+      
+      legendContent.append("span")
+        .text(function(d){ return d.title; });
+    }
   }
   
 }

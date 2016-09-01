@@ -286,6 +286,41 @@ GeoMexico.prototype.redrawMunicipalities = function() {
 GeoMexico.prototype.clickedMunicipality = function(d) {
     var vm = this;
 
+    vm.edo_zoom = {
+      "1":10,
+      "2":3,
+      "3":3,
+      "4":4,
+      "5":3,
+      "6":10,
+      "7":5,
+      "8":2,
+      "9":12,
+      "10":4,
+      "11":8,
+      "12":5,
+      "13":8,
+      "14":5,
+      "15":6,
+      "16":6,
+      "17":10,
+      "18":6,
+      "19":4,
+      "20":5,
+      "21":6,
+      "22":9,
+      "23":5,
+      "24":6,
+      "25":4,
+      "26":2,
+      "27":7,
+      "28":3,
+      "29":10,
+      "30":4,
+      "31":4,
+      "32":4
+  };
+  
     var x, y, k;
     if (d && vm.centeredMunicipality !== d) {
         var centroid = vm.path.centroid(d);
