@@ -116,7 +116,40 @@ GeoMexico.prototype.redrawStates = function() {
 //@Todo - upgrade to a general function for all geotypes; Upgrade from pnud.data4.mx
 GeoMexico.prototype.clickedEstado = function(d) {
     var vm = this;
-
+    vm.edo_zoom = {
+          "1":10,
+          "2":3,
+          "3":3,
+          "4":4,
+          "5":3,
+          "6":10,
+          "7":5,
+          "8":2,
+          "9":12,
+          "10":4,
+          "11":8,
+          "12":5,
+          "13":8,
+          "14":5,
+          "15":6,
+          "16":6,
+          "17":10,
+          "18":6,
+          "19":4,
+          "20":5,
+          "21":6,
+          "22":9,
+          "23":5,
+          "24":6,
+          "25":4,
+          "26":2,
+          "27":7,
+          "28":3,
+          "29":10,
+          "30":4,
+          "31":4,
+          "32":4
+      };
     var x, y, k;
     if (d && vm.centered !== d) {
         var centroid = vm.path.centroid(d);
@@ -382,6 +415,26 @@ GeoMexico.prototype.filterByMinMaxMunicipalities = function() {
 
   //Resets the map "Municipios" path data to topojson
   vm.municipalities.selectAll("path").data(vm.municipalitiesDefault, function(d){ return d.id; });
+
+}
+
+GeoMexico.prototype.filterByMinMaxStates = function() {
+  var vm = this; 
+
+  vm.states.selectAll("path").attr("stroke","#333").attr('stroke-width', 0.2);
+  vm.states.selectAll("path").attr("fill", "red");
+  vm.states.selectAll("path").attr('data-total', null);
+  vm.states.selectAll("path")
+    .data(vm._data, function(d){ return d.id; })
+    .attr('fill', function(d){
+      return vm._getQuantileColor(d);
+    })
+    .attr('data-total', function(d){
+      return d.z;
+    })
+
+  //Resets the map "Municipios" path data to topojson
+  vm.states.selectAll("path").data(vm.statesDefault, function(d){ return d.id; });
 
 }
 

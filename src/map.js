@@ -173,6 +173,10 @@ Map.prototype = map.prototype = {
     var values = [];
     var quantile = []; 
 
+    if(vm._config.plotOptions.map.quantiles.predefinedQuantiles.length > 0){
+      return vm._config.plotOptions.map.quantiles.predefinedQuantiles;
+    }
+
     data.forEach(function(d){      
       values.push(d.z);
     });
@@ -216,7 +220,6 @@ Map.prototype = map.prototype = {
       }
     }
    
-
     return quantile;
   },
   _getQuantileColor: function(d){
