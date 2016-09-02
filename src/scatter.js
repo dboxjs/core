@@ -89,12 +89,27 @@ Scatter.prototype = scatter.prototype = {
 	},
 	setData:function(data){
     var vm = this;
+    if(vm._config.data.filter){
+      data = data.filter(vm._config.data.filter);
+    }
     vm._data = data;
   },
   setDomains:function(){
     var vm = this;
-    vm._scales.x.domain(d3.extent(vm._data, function(d) { return d.x; })).nice();
-    vm._scales.y.domain(d3.extent(vm._data, function(d) { return d.y; })).nice();
+    var arr1 = d3.extent(vm._data, function(d) { return d.x; }),arr2 = d3.extent(vm._data, function(d) { return d.y; });
+    
+    console.log(vm._config.data.fixTo45);
+    if(vm._config.data.fixTo45){
+      if(arr1[1] > arr2[1]){
+        arr2 = arr1;
+      }else{
+        arr1 = arr2;
+      }
+    }
+
+    vm._scales.x.domain(arr1).nice();
+    vm._scales.y.domain(arr2).nice();
+    
   },
   drawAxes:function(){
     var vm = this;
