@@ -62,7 +62,7 @@ Chart.prototype = chart.prototype = {
 			var html = '';
 			html+="<div style='background-color:#E2E2E1;text-align:center;height: 40px;margin: 0px 15px'>";
 			vm._config.legend.categories.forEach(function(c){
-				html+="<div class='dbox-legend-category-title'><span class='dbox-legend-category-color' style='background-color:"+c.color+";'> </span><span style='width: 10px;height: 10px;float: left;margin: 10px 5px 0 5px;border-radius: 50%;'>"+c.title+"</span></div>";
+				html+="<div class='dbox-legend-category-title' style='margin:0 20px;'><span class='dbox-legend-category-color' style='background-color:"+c.color+";'> </span><span style='width: 10px;height: 10px;float: left;margin: 10px 5px 5px 5px;border-radius: 50%;'>"+c.title+"</span></div>";
 			})
 			html+="</div>";
 			legend.html(html)
