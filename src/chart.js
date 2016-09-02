@@ -60,9 +60,9 @@ Chart.prototype = chart.prototype = {
 		//Add Legend to the chart
 		if(vm._config.legend && vm._config.legend.enable === true && vm._config.legend.position === 'top'){
 			var html = '';
-			html+="<div style='background-color:#E2E2E1;text-align:center;height: 20px;margin: 0px 15px'>";
+			html+="<div style='background-color:#E2E2E1;text-align:center;height: 40px;margin: 0px 15px'>";
 			vm._config.legend.categories.forEach(function(c){
-				html+="<div class='dbox-legend-category-title'><span class='dbox-legend-category-color' style='background-color:"+c.color+";'> </span><span>"+c.title+"</span></div>";
+				html+="<div class='dbox-legend-category-title'><span class='dbox-legend-category-color' style='background-color:"+c.color+";'> </span><span style='width: 10px;height: 10px;float: left;margin: 10px 5px 0 5px;border-radius: 50%;'>"+c.title+"</span></div>";
 			})
 			html+="</div>";
 			legend.html(html)
