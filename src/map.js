@@ -320,9 +320,9 @@ Map.prototype = map.prototype = {
       .append('rect')
         .attr('class','back-rect')
         .attr('x', 5)
-        .attr('y', (vm._chart._height - (20 * quantiles.length)+ 10))
-        .attr('width', legendWidth)
-        .attr('height', (20 * quantiles.length) + 15 )
+        .attr('y', (vm._chart._height - (20 * quantiles.length)+ 10) - 20)
+        .attr('width', legendWidth + 15)
+        .attr('height', (20 * quantiles.length) + 50 )
         .style('fill', legendFill)
         .attr('rx', 5)
         .attr('ry', 5)
@@ -353,6 +353,17 @@ Map.prototype = map.prototype = {
       .style('stroke', '#A7A7A7');
 
 
+      vm._chart._legend.append('rect')
+    .attr('width', legendWidth + 5)
+    .attr('height', (20 * quantiles.length) + 7)
+    .attr('x', 9)
+    .attr('y', (vm._chart._height - (20 * quantiles.length)) + 18)
+    .attr('fill', 'rgba(0,0,0,0)')
+    .attr('stroke', '#AEADB3')
+    .attr('stroke-dasharray', '10,5')
+    .attr('stroke-linecap', 'butt')
+    .attr('stroke-width', '3')
+
     vm._chart._legend.selectAll('text')
        .data(quantiles)
     .enter().append('text')
@@ -371,6 +382,15 @@ Map.prototype = map.prototype = {
         var y = 15 + (vm._chart._height - (20 * quantiles.length))  + (i*20);
         return y;
       });
+      vm._chart._legend
+      .append("text")
+      .attr("x",10)
+      .attr("y",430)
+      .text(vm._config.legend.title)
+      .attr("font-family", "Roboto")
+      .attr("font-size", "12pts")
+      .style("fill","#aeadb3")
+      .style("font-weight", "bold")
   }, 
   update :function(config){
     
