@@ -97,18 +97,27 @@ Scatter.prototype = scatter.prototype = {
   setDomains:function(){
     var vm = this;
     var arr1 = d3.extent(vm._data, function(d) { return d.x; }),arr2 = d3.extent(vm._data, function(d) { return d.y; });
+    var arrOk = [0,0];
     
-    console.log(vm._config.data.fixTo45);
     if(vm._config.data.fixTo45){
       if(arr1[1] > arr2[1]){
-        arr2 = arr1;
+        //arr2 = arr1;
+        arrOk[1] = arr1[1];
       }else{
-        arr1 = arr2;
+        arrOk[1] = arr2[1];
       }
+
+      if(arr1[0] < arr2[0]){
+        //arr2 = arr1;
+        arrOk[0] = arr1[0];
+      }else{
+        arrOk[0] = arr2[0];
+      }
+
     }
 
-    vm._scales.x.domain(arr1).nice();
-    vm._scales.y.domain(arr2).nice();
+    vm._scales.x.domain(arrOk).nice();
+    vm._scales.y.domain(arrOk).nice();
     
   },
   drawAxes:function(){
@@ -369,7 +378,7 @@ Scatter.prototype = scatter.prototype = {
 
       if(d.Entidad.trim() === 'Nacional'){
         n.color = '#009942';
-      }else{
+      }else{        
         n.color = '#ccc';
       }
 
