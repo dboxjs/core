@@ -322,7 +322,7 @@ Map.prototype = map.prototype = {
         .attr('x', 5)
         .attr('y', (vm._chart._height - (20 * quantiles.length)+ 10) - 20)
         .attr('width', legendWidth + 15)
-        .attr('height', (20 * quantiles.length) + 50 )
+        .attr('height', (20 * quantiles.length) + 60 )
         .style('fill', legendFill)
         .attr('rx', 5)
         .attr('ry', 5)
@@ -330,11 +330,11 @@ Map.prototype = map.prototype = {
     vm._chart._legend.selectAll('.rect-info')
       .data(quantiles)
     .enter().append('circle')
-      .attr('cx', 20)
+      .attr('cx', 28)
       .attr('cy', function(d,i){
         i++;
         var y = (vm._chart._height - (20 * quantiles.length)) + (i*20);
-        return y + 10;
+        return y + 25;
       })
       .attr('r', 9)  
     /*.enter().append('rect')
@@ -354,10 +354,10 @@ Map.prototype = map.prototype = {
 
 
       vm._chart._legend.append('rect')
-    .attr('width', legendWidth + 5)
-    .attr('height', (20 * quantiles.length) + 7)
-    .attr('x', 9)
-    .attr('y', (vm._chart._height - (20 * quantiles.length)) + 18)
+    .attr('width', legendWidth - 5)
+    .attr('height', (20 * quantiles.length) + 17)
+    .attr('x', 14)
+    .attr('y', (vm._chart._height - (20 * quantiles.length)) + 24)
     .attr('fill', 'rgba(0,0,0,0)')
     .attr('stroke', '#AEADB3')
     .attr('stroke-dasharray', '10,5')
@@ -376,21 +376,24 @@ Map.prototype = map.prototype = {
       .attr("font-size", "12pts")
       .style("fill","#aeadb3")
       .style("font-weight", "bold")
-      .attr('x', 30 + 5)
+      .attr('x', 43)
       .attr('y', function(d,i){
         i++;
         var y = 15 + (vm._chart._height - (20 * quantiles.length))  + (i*20);
-        return y;
-      });
+        return y + 15;
+      })
+      .call(wrap, legendWidth);
+
       vm._chart._legend
       .append("text")
       .attr("x",10)
-      .attr("y",430)
+      .attr("y",(vm._chart._height - (20 * quantiles.length)) + 12)
       .text(vm._config.legend.title)
       .attr("font-family", "Roboto")
       .attr("font-size", "12pts")
       .style("fill","#aeadb3")
       .style("font-weight", "bold")
+      .call(wrap, legendWidth);
   }, 
   update :function(config){
     
@@ -501,6 +504,39 @@ Map.prototype.resetStates = function(){
   vm.geo.resetStates(); 
 
   
+}
+
+function wrap(text, width) {
+
+  text.each(function() {
+    var text = d3.select(this)
+
+    console.log(text.text(),text.text().split(/\s+/),text.text().length,width, width - text.text().length);
+    var dy1 = 0;
+    if ((width - text.text().length) < 150){
+      dy1 = - 6;
+    }
+
+    var words = text.text().split(/\s+/).reverse(),
+        word,
+        line = [],
+        lineNumber = 0,
+        lineHeight = 8, // ems
+        y = text.attr("y"),
+        x = text.attr("x"),
+        dy = parseFloat(text.attr("y"))/10;        
+        var tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy1 + "px");
+    while (word = words.pop()) {
+      line.push(word);
+      tspan.text(line.join(" "));
+      if (tspan.node().getComputedTextLength() > width) {
+        line.pop();
+        tspan.text(line.join(" "));
+        line = [word];
+        tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + "px").text(word);
+      }
+    }
+  });
 }
 
 

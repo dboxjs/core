@@ -133,7 +133,7 @@ Timeline.prototype = timeline.prototype = {
         .attr("class", "label")
         .attr("transform", "rotate(-90)")
         .attr("x", -vm._chart._height/2)
-        .attr("y", -vm._config.size.margin.left)
+        .attr("y", -vm._config.size.margin.left + 10)
         .attr("dy", ".71em")
         .style("text-anchor", "middle")
         .style("font-size","14px")
