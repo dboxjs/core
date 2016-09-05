@@ -511,7 +511,6 @@ function wrap(text, width) {
   text.each(function() {
     var text = d3.select(this)
 
-    console.log(text.text(),text.text().split(/\s+/),text.text().length,width, width - text.text().length);
     var dy1 = 0;
     if ((width - text.text().length) < 150){
       dy1 = - 6;
