@@ -316,6 +316,46 @@ Map.prototype = map.prototype = {
       ];
     }
 
+    //START GENERATING SHADOW
+    var defs = vm._chart._svg.append("defs");
+
+    var filter = defs.append("filter")
+        .attr("id", "drop-shadow")
+        .attr("x",0)
+        .attr("y",0)
+        .attr("height", "120%");
+
+    filter.append("feoffset")
+        .attr("in", "SourceGraphic")
+        .attr("dx", 5)
+        .attr("dy", 5)
+        .attr("result", "offOut");
+
+    filter.append("feColorMatrix")
+          .attr("result","matrixOut")
+          .attr("in","offOut")
+          .attr("type","matrix")
+          .attr("values","0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.4 0");
+
+    filter.append("feGaussianBlur")
+        .attr("in", "matrixOut")        
+        .attr("result", "blurOut")
+        .attr("stdDeviation", 5);
+
+    filter.append("feblend")
+        .attr("in", "SourceGraphic")
+        .attr("in2", "blurOut")
+        .attr("mode", "normal");
+
+    var feMerge = filter.append("feMerge");
+
+    feMerge.append("feMergeNode")
+        .attr("in", "offsetBlur")
+    feMerge.append("feMergeNode")
+        .attr("in", "SourceGraphic");
+
+    //FINISH GENERATING SHADOW
+
     vm._chart._legend
       .append('rect')
         .attr('class','back-rect')
@@ -326,6 +366,7 @@ Map.prototype = map.prototype = {
         .style('fill', legendFill)
         .attr('rx', 5)
         .attr('ry', 5)
+        .style("filter", "url(#drop-shadow)")
 
     vm._chart._legend.selectAll('.rect-info')
       .data(quantiles)
@@ -390,7 +431,7 @@ Map.prototype = map.prototype = {
       .attr("y",(vm._chart._height - (20 * quantiles.length)) + 12)
       .text(vm._config.legend.title)
       .attr("font-family", "Roboto")
-      .attr("font-size", "12pts")
+      .attr("font-size", "11px")
       .style("fill","#aeadb3")
       .style("font-weight", "bold")
       .call(wrap, legendWidth);
@@ -532,7 +573,7 @@ function wrap(text, width) {
         line.pop();
         tspan.text(line.join(" "));
         line = [word];
-        tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + "px").text(word);
+        tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + "px").text(word).attr("font-size", "11px");
       }
     }
   });
