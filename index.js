@@ -12,6 +12,11 @@ export {
 } from "./src/timeline";
 
 export {
+  default as heatmap,
+} from "./src/heatmap";
+
+
+/*export {
   default as stackedArea,
 } from "./src/stackedArea";
 
@@ -25,4 +30,4 @@ export {
 
 export {
   default as map,
-} from "./src/map";
+} from "./src/map";*/
