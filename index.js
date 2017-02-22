@@ -1,3 +1,8 @@
+
+export {
+  default as chart,
+} from "./src/chart";
+
 export {
   default as scatter,
 } from "./src/scatter";

@@ -2,10 +2,10 @@
 
 function Columns(options) {
   var vm = this;
-	vm._config = options.config; 
-	vm._chart  = options.chart; 
-	vm._data   = options.data; 
-	vm._scales = options.scales; 
+	vm._config = options.config;
+	vm._chart  = options.chart;
+	vm._data   = options.data;
+	vm._scales = options.scales;
 }
 
 Columns.prototype.draw = function (){
@@ -15,7 +15,7 @@ Columns.prototype.draw = function (){
       return d.x;
     });
 
-  var bandWidth = d3.scale.ordinal()
+  var bandWidth = d3.scaleOrdinal()
             .domain(dates)
             .rangeRoundBands(vm._scales.x.range(), 0.1)
             .rangeBand(); */
@@ -46,16 +46,16 @@ Columns.prototype.draw = function (){
 
 Columns.prototype.select = function (selector){
   var vm = this;
-  var select = false; 
-   
+  var select = false;
+
   vm._chart._svg.selectAll('.bar')
     .each(function(d){
       if(d.x === selector || d.y === selector){
-        select = d3.select(this); 
+        select = d3.select(this);
       }
     })
-    
-  return select; 
+
+  return select;
 }
 
 export default function columns(options) {

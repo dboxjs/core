@@ -5,5 +5,5 @@ export default {
   format: "umd",
   moduleName: "dbox",
   plugins: [npm({jsnext: true})],
-  dest: "../d4pkg-develop/src/dbox/build/dbox.js"
+  dest: "../dbox-testing-site/src/app/dbox/js/dbox.js"
 };

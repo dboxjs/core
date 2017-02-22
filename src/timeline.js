@@ -1,10 +1,157 @@
-import chart from './chart.js';
+export default function(config) {
+
+  var parseDate = d3.timeParse("%Y-%m-%d");
+
+  function Timeline(config){
+    var vm = this;
+    vm._config = config ? config : {};
+    vm._data = [];
+    vm._scales ={};
+    vm._axes = {};
+
+    vm._line = d3.line()
+      .curve(d3.curveBasis)
+      .x(function(d) { return vm._scales.x(d.x); })
+      .y(function(d) { return vm._scales.y(d.y); });
+  }
+
+  //-------------------------------
+  //User config functions
+  Timeline.prototype.x = function(col){
+    var vm = this;
+    vm._config.x = col;
+    return vm;
+  }
+
+  Timeline.prototype.y = function(col){
+    var vm = this;
+    vm._config.y = col;
+    return vm;
+  }
+
+  Timeline.prototype.series = function(arr){
+    var vm = this;
+    vm._config.series = arr;
+    return vm;
+  }
+
+  Timeline.prototype.color = function(col){
+    var vm = this;
+    vm._config.color = col;
+    return vm;
+  }
+
+  Timeline.prototype.end = function(){
+    var vm = this;
+    return vm._chart;
+  }
+
+  //-------------------------------
+  //Triggered by the chart.js;
+  Timeline.prototype.chart = function(chart){
+    var vm = this;
+    vm._chart = chart;
+    return vm;
+  }
+
+
+  Timeline.prototype.data = function(data){
+    var vm = this;
+
+    vm._data = data.map(function(d){
+      d.x = parseDate(d[vm._config.x]);
+      d.color = d[vm._config.color];
+      delete(d[vm._config.x]);
+      return d;
+    });
+
+    vm._lines = vm._config.y ? vm._config.y : vm._config.series;
+
+    vm._lines = vm._lines.map(function(name) {
+      return {
+        name: name,
+        values: data.map(function(d) {
+          return {x: d.x, y: +d[name]};
+        })
+      };
+    });
+
+    return vm;
+  }
+
+  Timeline.prototype.scales = function(s){
+    var vm = this;
+    vm._scales = s;
+    return vm;
+  }
+
+  Timeline.prototype.axes = function(a){
+    var vm = this;
+    vm._axes = a;
+    return vm;
+  }
+
+  Timeline.prototype.domains = function(){
+    var vm = this;
+    var xMinMax = d3.extent(vm._data, function(d) { return d.x; });
+
+    var yMinMax = [
+      d3.min(vm._lines, function(c) { return d3.min(c.values, function(v) { return v.y; }); }),
+      d3.max(vm._lines, function(c) { return d3.max(c.values, function(v) { return v.y; }); })
+    ];
+
+    vm._scales.x.domain(xMinMax).nice();
+    vm._scales.y.domain(yMinMax).nice();
+
+    return vm;
+  };
+
+  Timeline.prototype.draw = function(){
+    var vm = this;
+
+    var lines = vm._chart._svg.selectAll(".lines")
+      .data(vm._lines)
+    .enter().append("g")
+      .attr("class", "lines");
+
+    var path = vm._chart._svg.selectAll(".lines").append("path")
+      .attr("class", "line")
+      .attr("d", function(d) {
+        console.log(d);
+        console.log(vm._line(d.values));
+        return vm._line(d.values);
+      })
+      .style("stroke", function(d){
+        if (d.name == "Airbus"){
+          return "rgb(000,255,000)";
+        }else {
+          return "#000";
+        }
+      });
+
+
+    path.each(function(d) { d.totalLength = this.getTotalLength(); })
+      .attr("stroke-dasharray", function(d) { return d.totalLength + " " + d.totalLength; })
+      .attr("stroke-dashoffset", function(d) { return d.totalLength; })
+      .transition()
+        .duration(5000)
+        .ease(d3.easeLinear)
+        .attr("stroke-dashoffset", 0);
+
+    return vm;
+  }
+
+  return new Timeline(config);
+}
+
+
+/*import chart from './chart.js';
 
 function Timeline(config) {
   var vm = this;
-  vm._config = config; 
-  vm._chart; 
-  vm._scales = {}; 
+  vm._config = config;
+  vm._chart;
+  vm._scales = {};
   vm._axes = {};
 }
 
@@ -21,8 +168,8 @@ Timeline.prototype = timeline.prototype = {
     q.await(function(error,data){
       if (error) {
         //console.log(error)
-        throw error;	
-        return false; 
+        throw error;
+        return false;
       }
 
       vm.setData(data);
@@ -40,14 +187,14 @@ Timeline.prototype = timeline.prototype = {
 	setScales: function(){
 		var vm = this;
 
-		vm._scales.x = d3.time.scale()
+		vm._scales.x = d3.scaleTime()
 		  .range([0, vm._chart._width]);
 
-		vm._scales.y = d3.scale.linear()
+		vm._scales.y = d3.scaleLinear()
 		  .range([vm._chart._height, 0]);
 
-    vm._scales.color = d3.scale.category20c();
-	}, 
+    vm._scales.color = d3.scaleOrdinal(d3.schemeCategory20c);
+	},
 	setAxes : function(){
 		var vm = this;
 
@@ -60,7 +207,7 @@ Timeline.prototype = timeline.prototype = {
 		  .orient("left");
 
 
-    if(vm._config.yAxis && vm._config.yAxis.ticks 
+    if(vm._config.yAxis && vm._config.yAxis.ticks
         && vm._config.yAxis.ticks.enabled === true && vm._config.yAxis.ticks.style ){
 
       switch(vm._config.yAxis.ticks.style){
@@ -71,15 +218,15 @@ Timeline.prototype = timeline.prototype = {
       }
 
     }
-   
+
     if( vm._config.yAxis.ticks.format){
       console.log('Set tick format');
-      vm._axes.y.tickFormat(vm._config.yAxis.ticks.format); 
+      vm._axes.y.tickFormat(vm._config.yAxis.ticks.format);
     }
 	},
 	setData:function(data){
     var vm = this;
-    var keys = d3.keys(data[0]).filter(function(key) { return key !== "date"; }); 
+    var keys = d3.keys(data[0]).filter(function(key) { return key !== "date"; });
 
     var series = keys.map(function(name) {
       return {
@@ -143,17 +290,12 @@ Timeline.prototype = timeline.prototype = {
   },
   drawData : function(){
     var vm = this;
-    /* @Deprecated - data manipulation should only happen on the setData method
-      vm._data = d3.nest()
-        .key(function(d){ return d.name; })
-        .entries(vm._data);
-    */
     var line = d3.svg.line()
         .interpolate(vm._config.data.interpolation)
         .defined(function(d) { return d; })
         .x(function(d) { return vm._scales.x(d.x); })
         .y(function(d) { return vm._scales.y(d.y); });
-      
+
     var series = vm._chart._svg.selectAll(".series")
         .data(vm._data)
       .enter().append("g")
@@ -165,7 +307,7 @@ Timeline.prototype = timeline.prototype = {
         .style("stroke-dasharray",function(d){ if(d.name == "Nacional"){
             return ("10,5");
           }})
-        .style("stroke", function(d) { 
+        .style("stroke", function(d) {
           if(d.color){ return d.color; }
           else { return vm._scales.color(d.key); }
         }) //return vm._scales.color(d.name); })
@@ -179,11 +321,11 @@ Timeline.prototype = timeline.prototype = {
         .attr("r", 3)
         .attr("cx", function(d) { return vm._scales.x(d.x); })
         .attr("cy", function(d) { return vm._scales.y(d.y); })
-        .style("fill", function(d) { 
+        .style("fill", function(d) {
           if(d.color){ return d.color; }
           else { return vm._scales.color(d.key); }
         })//return vm._scales.color(d.name); })
-        .style("stroke", function(d) { 
+        .style("stroke", function(d) {
           if(d.color){ return d.color; }
           else { return vm._scales.color(d.key); }
         }) // return vm._scales.color(d.name); })
@@ -199,36 +341,36 @@ Timeline.prototype = timeline.prototype = {
           }
           vm._chart._tip.hide(d, d3.select(this).node())
         });
-        /*
-        series.selectAll('.dot-inside')
-          .data(function(d){return d.values})
-        .enter().append("circle")
-          .attr("class", "dot-inside")
-          .attr("r", 4)
-          .attr("cx", function(d) { return vm._scales.x(d.x); })
-          .attr("cy", function(d) { return vm._scales.y(d.y); })
-          .style("fill", 'black')//return vm._scales.color(d.name); })
-          .style("stroke", function(d) { return d.color;}) // return vm._scales.color(d.name); })
-          .on('mouseover', function(d,i){
-            if(vm._config.data.mouseover){
-              vm._config.data.mouseover.call(vm, d,i)
-            }
-            vm._chart._tip.show(d, d3.select(this).node())
-          })
-          .on('mouseout',function(d,i){
-            if(vm._config.data.mouseout){
-              vm._config.data.mouseout.call(vm, d,i)
-            }
-            vm._chart._tip.hide(d, d3.select(this).node())
-          });
-          */
-        
-   /* series.append("text")
-        .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
-        .attr("transform", function(d) { return "translate(" + vm._scales.x(d.value.x) + "," + vm._scales.y(d.value.y) + ")"; })
-        .attr("x", 3)
-        .attr("dy", ".35em")
-        .text(function(d) { return d.name; });*/
+
+        //series.selectAll('.dot-inside')
+        //  .data(function(d){return d.values})
+        //.enter().append("circle")
+        //  .attr("class", "dot-inside")
+        //  .attr("r", 4)
+        //  .attr("cx", function(d) { return vm._scales.x(d.x); })
+        //  .attr("cy", function(d) { return vm._scales.y(d.y); })
+        //  .style("fill", 'black')//return vm._scales.color(d.name); })
+        //  .style("stroke", function(d) { return d.color;}) // return vm._scales.color(d.name); })
+        //  .on('mouseover', function(d,i){
+        //    if(vm._config.data.mouseover){
+        //      vm._config.data.mouseover.call(vm, d,i)
+        //    }
+        //    vm._chart._tip.show(d, d3.select(this).node())
+        //  })
+        //  .on('mouseout',function(d,i){
+        //    if(vm._config.data.mouseout){
+        //      vm._config.data.mouseout.call(vm, d,i)
+        //    }
+        //    vm._chart._tip.hide(d, d3.select(this).node())
+        //  });
+
+
+    //series.append("text")
+    //    .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
+    //    .attr("transform", function(d) { return "translate(" + vm._scales.x(d.value.x) + "," + vm._scales.y(d.value.y) + ")"; })
+    //    .attr("x", 3)
+    //    .attr("dy", ".35em")
+    //    .text(function(d) { return d.name; });
   }
 
 
@@ -236,4 +378,4 @@ Timeline.prototype = timeline.prototype = {
 
 export default function timeline(config) {
   return new Timeline(arguments.length ? config : null);
-}
+}*/

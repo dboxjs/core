@@ -1,48 +1,76 @@
 export default function(config) {
 
-  function Scatter(config){
+  function Heatmap(config){
     var vm = this;
     vm._config = config ? config : {};
     vm._data = [];
     vm._scales ={};
     vm._axes = {};
     //vm._tip = d3.tip().attr('class', 'd3-tip').html(vm._config.data.tip);
+    //
+    var vm._gridSize = Math.floor(width / 24),
+      legendElementWidth = vm._gridSize*2,
+      buckets = 9,
+      colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"], // alternatively colorbrewer.YlGnBu[9]
+      days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+      times = ["1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12a", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p", "12p"];
+      datasets = ["data.tsv", "data2.tsv"];
+
+    var vm._dayLabels = svg.selectAll(".dayLabel")
+          .data(days)
+          .enter().append("text")
+            .text(function (d) { return d; })
+            .attr("x", 0)
+            .attr("y", function (d, i) { return i * vm._gridSize; })
+            .style("text-anchor", "end")
+            .attr("transform", "translate(-6," + vm._gridSize / 1.5 + ")")
+            .attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); });
+
+    var vm._timeLabels = svg.selectAll(".timeLabel")
+        .data(times)
+        .enter().append("text")
+          .text(function(d) { return d; })
+          .attr("x", function(d, i) { return i * vm._gridSize; })
+          .attr("y", 0)
+          .style("text-anchor", "middle")
+          .attr("transform", "translate(" + vm._gridSize / 2 + ", -6)")
+          .attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); });
   }
 
   //-------------------------------
   //User config functions
-  Scatter.prototype.x = function(col){
+  Heatmap.prototype.x = function(col){
     var vm = this;
     vm._config.x = col;
     return vm;
   }
 
-  Scatter.prototype.y = function(col){
+  Heatmap.prototype.y = function(col){
     var vm = this;
     vm._config.y = col;
     return vm;
   }
 
-  Scatter.prototype.color = function(col){
+  Heatmap.prototype.color = function(col){
     var vm = this;
     vm._config.color = col;
     return vm;
   }
 
-  Scatter.prototype.end = function(){
+  Heatmap.prototype.end = function(){
     var vm = this;
     return vm._chart;
   }
 
   //-------------------------------
   //Triggered by the chart.js;
-  Scatter.prototype.chart = function(chart){
+  Heatmap.prototype.chart = function(chart){
     var vm = this;
     vm._chart = chart;
     return vm;
   }
 
-  Scatter.prototype.data = function(data){
+  Heatmap.prototype.data = function(data){
     var vm = this;
     vm._data = data.map(function(d){
       var m = {};
@@ -54,19 +82,19 @@ export default function(config) {
     return vm;
   }
 
-  Scatter.prototype.scales = function(s){
+  Heatmap.prototype.scales = function(s){
     var vm = this;
     vm._scales = s;
     return vm;
   }
 
-  Scatter.prototype.axes = function(a){
+  Heatmap.prototype.axes = function(a){
     var vm = this;
     vm._axes = a;
     return vm;
   }
 
-  Scatter.prototype.domains = function(){
+  Heatmap.prototype.domains = function(){
     var vm = this;
     var xMinMax = d3.extent(vm._data, function(d) { return d.x; }),
         yMinMax=d3.extent(vm._data, function(d) { return d.y; });
@@ -97,7 +125,7 @@ export default function(config) {
     return vm;
   };
 
-  Scatter.prototype.draw = function(){
+  Heatmap.prototype.draw = function(){
     var vm = this;
 
     console.log(vm, vm._scales, vm._scales.y(6.3))
@@ -132,6 +160,6 @@ export default function(config) {
     return vm;
   }
 
-  return new Scatter(config);
+  return new Heatmap(config);
 }
 
