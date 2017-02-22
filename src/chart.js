@@ -1,5 +1,6 @@
 import carto from './carto/carto.js';
 
+
 export default function(config) {
 
   function Chart(config){
@@ -34,9 +35,10 @@ export default function(config) {
     return vm;
   }
 
-  Chart.prototype.layer = function(_layer, config){
+  Chart.prototype.layer = function(_layer, _config){
     var vm = this;
     var layer;
+    var config = _config ? _config : vm._config;
     if( _layer === undefined && _layer === null){
       //@Todo Throw Error
     }else{
@@ -287,16 +289,20 @@ export default function(config) {
 
   Chart.prototype.drawAxes = function(){
     var vm = this;
+    var xAxis, yAxis;
 
-
-    var xAxis = vm._svg.append("g")
+    if(vm._config.xAxis && vm._config.xAxis.enabled !== false){
+      xAxis = vm._svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + vm._height + ")")
         .call(vm._axes.x);
+    }
 
-    var yAxis = vm._svg.append("g")
-          .attr("class", "y axis")
-          .call(vm._axes.y);
+    if(vm._config.xAxis && vm._config.xAxis.enabled !== false){
+      yAxis = vm._svg.append("g")
+        .attr("class", "y axis")
+        .call(vm._axes.y);
+    }
 
     /*xAxis.selectAll('text')
         .on("click",function(d,i){
@@ -329,7 +335,7 @@ export default function(config) {
 
     }
 
-    if(vm._config.yAxis && vm._config.yAxis.visible){
+    if(vm._config.yAxis && vm._config.yAxis.enabled !== false){
 
       if(vm._config.yAxis && vm._config.yAxis.text){
         yAxis.append("text")
