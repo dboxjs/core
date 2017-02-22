@@ -291,14 +291,14 @@ export default function(config) {
     var vm = this;
     var xAxis, yAxis;
 
-    if(vm._config.xAxis && vm._config.xAxis.enabled !== false){
+    if(!vm._config.xAxis || ( vm._config.xAxis && vm._config.xAxis.enabled !== false ) ){
       xAxis = vm._svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + vm._height + ")")
         .call(vm._axes.x);
     }
 
-    if(vm._config.xAxis && vm._config.xAxis.enabled !== false){
+    if(!vm._config.yAxis || ( vm._config.yAxis && vm._config.yAxis.enabled !== false ) ){
       yAxis = vm._svg.append("g")
         .attr("class", "y axis")
         .call(vm._axes.y);
