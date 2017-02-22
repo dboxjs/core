@@ -2,16 +2,16 @@ import chart from './chart.js';
 
 function StackedArea(config) {
   var vm = this;
-  vm._config = config; 
-  vm._chart; 
-  vm._scales = {}; 
+  vm._config = config;
+  vm._chart;
+  vm._scales = {};
   vm._axes = {};
 }
 
 StackedArea.prototype = stackedArea.prototype = {
   generate:function(){
     var vm = this, q;
-    
+
     vm.draw();
     vm.setScales();
     vm.setAxes();
@@ -19,7 +19,7 @@ StackedArea.prototype = stackedArea.prototype = {
     q = vm._chart.loadData();
 
     q.await(function(error,data){
-      if (error) throw error;   
+      if (error) throw error;
 
       //console.log(error,data);
 
@@ -38,17 +38,17 @@ StackedArea.prototype = stackedArea.prototype = {
   setScales: function(){
     var vm = this;
 
-    vm._scales.x = d3.scale.ordinal()
+    vm._scales.x = d3.scaleOrdinal()
       .rangePoints([0, vm._chart._width]);
 
-    vm._scales.y = d3.scale.linear()
+    vm._scales.y = d3.scaleLinear()
       .range([vm._chart._height, 0]);
-    
+
     if(vm._config.colorScale)
       vm._scales.color = vm._config.colorScale;
     if(!vm._config.colorScale)
-      vm._scales.color = d3.scale.category20();
-  }, 
+      vm._scales.color = d3.scaleOrdinal(d3.schemeCategory20);
+  },
   setAxes : function(){
     var vm = this;
 
@@ -99,7 +99,7 @@ StackedArea.prototype = stackedArea.prototype = {
 
     var total = d3.nest()
         .key(function(d){ return d.x; })
-        .rollup(function(leaves){ 
+        .rollup(function(leaves){
           return d3.sum(leaves, function(j){ return j.y; });
         }).entries(vm._data);
 
@@ -127,7 +127,7 @@ StackedArea.prototype = stackedArea.prototype = {
     }
     var nestedData = nest.entries(vm._data).sort(function(a,b){ return a.values[a.values.length - 1].y > b.values[b.values.length -1].y ? -1 : 1;});
     var layers = stack(nestedData);
-    
+
     vm.setDomains();
     vm.drawAxes();
 

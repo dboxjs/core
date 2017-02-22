@@ -1,20 +1,20 @@
 import chart from './chart.js';
-import columns from './bars/columns.js'; 
-import lineAndCircles from './bars/lineAndCircles.js'; 
-import quantilesAndCircles from './bars/quantilesAndCircles.js'; 
-import averageLines from './bars/utils/averageLines.js'; 
+import columns from './bars/columns.js';
+import lineAndCircles from './bars/lineAndCircles.js';
+import quantilesAndCircles from './bars/quantilesAndCircles.js';
+import averageLines from './bars/utils/averageLines.js';
 
 function Bars(config) {
   var vm = this;
-  vm._config = config; 
-  vm._chart; 
-  vm._scales = {}; 
+  vm._config = config;
+  vm._chart;
+  vm._scales = {};
   vm._axes = {};
-  vm._stats = {}; 
-  vm._averageLines = []; 
-  vm.columns = null; 
-  vm.lineAndCircles = null; 
-  vm.quantilesAndCircles = null; 
+  vm._stats = {};
+  vm._averageLines = [];
+  vm.columns = null;
+  vm.lineAndCircles = null;
+  vm.quantilesAndCircles = null;
 }
 
 Bars.prototype = bars.prototype = {
@@ -23,20 +23,20 @@ Bars.prototype = bars.prototype = {
 
 		vm.init();
 		vm.setScales();
-		
+
 
 		q = vm._chart.loadData();
 
     q.awaitAll(function(error,data){
       if (error) {
-        throw error;	 
+        throw error;
         return false;
-      } 
-      vm.setStats(data);  
+      }
+      vm.setStats(data);
       vm.setAxes(data);
       vm.setData(data);
       vm.setDomains();
-      vm._setChartType(); 
+      vm._setChartType();
       vm.drawAxes();
       vm.drawData();
       vm.drawLegends();
@@ -45,7 +45,7 @@ Bars.prototype = bars.prototype = {
       if( vm._config.events && vm._config.events.load){
         vm._chart.dispatch.on("load.chart", vm._config.events.load(vm));
       }
-      
+
     });
 
 	},
@@ -56,10 +56,10 @@ Bars.prototype = bars.prototype = {
 	setScales: function(){
 		var vm = this;
     vm._scales = vm._chart.setScales();
-	}, 
+	},
   setStats: function(data){
 
-    var vm = this; 
+    var vm = this;
 
     if(Array.isArray(data)){
       vm._stats.x = {};
@@ -75,15 +75,17 @@ Bars.prototype = bars.prototype = {
 		  .scale(vm._scales.x)
 		  .orient("bottom");
 
+    //
 		vm._axes.y = d3.svg.axis()
 		  .scale(vm._scales.y)
 		  .orient("left")
 
-
-    if(vm._config.yAxis && vm._config.yAxis.ticks 
+    //Config the style of the ticks
+    if(vm._config.yAxis && vm._config.yAxis.ticks
         && vm._config.yAxis.ticks.enabled === true && vm._config.yAxis.ticks.style ){
 
       switch(vm._config.yAxis.ticks.style){
+        //Use a straight line accross the whole width of the chart
         case 'straightLine':
           vm._axes.y
             .tickSize(-vm._chart._width,0);
@@ -93,16 +95,16 @@ Bars.prototype = bars.prototype = {
 	},
 	setData:function(data){
     var vm = this;
-    
+
     if(Array.isArray(data)){
-      
+
       vm._data = data[0];
 
       if(data.length > 1){
         data.forEach(function(d,i){
           if(i>0) {
             if(vm._config.plotOptions.bars.averageLines[i-1].data.cartodb){
-              vm._config.plotOptions.bars.averageLines[i-1].data.raw = d[0].avg; 
+              vm._config.plotOptions.bars.averageLines[i-1].data.raw = d[0].avg;
             }
           }
         });
@@ -111,44 +113,44 @@ Bars.prototype = bars.prototype = {
   },
   setDomains:function(){
     var vm = this;
-    
+
     var domains = vm._chart.getDomains(vm._data);
 
     vm._scales.x.domain(domains.x);
     vm._scales.y.domain(domains.y);
 
     //Quantile scale
-    if(vm._scales.q){ 
-      vm._scales.q.domain(domains.q);    
+    if(vm._scales.q){
+      vm._scales.q.domain(domains.q);
     }
 
   },
   _setChartType:function(){
-    var vm = this; 
+    var vm = this;
 
     var params ={
-      "config"  : vm._config, 
+      "config"  : vm._config,
       "chart"   : vm._chart,
       "data"    : vm._data,
-      "scales"  : vm._scales, 
+      "scales"  : vm._scales,
     }
 
     if(vm._config.style){
       switch(vm._config.style){
         case 'lineAndCircles':
-          vm.lineAndCircles = lineAndCircles(params); 
+          vm.lineAndCircles = lineAndCircles(params);
         break;
         case 'columns':
-          vm.columns = columns(params); 
+          vm.columns = columns(params);
         break;
         case 'quantilesAndCircles':
-          vm.quantilesAndCircles = quantilesAndCircles(params); 
+          vm.quantilesAndCircles = quantilesAndCircles(params);
         break;
       }
     }
 
     //Set averageLines
-    vm.averageLines = averageLines(params);  
+    vm.averageLines = averageLines(params);
 
   },
   drawAxes:function(){
@@ -160,12 +162,12 @@ Bars.prototype = bars.prototype = {
         .call(vm._axes.x);
 
     //Rotation
-    xAxis.selectAll("text")  
+    xAxis.selectAll("text")
         .style("text-anchor", "end")
         .attr("dx", "0em")
         .attr("dy", "0em")
         .attr("transform", function(d) {
-          return "translate(0,8)rotate(-65)" 
+          return "translate(0,8)rotate(-65)"
         });
 
     if(vm._config.style){
@@ -174,7 +176,7 @@ Bars.prototype = bars.prototype = {
           vm.quantilesAndCircles.renameAxis(xAxis);
         break
       }
-    }      
+    }
 
     if(vm._config.xAxis && vm._config.xAxis.text){
       xAxis.append("text")
@@ -187,7 +189,7 @@ Bars.prototype = bars.prototype = {
 
     var yAxis = vm._chart._svg.append("g")
         .attr("class", "y axis")
-        .call(vm._axes.y);    
+        .call(vm._axes.y);
 
     if(vm._config.yAxis && vm._config.yAxis.text){
       yAxis.append("text")
@@ -200,7 +202,7 @@ Bars.prototype = bars.prototype = {
     }
   },
   drawData : function(){
-    var vm = this; 
+    var vm = this;
 
     if(vm._config.style){
       switch(vm._config.style){
@@ -221,16 +223,16 @@ Bars.prototype = bars.prototype = {
     vm.averageLines.draw();
   },
   set: function(option,value){
-    var vm = this; 
+    var vm = this;
     if(option === 'config') {
-      vm._config = value; 
+      vm._config = value;
     }else{
-      vm._config[option] = value ; 
+      vm._config[option] = value ;
     }
-  }, 
+  },
   select:function(selector){
-    var vm = this; 
-    var select = false; 
+    var vm = this;
+    var select = false;
     if(vm._config.style){
       switch(vm._config.style){
         case 'lineAndCircles':
@@ -248,11 +250,11 @@ Bars.prototype = bars.prototype = {
       }
     }
 
-    return select; 
+    return select;
   },
   triggerMouseOver:function(selector){
-    var vm = this; 
-   
+    var vm = this;
+
     vm._chart._svg.selectAll('circle')
       .each(function(d){
         if(d.x === selector || d.y === selector){
@@ -261,7 +263,7 @@ Bars.prototype = bars.prototype = {
       })
   },
   triggerMouseOut:function(selector){
-    var vm = this; 
+    var vm = this;
     vm._chart._svg.selectAll('circle')
       .each(function(d){
         if(d.x === selector || d.y === selector){
@@ -271,13 +273,13 @@ Bars.prototype = bars.prototype = {
   },
   redraw: function(){
     var vm = this;
-    vm._chart.destroy(); 
+    vm._chart.destroy();
     vm.generate();
   },
   drawLegends: function(){
     var vm = this;
-    if(vm._config.plotOptions && vm._config.plotOptions.bars 
-      && vm._config.plotOptions.bars.averageLines && Array.isArray(vm._config.plotOptions.bars.averageLines) 
+    if(vm._config.plotOptions && vm._config.plotOptions.bars
+      && vm._config.plotOptions.bars.averageLines && Array.isArray(vm._config.plotOptions.bars.averageLines)
       && vm._config.plotOptions.bars.averageLines.length >0 ){
 
       var avgLinesLegend = d3.select(vm._config.bindTo + ' .chart-legend-top').append("div")
@@ -286,7 +288,7 @@ Bars.prototype = bars.prototype = {
           .attr("class", "legend-average-lines")
           .style('padding-left','15px')
           .style('padding-right','15px');
-      
+
       var legendContent = avgLinesLegend.selectAll('.legend-content')
         .data(vm._config.plotOptions.bars.averageLines)
         .enter().append('div')
@@ -318,12 +320,12 @@ Bars.prototype = bars.prototype = {
           }
           vm.redraw();
         });
-      
+
       legendContent.append("span")
         .text(function(d){ return d.title; });
     }
   }
-  
+
 }
 
 
