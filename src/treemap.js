@@ -38,17 +38,16 @@ export default function(config) {
   Treemap.prototype.nestBy = function(keys) {
     var vm = this;
     if(Array.isArray(keys)) {
-      if(keys.length == 1)
-        console.warn("nestBy() When using a 1 length Array, labels and colors will show parent info");
       if(keys.length == 0)
         throw "Error: nestBy() array is empty";
       vm._config._keys = keys;
     } else if(typeof keys === 'string' || keys instanceof String) {
-      console.warn("nestBy() expects a min 2 length Array. String will be used to nest data, but labels will show parent's name.");
       vm._config._keys = [keys];
     } else {
+      if(keys == undefined || keys == null)
+        throw "Error: nestBy() expects column names to deaggregate data";
       vm._config._keys = [keys.toString()];
-      console.error("nestBy() expected name of columns. Will be forced to string version.");
+      console.warning("nestBy() expected name of columns. Argument will be forced to string version .toString()");
     }
     vm._config._labelName = vm._config._keys[vm._config._keys.length - 1]; //label will be last key
     return vm;
