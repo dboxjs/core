@@ -19,6 +19,10 @@ export {
   default as treemap,
 } from "./src/treemap";
 
+export {
+  default as MexicoMapRounded
+} from "./src/map/mexicoMapRounded";
+
 /*export {
   default as stackedArea,
 } from "./src/stackedArea";
