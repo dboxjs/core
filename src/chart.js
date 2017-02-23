@@ -29,6 +29,12 @@ export default function(config) {
     return vm;
   }
 
+  Chart.prototype.bindTo = function(selector) {
+    var vm = this;
+    vm._config.bindTo = selector;
+    return vm;
+  }
+
   Chart.prototype.data = function(data){
     var vm= this;
     vm._config.data = data;

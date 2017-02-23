@@ -23,9 +23,9 @@ export default function(config) {
     return vm;
   }
 
-  Treemap.prototype.colorScale = function(colorScale){
+  Treemap.prototype.colorScale = function(arrayOfColors){
     var vm = this;
-    vm._config._colorScale = colorScale;
+    vm._config._colorScale = d3.scaleOrdinal(arrayOfColors);
     return vm;
   }
 
@@ -143,7 +143,7 @@ export default function(config) {
             // TODO: improve way to get nested multiple keys
             var aux = {};
             aux.key = 'data';
-            aux.values = _.cloneDeep(nestedData);
+            aux.values = _.cloneDeep(nestedData); // WARN: Lodash dependency
             data = vm.formatNestedData(aux);
           } catch(err){
             console.error(err);
