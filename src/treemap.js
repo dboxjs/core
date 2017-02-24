@@ -139,6 +139,7 @@ export default function(config) {
             }
             nested += '.rollup(function(leaves) { return d3.sum(leaves, function(d) {return d.' + vm._config._size + ';})})'
             nested += '.entries(data)';
+
             var nestedData = eval(nested);
             // TODO: improve way to get nested multiple keys
             var aux = {};
