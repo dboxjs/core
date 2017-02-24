@@ -2,12 +2,13 @@ export default function(config) {
   function Treemap(config) {
     var vm = this;
     vm._config = config ? config : {};
-    vm._config._padding = 4;
+    vm._config._padding    = 3;
     vm._config._colorScale = d3.scaleOrdinal(d3.schemeCategory20c);
-    vm._config._labels = true;
-    vm._data = [];
+    vm._config._format     = d3.format(",.1f");
+    vm._config._labels     = true;
+    vm._data   = [];
     vm._scales = {};
-    vm._axes = {};
+    vm._axes   = {};
   }
 
   //-------------------------------
@@ -50,6 +51,15 @@ export default function(config) {
       console.warning("nestBy() expected name of columns. Argument will be forced to string version .toString()");
     }
     vm._config._labelName = vm._config._keys[vm._config._keys.length - 1]; //label will be last key
+    return vm;
+  }
+
+  Treemap.prototype.format = function(format){
+    var vm = this;
+    if (typeof format == 'function' || format instanceof Function)
+      vm._config._format = format;
+    else
+      vm._config._format = d3.format(format);
     return vm;
   }
 
@@ -170,7 +180,6 @@ export default function(config) {
 
   Treemap.prototype.draw = function(){
     var vm = this;
-    var format = d3.format(",d");
 
     var treemap = d3.treemap()
         .tile(d3.treemapResquarify)
@@ -202,22 +211,29 @@ export default function(config) {
         .attr("xlink:href", function(d) { return "#" + d.data.id; });
 
     if(vm._config._labels) {
-      cell.append("text")
+      var text = cell.append("text")
           .attr("clip-path", function(d) { return "url(#clip-" + d.data.id + ")"; })
-        .selectAll("tspan")
-          .data(function(d) { return d.data.id.split(/(?=[A-Z][^A-Z])/g); })
-        .enter().append("tspan")
+      text.append("tspan")
           .attr('class','capitalize')
-          .attr("x", 10)
-          .attr("y", function(d, i) { return 15 + i * 10; })
+          .attr("x", 8)
+          .attr("y", function(d, i) { return 25; })
           .text(function(d) {
-            var arr = d.replace('data.','').split('.');
+            console.log(d);
+            var arr = d.data.id.replace('data.','').split('.');
             return arr.length > 1 ? arr.slice(arr.length - 2, arr.length).join(' / ') : arr[arr.length - 1].toString();
+          });
+      text.append("tspan")
+          .attr('class','capitalize')
+          .attr("x", 8)
+          .attr("y", function(d, i) { return 45; })
+          .text(function(d) {
+            console.log(d);
+            return vm._config._format(d.value);
           });
     }
 
     cell.append("title")
-        .text(function(d) { return d.data.name + "\n" + format(d.value); });
+        .text(function(d) { return d.data.name + "\n" + vm._config._format(d.value); });
 
     return vm;
   }
