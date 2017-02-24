@@ -5,5 +5,5 @@ export default {
   format: "umd",
   moduleName: "dbox",
   plugins: [npm({jsnext: true})],
-  dest: "../dbox-testing-site/src/app/d4pkg-dbox/js/dbox.js"
+  dest: "../../gire/gire-matrimonio-adolescente/src/app/d4pkg-dbox/js/dbox.js"
 };
