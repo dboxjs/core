@@ -5,7 +5,7 @@ export default function(config) {
 
   function Chart(config){
     var vm = this;
-    vm._config = config ? config : {};
+    vm._config = config ? _.cloneDeep(config) : {};
     vm._data = [];
     vm._margin = vm._config.size.margin ? vm._config.size.margin : {left: 0, right: 0, top: 0, bottom: 0};
 
@@ -25,7 +25,13 @@ export default function(config) {
   //User
   Chart.prototype.config = function(config){
     var vm = this;
-    vm._config = config;
+    vm._config = _.cloneDeep(config);
+    return vm;
+  }
+
+  Chart.prototype.bindTo = function(selector) {
+    var vm = this;
+    vm._config.bindTo = selector;
     return vm;
   }
 
@@ -185,6 +191,11 @@ export default function(config) {
                 .defer(d3.tsv, vm._config.data.tsv);
     }
 
+    if(vm._config.data.json){
+      var q = d3.queue()
+                .defer(d3.json, vm._config.data.json);
+    }
+
     if(vm._config.data.csv){
         var q = d3.queue()
                 .defer(d3.csv, vm._config.data.csv);
@@ -192,7 +203,7 @@ export default function(config) {
 
     if(vm._config.data.raw){
         var q = d3.queue()
-                .defer(vm.mapData, vm._config.data.raw, vm._config.data.parser);
+                .defer(vm.mapData, vm._config.data.raw);
     }
 
     if(vm._config.data.cartodb){
@@ -386,11 +397,8 @@ export default function(config) {
 
   Chart.prototype.dispatch = d3.dispatch("load", "change");
 
-  Chart.prototype.mapData  =  function (data, parser, callback){
-    if(data.map)
-      callback(null, data.map(parser));
-    else
-      callback(null, data);
+  Chart.prototype.mapData  =  function (data, callback){
+    callback(null, data);
   }
 
   Chart.prototype.getDomains = function(data){
