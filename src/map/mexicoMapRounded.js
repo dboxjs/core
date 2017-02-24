@@ -84,6 +84,8 @@ MexicoMapRounded.prototype.drawMap = function(data) {
 
   });
 
+  return this;
+
 };
 
 
@@ -113,6 +115,7 @@ MexicoMapRounded.prototype.drawCircle = function(item,index){
     .attr("cx",centerX + paddingX)
     .attr("cy",centerY + paddingY)
     .attr("r",(self._circlesConfig.radius) ? self._circlesConfig.radius : 2.5)
+    .attr("class","circle-map-rounded")
     .style("fill",self._circlesConfig.style.fill)
     .style('stroke', self._circlesConfig.style.strokeColor)
     .style('stroke-width',self._circlesConfig.style.strokeWidth + "px")
@@ -150,4 +153,20 @@ MexicoMapRounded.prototype.triggerOut = function(item){
 
 MexicoMapRounded.prototype.setTipHtml = function(content){
   this._tip.html(content);
+}
+
+MexicoMapRounded.prototype.colorStates = function(domain,range){
+
+
+  var testScale = d3.scaleOrdinal()
+    .domain(domain)
+    .range(range);
+
+  d3.selectAll(".path_estado").style("fill",function(){
+    var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
+    console.log(testScale(randomnumber));
+    return testScale(randomnumber);
+  });
+
+  return this;
 }
