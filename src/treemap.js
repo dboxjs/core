@@ -210,7 +210,7 @@ export default function(config) {
           .attr("x", 10)
           .attr("y", function(d, i) { return 15 + i * 10; })
           .text(function(d) {
-            var arr = d.split('data.')[1].split('.');
+            var arr = d.replace('data.','').split('.');
             return arr.length > 1 ? arr.slice(arr.length - 2, arr.length).join(' / ') : arr[arr.length - 1].toString();
           });
     }
