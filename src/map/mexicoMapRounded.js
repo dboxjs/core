@@ -9,7 +9,8 @@ export default function(config) {
 
     this._mapConfig = mapConfig;
     /*mapConfig
-    target: 'ID string'
+    target: 'ID string',
+    identifierKey: string
     zoom:{
       available: bool,
       zoomRange: array of two numbers
@@ -82,11 +83,12 @@ export default function(config) {
     this._mapLayer.call(this._zoom);
     this._mapLayer.call(this._tip);
 
+    var self = this;
+
     this._data = d3.nest()
-                    .key(function(d) { return d.inegi; })
+                    .key(function(d) { return d[self._mapConfig.identifierKey]; })
                     .entries(data);
 
-    var self = this;
     this._data.forEach(function(obj,idx){
 
       dataStateLength = obj.values.length;
@@ -110,7 +112,7 @@ export default function(config) {
     var max,min = (this._circlesConfig.minPadding) ? this._circlesConfig.minPadding : 5;
     var paddingX, paddingY,centerX,centerY;
 
-    bbox = d3.select("#est_"+item.inegi).node().getBBox();
+    bbox = d3.select("#est_"+item[this._mapConfig.identifierKey]).node().getBBox();
 
     max = bbox.width;
 
@@ -169,18 +171,16 @@ export default function(config) {
     this._tip.html(content);
   }
 
-  MexicoMapRounded.prototype.colorStates = function(domain,range){
+  MexicoMapRounded.prototype.colorStates = function(domain,range,fillCallback){
 
-    var maximum = 100;
-    var minimum = 0;
-
-    var testScale = d3.scaleOrdinal()
+    var testScale = d3.scaleQuantile()
       .domain(domain)
       .range(range);
 
+    var self = this;
+
     d3.selectAll(".path_estado").style("fill",function(){
-      var randomnumber = Math.floor(Math.random() * (maximum - minimum + 1)) + minimum;
-      return testScale(randomnumber);
+      return fillCallback(self,this,testScale);
     });
 
     return this;
