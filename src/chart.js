@@ -187,7 +187,7 @@ export default function(config) {
 
     if(vm._config.data.csv){
         var q = d3.queue()
-                .defer(d3.csv, vm._config.data.csv, vm._config.data.parser);
+                .defer(d3.csv, vm._config.data.csv);
     }
 
     if(vm._config.data.raw){
