@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "prepublish": "rollup -c && uglifyjs ./build/dbox.js -c -m -o ./build/dbox.min.js",
+    "alecs": "rollup --config rollup.config.alecs.js",
     "dev": "rollup --config rollup.config.dev.js",
     "pk": "rollup --config rollup.config.pk.js && uglifyjs ../pnud-pk-vppd/src/dbox/build/dbox.js -c -m -o ../pnud-pk-vppd/src/dbox/build/dbox.min.js",
     "mt": "rollup --config rollup.config.mt.js && uglifyjs ../mt-post-olimpicos/src/dbox/build/dbox.js -c -m -o ../mt-post-olimpicos/src/dbox/build/dbox.min.js",
