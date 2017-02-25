@@ -3,14 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "prepublish": "rollup -c && uglifyjs ./build/dbox.js -c -m -o ./build/dbox.min.js",
-    "alecs": "rollup --config rollup.config.alecs.js",
     "dev": "rollup --config rollup.config.dev.js",
-    "pk": "rollup --config rollup.config.pk.js && uglifyjs ../pnud-pk-vppd/src/dbox/build/dbox.js -c -m -o ../pnud-pk-vppd/src/dbox/build/dbox.min.js",
-    "mt": "rollup --config rollup.config.mt.js && uglifyjs ../mt-post-olimpicos/src/dbox/build/dbox.js -c -m -o ../mt-post-olimpicos/src/dbox/build/dbox.min.js",
-    "pb": "rollup --config rollup.config.pb.js && uglifyjs ../frente-pobreza-mapa/src/dbox/build/dbox.js -c -m -o ../frente-pobreza-mapa/src/dbox/build/dbox.min.js",
-    "conade": "rollup --config rollup.config.conade.js && uglifyjs ../conade-admin/src/dbox/build/dbox.js -c -m -o ../conade-admin/src/dbox/build/dbox.min.js",
-    "gire-mapa": "rollup --config rollup.config.gire-mapa.js && uglifyjs ../../aws/gire-mapa-muerte-materna/src/dbox/build/dbox.js -c -m -o ../../aws/gire-mapa-muerte-materna/src/dbox/build/dbox.min.js",
-    "gire-materna": "rollup --config rollup.config.gire-materna.js && uglifyjs ../gire-mapa-muerte-materna-swiip/src/dbox/build/dbox.js -c -m -o ../gire-mapa-muerte-materna-swiip/src/dbox/build/dbox.js"
   },
   "devDependencies": {
     "rollup": "^0.26.3",

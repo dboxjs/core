@@ -1,11 +1,3 @@
 /node_modules
 /bower_components
 c3.js
-
-
-rollup.config.conade.js
-rollup.config.gire-mapa.js
-rollup.config.gire-materna.js
-rollup.config.mt.js
-rollup.config.pb.js
-rollup.config.pk.js
