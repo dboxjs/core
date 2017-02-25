@@ -23,14 +23,3 @@ export {
   default as MexicoMapRounded
 } from "./src/map/mexicoMapRounded";
 
-/*export {
-  default as stackedArea,
-} from "./src/stackedArea";
-
-export {
-  default as bars,
-} from "./src/bars";
-
-export {
-  default as map,
-} from "./src/map";*/
