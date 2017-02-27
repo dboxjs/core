@@ -15,7 +15,6 @@ export default function(config) {
     vm._svg = '';
     vm._scales ={};
     vm._axes = {};
-    //vm._tip = d3.tip().attr('class', 'd3-tip').html(vm._config.data.tip);
 
     //Public
     vm.layers = [];
@@ -55,10 +54,17 @@ export default function(config) {
     }
   }
 
+  Chart.prototype.getLayer = function(layer){
+    var vm = this;
+    return vm.layers[layer];
+  }
+
   Chart.prototype.draw =function(){
     var vm     = this, q;
     vm._scales = vm.scales();
     vm._axes   = vm.axes();
+
+
 
     q = vm.loadData();
 
@@ -71,6 +77,12 @@ export default function(config) {
       vm.drawSVG();
       vm.drawAxes();
       vm.drawGraphs();
+
+      //Trigger load chart event
+      if( vm._config.events && vm._config.events.load){
+        vm.dispatch.on("load.chart", vm._config.events.load(vm));
+      }
+
     })
 
   }
@@ -271,9 +283,9 @@ export default function(config) {
       .attr("transform", "translate(" + vm._margin.left + "," + vm._margin.top + ")");
 
     //Call the tip function
-    if(vm._config.data.tip){
+    /*if(vm._config.data.tip){
       vm._svg.call(vm._tip);
-    }
+    }*/
 
     //Apply background color
     if(vm._config.chart && vm._config.chart.background && vm._config.chart.background.color){
