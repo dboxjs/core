@@ -6,38 +6,44 @@ export default function(config) {
     vm._data = [];
     vm._scales ={};
     vm._axes = {};
-    //vm._tip = d3.tip().attr('class', 'd3-tip').html(vm._config.data.tip);
-    //
     vm._gridSize = Math.floor(vm._config.size.width / 16);
     vm._legendElementWidth = vm._gridSize;
-    vm._buckets = 9;
-    vm._colors = ['#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58','#031033']
-//["#41b6c4","#1d91c0","#225ea8","#253494","#081d58"]; // alternatively colorbrewer.YlGnBu[9]
-    //vm._days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-    //vm._times = ["1a", "2a", "3a", "4a", "5a", "6a", "7a", "8a", "9a", "10a", "11a", "12a", "1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p", "10p", "11p", "12p"];
-    vm._days = ["12", "13", "14", "15", "16", "17"];
-    vm._times = ["12", "13", "14", "15", "16", "17", "18","19","20","21","22","23","24","25","26+"];
 
-    vm._datasets = ["data.tsv", "data2.tsv"];
+    vm._config._format     = d3.format(",.1f");
+
+    vm._tip = d3.tip().attr('class', 'd3-tip');
   }
 
   //-------------------------------
   //User config functions
-  Heatmap.prototype.x = function(col){
+  Heatmap.prototype.x = function(columns){
     var vm = this;
-    vm._config.x = col;
+    vm._config.x = columns;
     return vm;
   }
 
-  Heatmap.prototype.y = function(col){
+  Heatmap.prototype.y = function(columns){
     var vm = this;
-    vm._config.y = col;
+    vm._config.y = columns;
     return vm;
   }
 
-  Heatmap.prototype.color = function(col){
+  Heatmap.prototype.colors = function(colors){
     var vm = this;
-    vm._config.color = col;
+    vm._config.colors = colors;
+    return vm;
+  }
+
+  Heatmap.prototype.tip = function(tip){
+    var vm = this;
+    vm._config.tip = tip;
+    vm._tip.html(vm._config.tip);
+    return vm;
+  }
+
+  Heatmap.prototype.buckets = function(b){
+    var vm = this;
+    vm._config.buckets = buckets;
     return vm;
   }
 
@@ -57,15 +63,11 @@ export default function(config) {
   Heatmap.prototype.data = function(data){
     var vm = this;
     vm._data = data.map(function(d){
-      /*var m = {
-        day: +d.day,
-        hour: +d.hour,
-        value: +d.value
-      };*/
       var m = {
-        day: d.edad_mujer,
-        hour: d.edad_hombre,
-        value: +d.tot
+        y: d.edad_mujer,
+        x: d.edad_hombre,
+        value: +d.tot,
+        percentage : +d.por,
       };
       return m;
     });
@@ -87,87 +89,85 @@ export default function(config) {
 
   Heatmap.prototype.domains = function(){
     var vm = this;
-    var xMinMax = d3.extent(vm._data, function(d) { return d.x; }),
-        yMinMax=d3.extent(vm._data, function(d) { return d.y; });
-    var arrOk = [0,0];
-
-    if(vm._config.fixTo45){
-      if(xMinMax[1] > yMinMax[1]){
-        arrOk[1] = xMinMax[1];
-      }else{
-        arrOk[1] = yMinMax[1];
-      }
-
-      if(xMinMax[0] < yMinMax[0]){
-        //yMinMax = xMinMax;
-        arrOk[0] = xMinMax[0];
-      }else{
-        arrOk[0] = yMinMax[0];
-      }
-
-      vm._scales.x.domain(arrOk).nice();
-      vm._scales.y.domain(arrOk).nice();
-
-    }else{
-      vm._scales.x.domain(xMinMax).nice();
-      vm._scales.y.domain(yMinMax).nice();
-    }
-
     return vm;
   };
 
   Heatmap.prototype.draw = function(){
     var vm = this;
 
+    //Call the tip
+    vm._chart._svg.call(vm._tip)
+
+    if(vm._config.xAxis){
+      vm._config.xAxis.y =  vm._config.y.length * vm._gridSize+25;
+    }else{
+      vm._config.xAxis = { 'y' : vm._config.y.length * vm._gridSize };
+    }
+
     vm._dayLabels = vm._chart._svg.selectAll(".dayLabel")
-          .data(vm._days)
+          .data(vm._config.y)
           .enter().append("text")
             .text(function (d) { return d; })
             .attr("x", 0)
             .attr("y", function (d, i) { return i * vm._gridSize; })
             .style("text-anchor", "end")
             .attr("transform", "translate(-6," + vm._gridSize / 1.5 + ")")
-            .attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); });
+            .attr("class", "dayLabel mono axis");
+            //.attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); });
 
     vm._timeLabels = vm._chart._svg.selectAll(".timeLabel")
-        .data(vm._times)
+        .data(vm._config.x)
         .enter().append("text")
           .text(function(d) { return d; })
           .attr("x", function(d, i) { return i * vm._gridSize; })
-          .attr("y", 0)
+          .attr("y", vm._config.xAxis.y)
           .style("text-anchor", "middle")
           .attr("transform", "translate(" + vm._gridSize / 2 + ", -6)")
-          .attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); });
+          .attr("class", "timeLabel mono axis");
+          //.attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); });
 
 
     var colorScale = d3.scaleQuantile()
         .domain([0, d3.max(vm._data, function (d) { return d.value; })])
-        .range(vm._colors);
-
-    console.log(colorScale.domain(), colorScale(20))
+        .range(vm._config.colors);
 
     var cards = vm._chart._svg.selectAll(".hour")
-        .data(vm._data, function(d) {return d.day+':'+d.hour;});
-
-    cards.append("title");
+        .data(vm._data, function(d) {
+          return d.y+':'+d.x;
+        });
 
     cards.enter().append("rect")
-        .attr("x", function(d) { console.log("times", vm._times.indexOf(d.hour)); return (vm._times.indexOf(d.hour) ) * vm._gridSize; })
-        .attr("y", function(d) { console.log("days", vm._days.indexOf(d.day));  return (vm._days.indexOf(d.day)) * vm._gridSize; })
+        .attr("x", function(d) { console.log("times", vm._config.x.indexOf(d.x)); return (vm._config.x.indexOf(d.x) ) * vm._gridSize; })
+        .attr("y", function(d) { console.log("days", vm._config.y.indexOf(d.y));  return (vm._config.y.indexOf(d.y)) * vm._gridSize; })
         .attr("rx", 4)
         .attr("ry", 4)
         .attr("class", "hour bordered")
         .attr("width", vm._gridSize)
         .attr("height", vm._gridSize)
-        .style("fill", vm._colors[0])
-        .transition()
+        .on('mouseover', function(d,i){
+          /*if(vm._config.data.mouseover){
+            vm._config.data.mouseover.call(vm, d,i);
+          }*/
+          vm._tip.show(d, d3.select(this).node());
+        })
+        .on('mouseout', function(d,i){
+          /*if(vm._config.data.mouseout){
+            vm._config.data.mouseout.call(this, d,i);
+          }*/
+          vm._tip.hide(d, d3.select(this).node());
+        })
+        .on("click", function(d,i){
+          if(vm._config.data.onclick){
+            vm._config.data.onclick.call(this, d, i);
+          }
+        })
+        .style("fill", vm._config.colors[0])
+      .transition()
         .duration(3000)
         .ease(d3.easeLinear)
         .style("fill", function(d) { return colorScale(d.value); });
 
-    cards.select("title").text(function(d) { return d.value; });
 
-    cards.exit().remove();
 
     var legend = vm._chart._svg.selectAll(".legend")
         .data([0].concat(colorScale.quantiles()), function(d) { return d; });
@@ -180,7 +180,7 @@ export default function(config) {
         .attr("y", vm._config.size.height - vm._config.size.margin.bottom*2)
         .attr("width", vm._legendElementWidth)
         .attr("height", vm._gridSize / 2)
-        .style("fill", function(d, i) { return vm._colors[i]; });
+        .style("fill", function(d, i) { return vm._config.colors[i]; });
 
     lgroup.append("text")
         .attr("class", "mono")
