@@ -1,6 +1,7 @@
 {
   "name": "dbox",
   "version": "0.0.1",
+  "description": "A library to create easy reusable charts",
   "scripts": {
     "prepublish": "rollup -c && uglifyjs ./build/dbox.js -c -m -o ./build/dbox.min.js",
     "dev": "rollup --config rollup.config.dev.js"
@@ -9,5 +10,18 @@
     "rollup": "^0.26.3",
     "rollup-plugin-node-resolve": "^1.5.0",
     "uglify-js": "^2.6.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dboxjs/dbox"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "cartodb": "^0.5.1",
+    "d3": "^4.6.0",
+    "d3-queue": "^3.0.3",
+    "d3-tip": "^0.7.1",
+    "lodash": "^4.17.4",
+    "topojson": "^2.2.0"
   }
 }
