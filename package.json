@@ -1,12 +1,17 @@
 {
   "name": "dboxjs",
-  "version": "0.0.1-0.0.1",
+  "version": "0.0.1-0.0.2",
   "description": "A library to create easy reusable charts",
   "scripts": {
     "prepublish": "rollup -c && uglifyjs ./build/dbox.js -c -m -o ./build/dbox.min.js",
-    "dev": "rollup --config rollup.config.dev.js"
+    "dev": "rollup --config rollup.config.dev.js",
+    "test": "mocha *.spec.js"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "rollup-plugin-node-resolve": "^2.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dboxjs/dbox.git"

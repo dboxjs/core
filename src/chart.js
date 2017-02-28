@@ -1,11 +1,11 @@
 import carto from './carto/carto.js';
-
+var d3 = require('d3');
 
 export default function(config) {
 
   function Chart(config){
     var vm = this;
-    vm._config = config ? _.cloneDeep(config) : {};
+    vm._config = config ? _.cloneDeep(config) : {size: {}};
     vm._data = [];
     vm._margin = vm._config.size.margin ? vm._config.size.margin : {left: 0, right: 0, top: 0, bottom: 0};
 
