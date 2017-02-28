@@ -1,5 +1,5 @@
 import carto from './carto/carto.js';
-var d3 = require('d3');
+//var d3 = require('d3');
 
 export default function(config) {
 
