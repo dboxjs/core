@@ -1,3 +1,0 @@
-npm run dev
-
-bower install d3 d3-queue topojson d3-tip --save
