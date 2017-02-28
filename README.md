@@ -7,6 +7,11 @@ Dbox uses ```cartodb```, ```d3```, ```d3-queue```, ```d3-tip```, ```lodash```, `
 
 ## Instalation
 
+Using npm
+```
+npm install dboxjs
+```
+
 ## Usage
 
 Dbox uses one chart that allows to draw different layers
