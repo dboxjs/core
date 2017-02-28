@@ -123,6 +123,10 @@ export default function(config) {
     vm._scales.x.domain(vm._xMinMax).nice();
     vm._scales.y.domain(vm._yMinMax).nice();
 
+    console.log(vm._scales.x.domain(), vm._chart._scales.x.domain())
+
+    vm._chart._scales = vm._scales;
+
     return vm;
   };
 
