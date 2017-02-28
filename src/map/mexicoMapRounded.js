@@ -127,6 +127,10 @@ export default function(config) {
 
     var self = this;
 
+    d3.selectAll(".states-polygon").on('click',function(){
+      self.triggerClick(item);
+    })
+
     this._mapLayer.append("circle")
       .attr("cx",centerX + paddingX)
       .attr("cy",centerY + paddingY)
