@@ -1,5 +1,5 @@
-/node_modules
-/bower_components
+build/
+node_modules/
+bower_components/
 c3.js
-
 rollup.config.dev.js
