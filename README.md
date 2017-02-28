@@ -1,125 +1,42 @@
-# Let's get started
+# Dbox.js
 
-## Installation
-```javascript
-bower install d3 d3-queue topojson d3-tip --save
+A library to create easy reusable charts
+
+## Dependencies
+Dbox uses ```cartodb```, ```d3```, ```d3-queue```, ```d3-tip```, ```lodash```, ```topojson```
+
+## Instalation
+
+Using npm
+```
+npm install dboxjs
 ```
 
-## config 
----
+## Usage
 
-### config.bindTo
----
-HTML id of the div where the chart will be drawn    
-```javascript
-config.bindTo = '#id'
-```
+Dbox uses one chart that allows to draw different layers
 
-### config.size
----
-Object for specifing the following properties of the chart
-* width
-* height
-* margin
-
-```javascript
-'size':{
-  'width':  d3.select('#map').node().getBoundingClientRect().width ? d3.select('#map').node().getBoundingClientRect().width : 555,
-  'height':500,
-  'margin':{top: 20, right: 50, bottom: 100, left: 40},
-},
-```
-
-
-
-## Complete example
----
 ```javascript
 var config = {
-	'bindTo': '#map',
-	'size':{
-	  'width':  d3.select('#map').node().getBoundingClientRect().width ? d3.select('#map').node().getBoundingClientRect().width : 555,
-	  'height':500,
-	  'margin':{top: 20, right: 50, bottom: 100, left: 40},
-	},
-	'template':'dbox-gray',
-	'data':{
-	  'csv':'app/components/map/data/Pobreza.csv',
-	  'sort':{
-	    'axis': 'y',
-	    'order': 'desc', // asc - 1, desc  -1 ,
-	    //'visible':false,
-	  },
-	  parser:function(d,i) {
-	    var n = {};
-	    n.id = +d.INEGI;
-	    n.z = +d.Total_08;
-	    return n;
-	  },
-	  tip:function(d) {
-	    var formatWhole = d3.format(",.0f");
-	    var format = d3.format(",.2f");
-	    var formatDecimals = d3.format(",.2f");
-	    var formatDecimalsThree = d3.format(",.3f");
+  'size':{
+    'width': width,
+    'height': 500,
+    'margin':{top: 20, right: 20, bottom: 30, left: 40},
+  },
+  'xAxis':{
+    'scale':'time'
+  }
+}
 
-	    var html = '';
-	    var total = d3.select(this).attr('data-total');
-
-	    if(d.properties.state_name) html+=d.properties.state_name;
-	    if(d.properties.inegi) html+='<br>Inegi: '+d.properties.inegi;
-
-	    if( total !== null ) {
-	      switch(units){
-	        case 'total':
-	          html+='<br>'+ vm.formatWhole(total);
-	        break;
-	        default:
-	          html+='<br>'+ vm.formatDecimals(total);
-	        break;
-	      }
-	    }
-	    return html;
-	  },
-	  mouseover:function(d,i){
-	    console.log(d,i)
-	  }
-	},
-	'xAxis':{
-	  'scale' : 'ordinal',
-	  'text'  : 'Districts',
-	},
-	'yAxis':{
-	  'scale' : 'linear',
-	  'text'  : 'Total Employed',
-	  'ticks':{
-	    'enabled':true,
-	    'style':'straightLine'
-	  }
-	},
-	'events':{
-	  'load': function(bars){
-	    /*var bar = bars.select('Kohistan');
-	    if( bar !== false){
-	      bar.attr('fill', 'red')
-	    };*/
-	  }
-	},
-	'plotOptions':{
-	    'map':{
-	      'geoType':'states',
-	      'units': 'percentage',
-	      'quantiles':{
-	        'buckets':5,
-	        'colors': [ '#85f2b7', '#c8f3df', '#f7f4f3','#f1c6ce',  '#e36984' ],
-	        'outOfRangeColor': '#969696'
-	      }
-	    }
-	  }
-
-	}
+dbox.chart(config)
+    .bindTo('#timeline-chart')
+    .data({'csv':'assets/data/linea.csv'})
+  .layer(dbox.timeline)
+    .x('year')
+    .series(['tot'])
+    .color('species')
+  .end()
+    .draw();
 ```
 
-### Bars
-```javascript
-```
-
+Check examples on [dboxjs.org](http://dboxjs.org)
