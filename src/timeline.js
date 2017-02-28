@@ -120,8 +120,8 @@ export default function(config) {
       d3.max(vm._lines, function(c) { return d3.max(c.values, function(v) { return v.y; }); })
     ];
 
-    vm._scales.x.domain(vm._xMinMax).nice();
-    vm._scales.y.domain(vm._yMinMax).nice();
+    vm._scales.x.domain(vm._xMinMax)
+    vm._scales.y.domain(vm._yMinMax)
 
     console.log(vm._scales.x.domain(), vm._chart._scales.x.domain())
 
@@ -152,6 +152,11 @@ export default function(config) {
       });
 
 
+    var t = textures.lines().thicker();
+
+    vm._chart._svg.call(t);
+
+
     vm._area.y0(vm._scales.y(vm._yMinMax[0]));
 
     var areas = vm._chart._svg.selectAll(".areas")
@@ -164,7 +169,7 @@ export default function(config) {
       .attr("d", function(d) {
         return vm._area(d.values);
       })
-      .attr("fill", "steelblue");
+      .attr("fill", t.url());
 
     /*path.each(function(d) { d.totalLength = this.getTotalLength(); })
       .attr("stroke-dasharray", function(d) { return d.totalLength + " " + d.totalLength; })
