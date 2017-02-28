@@ -218,7 +218,6 @@ export default function(config) {
           .attr("x", 8)
           .attr("y", function(d, i) { return 25; })
           .text(function(d) {
-            console.log(d);
             var arr = d.data.id.replace('data.','').split('.');
             return arr.length > 1 ? arr.slice(arr.length - 2, arr.length).join(' / ') : arr[arr.length - 1].toString();
           });
@@ -227,7 +226,6 @@ export default function(config) {
           .attr("x", 8)
           .attr("y", function(d, i) { return 45; })
           .text(function(d) {
-            console.log(d);
             return vm._config._format(d.value);
           });
     }

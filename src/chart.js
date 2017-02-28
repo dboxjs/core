@@ -75,8 +75,8 @@ export default function(config) {
       }
       vm._data = data;
       vm.drawSVG();
-      vm.drawAxes();
       vm.drawGraphs();
+      vm.drawAxes();
 
       //Trigger load chart event
       if( vm._config.events && vm._config.events.load){
@@ -404,6 +404,9 @@ export default function(config) {
         .axes(vm._axes)
         .domains()
         .draw();
+
+      //@TODO validate domains from multiple layers
+      vm._scales = gr._scales;
     })
   }
 

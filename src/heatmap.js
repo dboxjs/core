@@ -71,7 +71,6 @@ export default function(config) {
       };
       return m;
     });
-    console.log(vm._data);
     return vm;
   }
 
@@ -137,8 +136,8 @@ export default function(config) {
         });
 
     cards.enter().append("rect")
-        .attr("x", function(d) { console.log("times", vm._config.x.indexOf(d.x)); return (vm._config.x.indexOf(d.x) ) * vm._gridSize; })
-        .attr("y", function(d) { console.log("days", vm._config.y.indexOf(d.y));  return (vm._config.y.indexOf(d.y)) * vm._gridSize; })
+        .attr("x", function(d) { return (vm._config.x.indexOf(d.x) ) * vm._gridSize; })
+        .attr("y", function(d) { return (vm._config.y.indexOf(d.y)) * vm._gridSize; })
         .attr("rx", 4)
         .attr("ry", 4)
         .attr("class", "hour bordered")
@@ -176,7 +175,7 @@ export default function(config) {
         .attr("class", "legend");
 
     lgroup.append("rect")
-        .attr("x", function(d, i) { console.log( vm._legendElementWidth * i); return vm._legendElementWidth * i; })
+        .attr("x", function(d, i) {  return vm._legendElementWidth * i; })
         .attr("y", vm._config.size.height - vm._config.size.margin.bottom*2)
         .attr("width", vm._legendElementWidth)
         .attr("height", vm._gridSize / 2)
