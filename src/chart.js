@@ -1,5 +1,4 @@
 import carto from './carto/carto.js';
-//var d3 = require('d3');
 
 export default function(config) {
 
@@ -27,6 +26,12 @@ export default function(config) {
     vm._config = _.cloneDeep(config);
     return vm;
   }
+
+  Chart.prototype.grid = function(bool) {
+    var vm = this;
+    vm._config.grid = bool ? true : false;
+    return vm;
+  };
 
   Chart.prototype.bindTo = function(selector) {
     var vm = this;
@@ -75,6 +80,9 @@ export default function(config) {
       }
       vm._data = data;
       vm.drawSVG();
+      if(vm._config.grid == true) {
+        vm.drawGrid();
+      }
       vm.drawGraphs();
       vm.drawAxes();
 
@@ -195,6 +203,8 @@ export default function(config) {
     return axes;
   }
 
+
+
   Chart.prototype.loadData = function(){
     var vm = this;
 
@@ -309,6 +319,12 @@ export default function(config) {
     */
 
   }
+
+  Chart.prototype.drawGrid = function() {
+    var vm = this;
+    console.log(vm._scales.x.domain(), vm._scales.y.domain());
+    return vm;
+  };
 
   Chart.prototype.drawAxes = function(){
     var vm = this;
