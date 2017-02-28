@@ -131,23 +131,27 @@ export default function(config) {
       self.triggerClick(item);
     })
 
-    this._mapLayer.append("circle")
-      .attr("cx",centerX + paddingX)
-      .attr("cy",centerY + paddingY)
-      .attr("r",(self._circlesConfig.radius) ? self._circlesConfig.radius : 2.5)
-      .attr("class","circle-map-rounded")
-      .style("fill",self._circlesConfig.style.fill)
-      .style('stroke', self._circlesConfig.style.strokeColor)
-      .style('stroke-width',self._circlesConfig.style.strokeWidth + "px")
-      .on('click',function(){
-        self.triggerClick(item);
-      })
-      .on('mouseover',function(){
-        self.triggerOver(item);
-      })
-      .on('mouseout',function(){
-        self.triggerOut(item);
-      });
+    if(+item.dispensa){
+      this._mapLayer.append("circle")
+        .attr("cx",centerX + paddingX)
+        .attr("cy",centerY + paddingY)
+        .attr("r",(self._circlesConfig.radius) ? self._circlesConfig.radius : 2.5)
+        .attr("class","circle-map-rounded")
+        .style("fill",self._circlesConfig.style.fill)
+        .style('stroke', self._circlesConfig.style.strokeColor)
+        .style('stroke-width',self._circlesConfig.style.strokeWidth + "px")
+        .on('click',function(){
+          self.triggerClick(item);
+        })
+        .on('mouseover',function(){
+          self.triggerOver(item);
+        })
+        .on('mouseout',function(){
+          self.triggerOut(item);
+        });
+    }
+
+
   }
 
   MexicoMapRounded.prototype.triggerClick = function(item){
