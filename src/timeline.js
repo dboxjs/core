@@ -13,6 +13,26 @@ export default function(config) {
       .curve(d3.curveBasis)
       .x(function(d) { return vm._scales.x(d.x); })
       .y(function(d) { return vm._scales.y(d.y); });
+
+
+    vm._area = d3.area()
+      .curve(d3.curveBasis)
+      .x(function(d) {
+        if (d.alreadyScaled && d.alreadyScaled === true){
+          return d.x;
+        }else{
+          return vm._scales.x(d.x);
+        }
+      })
+      .y1(function(d) {
+        if (d.alreadyScaled && d.alreadyScaled === true){
+          return d.y;
+        }else{
+          return vm._scales.y(d.y);
+        }
+
+      });
+
   }
 
   //-------------------------------
@@ -93,15 +113,15 @@ export default function(config) {
 
   Timeline.prototype.domains = function(){
     var vm = this;
-    var xMinMax = d3.extent(vm._data, function(d) { return d.x; });
+    vm._xMinMax = d3.extent(vm._data, function(d) { return d.x; });
 
-    var yMinMax = [
+    vm._yMinMax = [
       d3.min(vm._lines, function(c) { return d3.min(c.values, function(v) { return v.y; }); }),
       d3.max(vm._lines, function(c) { return d3.max(c.values, function(v) { return v.y; }); })
     ];
 
-    vm._scales.x.domain(xMinMax).nice();
-    vm._scales.y.domain(yMinMax).nice();
+    vm._scales.x.domain(vm._xMinMax).nice();
+    vm._scales.y.domain(vm._yMinMax).nice();
 
     return vm;
   };
@@ -117,8 +137,6 @@ export default function(config) {
     var path = vm._chart._svg.selectAll(".lines").append("path")
       .attr("class", "line")
       .attr("d", function(d) {
-        console.log(d);
-        console.log(vm._line(d.values));
         return vm._line(d.values);
       })
       .style("stroke", function(d){
@@ -130,13 +148,27 @@ export default function(config) {
       });
 
 
-    path.each(function(d) { d.totalLength = this.getTotalLength(); })
+    vm._area.y0(vm._scales.y(vm._yMinMax[0]));
+
+    var areas = vm._chart._svg.selectAll(".areas")
+      .data(vm._lines)
+    .enter().append("g")
+      .attr("class", "areas");
+
+    var pathArea  = vm._chart._svg.selectAll(".areas").append("path")
+      .attr("class", "area")
+      .attr("d", function(d) {
+        return vm._area(d.values);
+      })
+      .attr("fill", "steelblue");
+
+    /*path.each(function(d) { d.totalLength = this.getTotalLength(); })
       .attr("stroke-dasharray", function(d) { return d.totalLength + " " + d.totalLength; })
       .attr("stroke-dashoffset", function(d) { return d.totalLength; })
       .transition()
         .duration(5000)
         .ease(d3.easeLinear)
-        .attr("stroke-dashoffset", 0);
+        .attr("stroke-dashoffset", 0);*/
 
     return vm;
   }
