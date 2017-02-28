@@ -322,7 +322,7 @@ export default function(config) {
 
   Chart.prototype.drawGrid = function() {
     var vm = this;
-    console.log(vm._scales.x.domain(), vm._scales.y.domain());
+    console.log(vm.layers[0]._scales);
     return vm;
   };
 
