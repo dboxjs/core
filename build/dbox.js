@@ -34,11 +34,13 @@ var carto = function() {
   return carto;
 };
 
+var d3$1 = require('d3');
+
 var chart = function(config) {
 
   function Chart(config){
     var vm = this;
-    vm._config = config ? _.cloneDeep(config) : {};
+    vm._config = config ? _.cloneDeep(config) : {size: {}};
     vm._data = [];
     vm._margin = vm._config.size.margin ? vm._config.size.margin : {left: 0, right: 0, top: 0, bottom: 0};
 
@@ -119,35 +121,35 @@ var chart = function(config) {
     if(vm._config.xAxis && vm._config.xAxis.scale){
       switch(vm._config.xAxis.scale){
         case 'linear':
-          scales.x = d3.scaleLinear()
+          scales.x = d3$1.scaleLinear()
               .range([0, vm._width]);
         break;
 
         case 'time':
-          scales.x = d3.scaleTime()
+          scales.x = d3$1.scaleTime()
               .range([0, vm._width]);
         break;
 
         case 'ordinal':
-          scales.x = d3.scaleOrdinal()
+          scales.x = d3$1.scaleOrdinal()
             .rangeBands([0, vm._width], 0.1);
         break;
 
             case 'quantile':
-              scales.x = d3.scaleOrdinal()
+              scales.x = d3$1.scaleOrdinal()
                 .rangeBands([0, vm._width], 0.1);
 
-              scales.q = d3.scaleQuantile()
-                .range(d3.range(vm._config.xAxis.buckets) );
+              scales.q = d3$1.scaleQuantile()
+                .range(d3$1.range(vm._config.xAxis.buckets) );
             break;
 
         default:
-          scales.x = d3.scaleLinear()
+          scales.x = d3$1.scaleLinear()
               .range([0, vm._width]);
         break;
       }
     }else{
-      scales.x = d3.scaleLinear()
+      scales.x = d3$1.scaleLinear()
           .range([0, vm._width]);
     }
 
@@ -155,40 +157,40 @@ var chart = function(config) {
     if(vm._config.yAxis && vm._config.yAxis.scale){
       switch(vm._config.yAxis.scale){
         case 'linear':
-          scales.y = d3.scaleLinear()
+          scales.y = d3$1.scaleLinear()
               .range([vm._height, 0]);
         break;
 
         case 'time':
-          scales.y = d3.scaleTime()
+          scales.y = d3$1.scaleTime()
               .range([vm._height, 0]);
         break;
 
         case 'ordinal':
-          scales.y = d3.scaleOrdinal()
+          scales.y = d3$1.scaleOrdinal()
             .rangeBands([vm._height, 0], 0.1);
         break;
 
         case 'quantile':
-          scales.y = d3.scaleOrdinal()
+          scales.y = d3$1.scaleOrdinal()
             .rangeBands([0, vm._width], 0.1);
 
-          scales.q = d3.scaleQuantile()
-            .range(d3.range(vm._config.yAxis.buckets) );
+          scales.q = d3$1.scaleQuantile()
+            .range(d3$1.range(vm._config.yAxis.buckets) );
         break;
 
         default:
-          scales.y = d3.scaleLinear()
+          scales.y = d3$1.scaleLinear()
               .range([vm._height, 0]);
         break;
       }
     }else{
-      scales.y = d3.scaleLinear()
+      scales.y = d3$1.scaleLinear()
           .range([vm._height, 0]);
     }
 
 
-    scales.color = d3.scaleOrdinal(d3.schemeCategory10);
+    scales.color = d3$1.scaleOrdinal(d3$1.schemeCategory10);
 
     return scales;
   };
@@ -196,8 +198,8 @@ var chart = function(config) {
   Chart.prototype.axes = function(){
     var vm = this, axes={};
 
-    axes.x = d3.axisBottom(vm._scales.x);
-    axes.y = d3.axisLeft(vm._scales.y);
+    axes.x = d3$1.axisBottom(vm._scales.x);
+    axes.y = d3$1.axisLeft(vm._scales.y);
 
     if(vm._config.yAxis && vm._config.yAxis.ticks
         && vm._config.yAxis.ticks.enabled === true && vm._config.yAxis.ticks.style ){
@@ -220,27 +222,27 @@ var chart = function(config) {
     var vm = this;
 
     if(vm._config.data.tsv){
-      var q = d3.queue()
-                .defer(d3.tsv, vm._config.data.tsv);
+      var q = d3$1.queue()
+                .defer(d3$1.tsv, vm._config.data.tsv);
     }
 
     if(vm._config.data.json){
-      var q = d3.queue()
-                .defer(d3.json, vm._config.data.json);
+      var q = d3$1.queue()
+                .defer(d3$1.json, vm._config.data.json);
     }
 
     if(vm._config.data.csv){
-        var q = d3.queue()
-                .defer(d3.csv, vm._config.data.csv);
+        var q = d3$1.queue()
+                .defer(d3$1.csv, vm._config.data.csv);
     }
 
     if(vm._config.data.raw){
-        var q = d3.queue()
+        var q = d3$1.queue()
                 .defer(vm.mapData, vm._config.data.raw);
     }
 
     if(vm._config.data.cartodb){
-      var q = d3.queue()
+      var q = d3$1.queue()
             .defer(carto.query,vm._config.data);
     }
 
@@ -264,17 +266,17 @@ var chart = function(config) {
     var vm = this;
 
     //Remove any previous svg
-    d3.select(vm._config.bindTo).select('svg').remove();
-    d3.select(vm._config.bindTo).html('');
+    d3$1.select(vm._config.bindTo).select('svg').remove();
+    d3$1.select(vm._config.bindTo).html('');
 
     //Add the css template class
     if(vm._config.template){
-      d3.select(vm._config.bindTo).classed(vm._config.template, true);
+      d3$1.select(vm._config.bindTo).classed(vm._config.template, true);
     }
 
     //Add title to the chart
     if(vm._config.chart && vm._config.chart.title){
-      d3.select(vm._config.bindTo).append("div")
+      d3$1.select(vm._config.bindTo).append("div")
         .attr("class", "chart-title")
         .html(vm._config.chart.title);
     }
@@ -283,7 +285,7 @@ var chart = function(config) {
     //@TODO - PASS THE STYLES TO DBOX.CSS
     //@TODO - ALLOW DIFFERENT POSSITIONS FOR THE LEGEND
     if(vm._config.legend && vm._config.legend.enable === true && vm._config.legend.position === 'top'){
-      var legend = d3.select(vm._config.bindTo).append("div")
+      var legend = d3$1.select(vm._config.bindTo).append("div")
         .attr("class", "chart-legend-top");
 
       var html = '';
@@ -297,7 +299,7 @@ var chart = function(config) {
 
 
     //Create the svg
-    vm._svg = d3.select(vm._config.bindTo).append("svg")
+    vm._svg = d3$1.select(vm._config.bindTo).append("svg")
       .attr("width", vm._width + vm._margin.left + vm._margin.right)
       .attr("height", vm._height + vm._margin.top + vm._margin.bottom)
       .append("g")
@@ -310,10 +312,10 @@ var chart = function(config) {
 
     //Apply background color
     if(vm._config.chart && vm._config.chart.background && vm._config.chart.background.color){
-      d3.select(vm._config.bindTo+" svg").style('background-color', vm._config.chart.background.color );
+      d3$1.select(vm._config.bindTo+" svg").style('background-color', vm._config.chart.background.color );
     }
 
-    var legendBottom = d3.select(vm._config.bindTo).append("div")
+    var legendBottom = d3$1.select(vm._config.bindTo).append("div")
         .attr("class", "chart-legend-bottom");
     //Legend for average lines
     /*
@@ -364,7 +366,7 @@ var chart = function(config) {
     }
 
     if(vm._config.xAxis && vm._config.xAxis.dropdown && vm._config.xAxis.dropdown.enable === true){
-      var xAxisDropDown = d3.select(vm._config.bindTo).append("div").attr('class','dbox-xAxis-select')
+      var xAxisDropDown = d3$1.select(vm._config.bindTo).append("div").attr('class','dbox-xAxis-select')
                             .append("select")
                             .on("change", function(){
                               vm.updateAxis('x', this.value);
@@ -394,10 +396,10 @@ var chart = function(config) {
     }
 
     if(vm._config.yAxis && vm._config.yAxis.dropdown && vm._config.yAxis.dropdown.enable === true){
-      var yAxisDropDown = d3.select(vm._config.bindTo).append("div").attr('class','dbox-yAxis-select')
+      var yAxisDropDown = d3$1.select(vm._config.bindTo).append("div").attr('class','dbox-yAxis-select')
                             .attr('style', function(){
-                              var x = -1*d3.select(vm._config.bindTo).node().getBoundingClientRect().width/2+ vm._chart._margin.left/4;
-                              var y = -1*d3.select(vm._config.bindTo).node().getBoundingClientRect().height/2;
+                              var x = -1*d3$1.select(vm._config.bindTo).node().getBoundingClientRect().width/2+ vm._chart._margin.left/4;
+                              var y = -1*d3$1.select(vm._config.bindTo).node().getBoundingClientRect().height/2;
                               return 'transform: translate('+x+'px,'+y+'px) rotate(-90deg);'
                             })
                             .append("select")
@@ -428,7 +430,7 @@ var chart = function(config) {
     });
   };
 
-  Chart.prototype.dispatch = d3.dispatch("load", "change");
+  Chart.prototype.dispatch = d3$1.dispatch("load", "change");
 
   Chart.prototype.mapData  =  function (data, callback){
     callback(null, data);
@@ -443,21 +445,21 @@ var chart = function(config) {
 
 
       //Default ascending function
-      var sortFunctionY = function(a, b) { return d3.ascending(a.y,b.y); };
-      var sortFunctionX = function(a, b) { return d3.ascending(a.x,b.x); };
+      var sortFunctionY = function(a, b) { return d3$1.ascending(a.y,b.y); };
+      var sortFunctionX = function(a, b) { return d3$1.ascending(a.x,b.x); };
 
 
       //if applying sort
       if(vm._config.data.sort && vm._config.data.sort.order){
         switch(vm._config.data.sort.order){
           case 'asc':
-            sortFunctionY = function(a, b) { return d3.ascending(a.y,b.y); };
-            sortFunctionX = function(a, b) { return d3.ascending(a.x,b.x); };
+            sortFunctionY = function(a, b) { return d3$1.ascending(a.y,b.y); };
+            sortFunctionX = function(a, b) { return d3$1.ascending(a.x,b.x); };
           break;
 
           case 'desc':
-            sortFunctionY = function(a, b) { return d3.descending(a.y,b.y); };
-            sortFunctionX = function(a, b) { return d3.descending(a.x,b.x); };
+            sortFunctionY = function(a, b) { return d3$1.descending(a.y,b.y); };
+            sortFunctionX = function(a, b) { return d3$1.descending(a.x,b.x); };
           break;
         }
       }
@@ -467,12 +469,12 @@ var chart = function(config) {
     if(vm._config.xAxis && vm._config.xAxis.scale){
       switch(vm._config.xAxis.scale){
         case 'linear':
-          minMax = d3.extent(data, function(d) { return d.x; });
+          minMax = d3$1.extent(data, function(d) { return d.x; });
           domains.x = minMax;
         break;
 
         case 'time':
-              minMax = d3.extent(data, function(d) { return d.x; });
+              minMax = d3$1.extent(data, function(d) { return d.x; });
               domains.x = minMax;
         break;
 
@@ -506,18 +508,18 @@ var chart = function(config) {
                 domains.q.push(d.x);
               });
 
-              domains.x = d3.range(vm._config.xAxis.buckets);
+              domains.x = d3$1.range(vm._config.xAxis.buckets);
 
             break;
 
 
         default:
-          minMax = d3.extent(data, function(d) { return d.x; });
+          minMax = d3$1.extent(data, function(d) { return d.x; });
           domains.x = minMax;
         break;
       }
     }else{
-      minMax = d3.extent(data, function(d) { return d.x; });
+      minMax = d3$1.extent(data, function(d) { return d.x; });
       domains.x = minMax;
     }
 
@@ -525,7 +527,7 @@ var chart = function(config) {
     if(vm._config.yAxis && vm._config.yAxis.scale){
       switch(vm._config.yAxis.scale){
         case 'linear':
-          minMax = d3.extent(data, function(d) { return d.y; });
+          minMax = d3$1.extent(data, function(d) { return d.y; });
 
           //Adjust for min values greater than zero
           //set the min value to -10%
@@ -536,34 +538,34 @@ var chart = function(config) {
         break;
 
         case 'time':
-          minMax = d3.extent(data, function(d) { return d.y; });
+          minMax = d3$1.extent(data, function(d) { return d.y; });
                 domains.y = minMax;
         break;
 
         case 'ordinal':
               if(vm._config.data.sort && vm._config.data.sort.axis === 'y'){
 
-                var sorted = data.sort(function(a, b) { return d3.ascending(a.y,b.y); });
+                var sorted = data.sort(function(a, b) { return d3$1.ascending(a.y,b.y); });
                 domains.y = [];
                 sorted.forEach(function(d){
                   domains.y.push(d.x);
                 });
 
               }else{
-                domains.y = d3.map(data, function(d) {
+                domains.y = d3$1.map(data, function(d) {
                   return d.y;
-                }).keys().sort(function(a, b) { return d3.ascending(a,b); });
+                }).keys().sort(function(a, b) { return d3$1.ascending(a,b); });
               }
 
         break;
 
         default:
-          minMax = d3.extent(data, function(d) { return d.y; });
+          minMax = d3$1.extent(data, function(d) { return d.y; });
           domains.y = minMax;
         break;
       }
     }else{
-      minMax = d3.extent(data, function(d) { return d.y; });
+      minMax = d3$1.extent(data, function(d) { return d.y; });
       domains.y = minMax;
     }
 
@@ -573,7 +575,7 @@ var chart = function(config) {
 
   Chart.prototype.destroy = function(){
     var vm = this;
-    d3.select(vm._config.bindTo).html("");
+    d3$1.select(vm._config.bindTo).html("");
   };
 
   return new Chart(config);
