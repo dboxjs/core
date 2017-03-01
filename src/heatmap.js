@@ -141,6 +141,7 @@ export default function(config) {
         .attr("rx", 4)
         .attr("ry", 4)
         .attr("class", "hour bordered")
+        .attr("id", function(d){ return 'x' + d.x + 'y' + d.y;})
         .attr("width", vm._gridSize)
         .attr("height", vm._gridSize)
         .on('mouseover', function(d,i){
