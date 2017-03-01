@@ -6,9 +6,16 @@ export default function(config) {
     vm._config._colorScale = d3.scaleOrdinal(d3.schemeCategory20c);
     vm._config._format     = d3.format(",.1f");
     vm._config._labels     = true;
+    vm._config.tip = function(d) { return d.data.name + "\n" + vm._config._format(d.value); };
     vm._data   = [];
     vm._scales = {};
     vm._axes   = {};
+    vm._tip = d3.tip()
+                .attr('class', 'd3-tip tip-treemap')
+                //.rootElement(document.getElementById(vm._config.bindTo))
+                .direction('n')
+                .offset(function(d){ return [d3.select(vm._config.bindTo).node().offsetParent.offsetTop - 5735,0];})
+                .html(vm._config.tip);
   }
 
   //-------------------------------
@@ -68,6 +75,13 @@ export default function(config) {
     vm._config._labels = Boolean(bool);
     return vm;
   };
+
+  Treemap.prototype.tip = function(tip){
+    var vm = this;
+    vm._config.tip = tip;
+    vm._tip.html(vm._config.tip);
+    return vm;
+  }
 
   //-------------------------------
   //Triggered by the chart.js;
@@ -180,6 +194,7 @@ export default function(config) {
 
   Treemap.prototype.draw = function(){
     var vm = this;
+    vm._chart._svg.call(vm._tip);
 
     var treemap = d3.treemap()
         .tile(d3.treemapResquarify)
@@ -199,7 +214,7 @@ export default function(config) {
       .enter().append("g")
         .attr("transform", function(d) { return "translate(" + d.x0 + "," + d.y0 + ")"; });
 
-    cell.append("rect")
+    var rect = cell.append("rect")
         .attr("id", function(d) { return d.data.id; })
         .attr("width", function(d) { return d.x1 - d.x0; })
         .attr("height", function(d) { return d.y1 - d.y0; })
@@ -230,8 +245,23 @@ export default function(config) {
           });
     }
 
+    /*
     cell.append("title")
         .text(function(d) { return d.data.name + "\n" + vm._config._format(d.value); });
+    */
+
+    rect.on('mouseover', function(d,i){
+          /*if(vm._config.data.mouseover){
+            vm._config.data.mouseover.call(vm, d,i);
+          }*/
+          vm._tip.show(d, d3.select(this).node());
+        })
+        .on('mouseout', function(d,i){
+          /*if(vm._config.data.mouseout){
+            vm._config.data.mouseout.call(this, d,i);
+          }*/
+          vm._tip.hide(d, d3.select(this).node());
+        })
 
     return vm;
   }
