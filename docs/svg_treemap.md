@@ -10,7 +10,7 @@ __nestBy('columnName')__: Uses only one level nesting
 
 __nestBy(['columnName1', 'columnName2', ...])__: Nests data using many levels of hierarchy
 
-```
+```javascript
 {
 "name": "grandparent",
 "children": [
@@ -31,7 +31,7 @@ __nestBy(['columnName1', 'columnName2', ...])__: Nests data using many levels of
 
 **(Required)** Expects a column name that will be used to determine each rect size. It **must ** be a _Number_
 
-```
+```javascript
 data = {"name": "foo", "value": 32};
 layer.size('value')
 ```
@@ -52,7 +52,7 @@ layer.colorScale(['red','#45f530','blue'])
 
 **Default:** 4
 
-```
+```javascript
 layer.padding(5)
 ```
 
@@ -62,7 +62,7 @@ layer.padding(5)
 
 **Default:** ```true```
 
-```
+```javascript
 layer.labels(false)
 ```
 
@@ -72,6 +72,6 @@ layer.labels(false)
 
 **Default:** ```function(d) { return d.data.name + "\n" + vm._config._format(d.value); };```
 
-```
-layer.tip(function(d) { return d.data.name; };
+```javascript
+layer.tip(function(d) { return d.data.name; });
 ```
