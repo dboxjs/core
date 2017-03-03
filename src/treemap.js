@@ -14,7 +14,7 @@ export default function(config) {
                 .attr('class', 'd3-tip tip-treemap')
                 //.rootElement(document.getElementById(vm._config.bindTo))
                 .direction('n')
-                .offset(function(d){ return [d3.select(vm._config.bindTo).node().offsetParent.offsetTop - 5735,0];})
+                //.offset(function(d){ return [d3.select(vm._config.bindTo).node().offsetParent.offsetTop - 5735,0];})
                 .html(vm._config.tip);
   }
 
@@ -233,15 +233,18 @@ export default function(config) {
           .attr("x", 8)
           .attr("y", function(d, i) { return 25; })
           .text(function(d) {
-            var arr = d.data.id.replace('data.','').split('.');
-            return arr.length > 1 ? arr.slice(arr.length - 2, arr.length).join(' / ') : arr[arr.length - 1].toString();
+            if(d.value > 2) {
+              var arr = d.data.id.replace('data.','').split('.');
+              return arr.length > 1 ? arr.slice(arr.length - 2, arr.length).join(' / ') : arr[arr.length - 1].toString();
+            } else
+              return '';
           });
       text.append("tspan")
           .attr('class','capitalize')
           .attr("x", 8)
           .attr("y", function(d, i) { return 45; })
           .text(function(d) {
-            return vm._config._format(d.value);
+            return d.value > 2 ? vm._config._format(d.value) : '';
           });
     }
 
