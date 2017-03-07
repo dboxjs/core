@@ -1,38 +1,21 @@
 {
   "name": "dboxjs",
-  "version": "0.0.1-0.0.2",
+  "version": "0.0.1-0.1.0",
   "description": "A library to create easy reusable charts",
+  "main": "dist/dbox.js",
+  "module": "dist/dbox.mjs",
+  "jsnext:main": "dist/dbox.mjs",
   "scripts": {
-    "prepublish": "rollup -c && uglifyjs ./build/dbox.js -c -m -o ./build/dbox.min.js",
-    "dev": "rollup --config rollup.config.dev.js",
-    "test": "mocha *.spec.js"
-  },
-  "devDependencies": {
-    "chai": "^3.5.0",
-    "mocha": "^3.2.0",
-    "rollup-plugin-node-resolve": "^2.0.0",
-    "uglify-js": "^2.8.1"
+    "prebuild": "eslint lib test",
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "pretest": "npm run build",
+    "test": "mocha",
+    "prepublish": "npm test"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dboxjs/dbox.git"
-  },
-  "license": "MIT",
-  "dependencies": {
-    "cartodb": "^0.5.1",
-    "d3": "^4.6.0",
-    "d3-queue": "^3.0.3",
-    "d3-tip": "^0.7.1",
-    "lodash": "^4.17.4",
-    "topojson": "^2.2.0"
-  },
-  "bugs": {
-    "url": "https://github.com/dboxjs/dbox/issues"
-  },
-  "homepage": "https://github.com/dboxjs/dbox#readme",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
   },
   "keywords": [
     "d3",
@@ -41,5 +24,37 @@
     "dbox",
     "dboxjs"
   ],
-  "author": ""
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dboxjs/dbox/issues"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "docs"
+  ],
+  "homepage": "https://github.com/dboxjs/dbox#readme",
+  "dependencies": {
+    "cartodb": "^0.5.1",
+    "d3": "^4.6.0",
+    "d3-queue": "^3.0.3",
+    "d3-tip": "^0.7.1",
+    "lodash": "^4.17.4",
+    "topojson": "^2.2.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "babel-plugin-external-helpers": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-register": "^6.18.0",
+    "babelrc-rollup": "^3.0.0",
+    "eslint": "^3.12.2",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
+    "rollup": "^0.37.0",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-istanbul": "^1.1.0",
+    "rollup-watch": "^2.5.0"
+  }
 }
