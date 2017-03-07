@@ -145,6 +145,10 @@ export default function(config) {
     return data;
   }
 
+  function nestKey(nest, key, callback){
+    callback(null,nest.key(function(d){ return d[key]; }))
+  }
+
   Treemap.prototype.data = function(data){
     var vm = this;
     // Validate structure like [{name: '', children: [{},{}]}]
@@ -157,19 +161,19 @@ export default function(config) {
           try {
             if(!vm._config._keys)
               throw "nestBy() in layer was not configured";
-            var nested = 'd3.nest()';
-            for (var i = 0; i < vm._config._keys.length; i++) {
-              nested += '.key(function(d){ return d.'+ vm._config._keys[i] + '; })';
-            }
-            nested += '.rollup(function(leaves) { return d3.sum(leaves, function(d) {return d.' + vm._config._size + ';})})'
-            nested += '.entries(data)';
+            var nested = d3.nest();
+            var queue = d3.queue();
+            for(var i = 0; i < vm._config._keys.length; i++)
+              queue.defer(nestKey, nested, vm._config._keys[i])
+            queue.awaitAll(function(error, nested) {
+              var nestedData = nested[0].rollup(function(leaves) { return d3.sum(leaves, function(d) {return d[vm._config._size];})}).entries(data);
+              var aux = {};
+              aux.key = 'data';
+              aux.values = _.cloneDeep(nestedData); // WARN: Lodash dependency
+              data = vm.formatNestedData(aux);
+              vm._data = data;
+            });
 
-            var nestedData = eval(nested);
-            // TODO: improve way to get nested multiple keys
-            var aux = {};
-            aux.key = 'data';
-            aux.values = _.cloneDeep(nestedData); // WARN: Lodash dependency
-            data = vm.formatNestedData(aux);
           } catch(err){
             console.error(err);
           }
@@ -182,13 +186,13 @@ export default function(config) {
             if(data[vm._config._size] !== Number(data[vm._config._size]))
               throw  "Value used for treemap rect size is not a number";
             data = vm.formatNestedData(data);
+            vm._data = data;
           } catch(err){
             console.error(err);
           }
         }
       }
     }
-    vm._data = data;
     return vm;
   }
 
