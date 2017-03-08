@@ -1,8 +1,9 @@
 import * as dbox from '../';
-import { strictEqual } from 'assert';
+import * as assert from 'assert';
 
 describe('dbox', () => {
   it('creates a chart template', () => {
-    
+    var chart = dbox.chart();
+    assert.deepEqual(chart._config, {size: {}});
   });
 });
