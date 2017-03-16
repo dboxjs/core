@@ -1,5 +1,6 @@
 dist
 node_modules
+bower_components
 coverage
 rollup.config.dev.js
 *.log
