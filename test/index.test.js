@@ -32,4 +32,25 @@ describe('chart core', () => {
                 .bindTo('body')
     assert.strictEqual(chart._config.bindTo, 'body');
   });
+
+  it('Should return generated scales', () => {
+    var data = [{name: 'female', value: 52, date: new Date('2017-05-12')},{name: 'male', value: 25, date: new Date('2017-05-11')},{name: 'NA', value: 8, date: new Date('2017-05-10')}];
+    var options = {
+      column: 'name',
+      type: 'ordinal',
+      range: [0, 600]
+    };
+    var xScale = dbox.chart().generateScale(data, options);
+
+    options = {
+      column: 'value',
+      type: 'linear',
+      range: [0, 400]
+    };
+    var yScale = dbox.chart().generateScale(data, options);
+    console.log(xScale.range(), xScale.domain());
+    console.log(yScale.range(), yScale.domain());
+    assert.strictEqual(xScale('male'), 213);
+    assert.strictEqual(yScale(25), 155);
+  });
 });
