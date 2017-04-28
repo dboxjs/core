@@ -2,6 +2,8 @@ import babel from 'rollup-plugin-babel';
 import babelrc from 'babelrc-rollup';
 import istanbul from 'rollup-plugin-istanbul';
 import npm from "rollup-plugin-node-resolve";
+import * as _ from 'lodash';
+import * as d3 from 'd3';
 
 let pkg = require('./package.json');
 let external = Object.keys(pkg.dependencies);
@@ -19,6 +21,10 @@ export default {
     npm({jsnext: true})
   ],
   external: external,
+  globals: {
+    lodash: '_',
+    d3:'d3'
+  },
   targets: [
     {
       dest: pkg.main,
