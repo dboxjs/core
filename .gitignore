@@ -4,3 +4,4 @@ bower_components
 coverage
 rollup.config.dev.js
 *.log
+.DS_Store
