@@ -1,7 +1,8 @@
+import resolve from "rollup-plugin-node-resolve";
 import babel from 'rollup-plugin-babel';
 import babelrc from 'babelrc-rollup';
+
 import istanbul from 'rollup-plugin-istanbul';
-import npm from "rollup-plugin-node-resolve";
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -18,12 +19,13 @@ let external = Object.keys(pkg.dependencies);
 export default {
   entry: 'lib/index.js',
   plugins: [
-    npm({jsnext: true})
+    resolve(),
+    babel(babelrc())
   ],
   external: external,
   globals: {
     lodash: '_',
-    d3:'d3'
+    d3:'d3',
   },
   targets: [
     {
