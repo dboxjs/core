@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@dboxjs/chart@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@dboxjs/chart/-/chart-0.0.1.tgz#ce5ce225bac3b068e65d85219f850f395562f130"
+
 "@dboxjs/dbox-radar@0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@dboxjs/dbox-radar/-/dbox-radar-0.0.1.tgz#433af20c71502e1a4a6c1f416f2a928503b5ea66"
