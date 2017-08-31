@@ -10,6 +10,10 @@
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/@dboxjs/dbox-scatter/-/dbox-scatter-0.0.2.tgz#c4984a0f1813b0825956e160497f07dc30edf660"
 
+"@dboxjs/heatmap@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@dboxjs/heatmap/-/heatmap-0.0.1.tgz#395b217f2b16551be7f50b243138a413a2832938"
+
 "@dboxjs/stacked-area@0.0.1":
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/@dboxjs/stacked-area/-/stacked-area-0.0.1.tgz#eeb4269750b3f07d242f70e02c3b45dbd225e555"
