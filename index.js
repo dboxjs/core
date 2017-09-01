@@ -10,11 +10,11 @@
 /* Core */
 export {
   default as chart,
-} from "./chart/chart";
+} from "./lib/chart/chart";
 
 export {
   default as timeline,
-} from "./timeline/timeline";
+} from "./lib/timeline/timeline";
 
 /* export {
   default as stackedArea
