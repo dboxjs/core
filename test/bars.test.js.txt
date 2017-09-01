@@ -1,4 +1,4 @@
-import * as dbox from '../';
+import * as dbox from '../dist/';
 import * as assert from 'assert';
 
 describe('Bar chart', () => {

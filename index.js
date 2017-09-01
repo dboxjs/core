@@ -12,8 +12,6 @@ export {
   default as chart,
 } from "./chart/chart";
 
-
-
 export {
   default as timeline,
 } from "./timeline/timeline";
@@ -26,29 +24,15 @@ export {
   default as treemap,
 } from "./treemap/treemap";
 
-/*export {
-  default as MexicoMapRounded
-} from "./map/mexicoMapRounded";*/
-
+/* Chart modules */
 export {
   default as bars
-} from "./bars/barchart.js"
-
-/*export {
-  default as stackBar,
-} from "./stackBar/stackBar.js"*/
-
-
-/*export {
-  default as map
-} from "./map/map.js"*/
-
+} from "@dboxjs/bars"
 
 export {
   default as radar
 } from "@dboxjs/dbox-radar"
 
-/* Chart objects */
 export {
   default as scatter,
 } from "@dboxjs/dbox-scatter"
