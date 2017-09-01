@@ -16,13 +16,18 @@ export {
   default as timeline,
 } from "./timeline/timeline";
 
+/* export {
+  default as stackedArea
+} from "@dboxjs/stacked-area"
+ */
+
 export {
   default as heatmap,
-} from "./heatmap/heatmap";
+} from "@dboxjs/heatmap";
 
 export {
   default as treemap,
-} from "./treemap/treemap";
+} from "@dboxjs/treemap";
 
 /* Chart modules */
 export {

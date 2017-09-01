@@ -16,18 +16,18 @@ export {
   default as timeline,
 } from "./lib/timeline/timeline";
 
-export {
-  default as heatmap,
-} from "./lib/heatmap/heatmap";
-
-export {
-  default as treemap,
-} from "./lib/treemap/treemap";
-
 /* Chart modules */
 export {
   default as bars
 } from "../bars/index.js" 
+
+export {
+  default as heatmap,
+} from "@dboxjs/heatmap";
+
+export {
+  default as treemap,
+} from "@dboxjs/treemap";
 
 export {
   default as radar
