@@ -23,20 +23,19 @@ export {
 
 export {
   default as heatmap,
-} from "@dboxjs/heatmap";
+} from "../heatmap/index.js";
 
 export {
   default as treemap,
-} from "@dboxjs/treemap";
+} from "../treemap/index.js"; 
 
 export {
   default as radar
-} from "@dboxjs/dbox-radar"
+} from "../dbox-radar/radar.js"; 
 
 export {
   default as scatter,
-} from "@dboxjs/dbox-scatter"
-
+} from "../dbox-scatter/src/index.js"
 
 /*export {
   default as MexicoMapRounded
