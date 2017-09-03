@@ -12,39 +12,32 @@ export {
   default as chart,
 } from "./lib/chart/chart";
 
-export {
-  default as timeline,
-} from "./lib/timeline/timeline";
-
 /* Chart modules */
 export {
   default as bars
-} from "../bars/index.js" 
+} from "../bars/bars.js" 
 
 export {
   default as heatmap,
-} from "../heatmap/index.js";
-
-export {
-  default as treemap,
-} from "../treemap/index.js"; 
+} from "../heatmap/heatmap.js";
 
 export {
   default as radar
-} from "../dbox-radar/radar.js"; 
+} from "../radar/radar.js"; 
 
 export {
   default as scatter,
-} from "../dbox-scatter/src/index.js"
+} from "../scatter/scatter.js"
 
-/*export {
-  default as MexicoMapRounded
-} from "./map/mexicoMapRounded";*/
+export {
+  default as timeline,
+} from "../timeline/timeline.js";
 
-/*export {
-  default as stackBar,
-} from "./stackBar/stackBar.js"*/
+export {
+  default as treemap,
+} from "../treemap/treemap.js"; 
 
-/*export {
-  default as map
-} from "./map/map.js"*/
+
+
+
+

@@ -45,11 +45,11 @@
     "topojson": "^2.2.0"
   },
   "devDependencies": {
-    "@dboxjs/heatmap": "0.0.1",
-    "@dboxjs/treemap": "0.0.1",
     "@dboxjs/dbox-radar": "0.0.1",
     "@dboxjs/dbox-scatter": "0.0.2",
+    "@dboxjs/heatmap": "0.0.1",
     "@dboxjs/stacked-area": "0.0.1",
+    "@dboxjs/treemap": "0.0.1",
     "babel-eslint": "^7.1.1",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.0",

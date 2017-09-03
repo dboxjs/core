@@ -12,32 +12,31 @@ export {
   default as chart,
 } from "./lib/chart/chart";
 
-export {
-  default as timeline,
-} from "./lib/timeline/timeline";
-
-/* export {
-  default as stackedArea
-} from "@dboxjs/stacked-area"
- */
-
-export {
-  default as heatmap,
-} from "@dboxjs/heatmap";
-
-export {
-  default as treemap,
-} from "@dboxjs/treemap";
-
 /* Chart modules */
 export {
   default as bars
 } from "@dboxjs/bars"
 
 export {
+  default as heatmap,
+} from "@dboxjs/heatmap";
+
+export {
   default as radar
-} from "@dboxjs/dbox-radar"
+} from "@dboxjs/radar"
 
 export {
   default as scatter,
-} from "@dboxjs/dbox-scatter"
+} from "@dboxjs/scatter"
+
+export {
+  default as timeline,
+} from "@dboxjs/timeline";
+
+export {
+  default as treemap,
+} from "@dboxjs/treemap";
+
+
+
+
