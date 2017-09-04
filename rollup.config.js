@@ -3,29 +3,23 @@ import babel from 'rollup-plugin-babel';
 import babelrc from 'babelrc-rollup';
 
 import istanbul from 'rollup-plugin-istanbul';
-import * as _ from 'lodash';
-import * as d3 from 'd3';
 
 let pkg = require('./package.json');
 let external = Object.keys(pkg.dependencies);
 
-//plugins: [
-    //babel(babelrc()),
-    //istanbul({
-      //exclude: ['test/**/*', 'node_modules/**/*', 'docs/**/*', '.editorconfig']
-    //})
-  //],
-
 export default {
-  entry: 'lib/index.js',
+  entry: 'index.js',
   plugins: [
     resolve(),
+    'external-helpers',
     babel(babelrc())
   ],
   external: external,
   globals: {
-    lodash: '_',
-    d3:'d3',
+    'lodash': '_',
+    'd3':'d3',
+    'cartodb':'cartodb',
+    'textures':'textures'
   },
   targets: [
     {
@@ -36,12 +30,3 @@ export default {
     }
   ]
 };
-
-/*
-,
-    {
-      dest: pkg.module,
-      format: 'es',
-      sourceMap: true
-    }
-*/
