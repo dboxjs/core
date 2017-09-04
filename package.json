@@ -45,12 +45,12 @@
     "topojson": "^2.2.0"
   },
   "devDependencies": {
-    "@dboxjs/bars": "0.0.2",
-    "@dboxjs/heatmap": "0.0.1",
-    "@dboxjs/radar": "0.0.2",
-    "@dboxjs/scatter": "0.0.3",
-    "@dboxjs/timeline": "0.0.1",
-    "@dboxjs/treemap": "0.0.1",
+    "@dboxjs/bars": "0.x",
+    "@dboxjs/heatmap": "0.x",
+    "@dboxjs/radar": "0.x",
+    "@dboxjs/scatter": "0.x",
+    "@dboxjs/timeline": "0.x",
+    "@dboxjs/treemap": "0.x",
     "babel-eslint": "^7.1.1",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.0",
