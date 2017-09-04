@@ -1,6 +1,6 @@
 {
-  "name": "dboxjs",
-  "version": "0.0.2",
+  "name": "@dboxjs/core",
+  "version": "0.0.6",
   "description": "A library to create easy reusable charts",
   "main": "dist/dbox.js",
   "module": "dist/dbox.mjs",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dboxjs/dbox.git"
+    "url": "git+https://github.com/dboxjs/core.git"
   },
   "keywords": [
     "d3",
@@ -45,15 +45,15 @@
     "topojson": "^2.2.0"
   },
   "devDependencies": {
+    "@dboxjs/bars": "0.0.2",
     "@dboxjs/heatmap": "0.0.1",
+    "@dboxjs/radar": "0.0.2",
+    "@dboxjs/scatter": "0.0.3",
+    "@dboxjs/timeline": "0.0.1",
     "@dboxjs/treemap": "0.0.1",
-    "@dboxjs/dbox-radar": "0.0.1",
-    "@dboxjs/dbox-scatter": "0.0.2",
-    "@dboxjs/stacked-area": "0.0.1",
     "babel-eslint": "^7.1.1",
     "babel-plugin-external-helpers": "^6.22.0",
-    "babel-preset-es2015": "^6.18.0",
-    "babel-preset-latest": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
     "babel-register": "^6.18.0",
     "babelrc-rollup": "^3.0.0",
     "eslint": "^3.12.2",

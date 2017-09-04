@@ -9,7 +9,7 @@ Dbox uses ```cartodb```, ```d3```, ```d3-queue```, ```d3-tip```, ```lodash```, `
 
 Using npm
 ```
-npm install dboxjs
+npm install @dboxjs/core
 ```
 
 ## Usage
