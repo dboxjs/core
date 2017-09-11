@@ -21,10 +21,89 @@ Methods for generating layers.
 
 ## Heatmap
 
+Heatmap layer module.
+
+Methods for generating heatmap layers.
+
+* heatmap.x -
+* heatmap.y -
+* heatmap.color -
+* heatmap.tip -
+* heatmap.buckets -
+* heatmap.end -
+* heatmap.chart -
+* heatmap.data -
+* heatmap.scales -
+* heatmap.axes -
+* heatmap.domains -
+* heatmap.draw -
+
 ## Radar
 
 ## Scatter
 
+Scatter layer module.
+
+Methods for generating scatter layers.
+
+* scatter.x -
+* scatter.y -
+* scatter.radius -
+* scatter.radiusRange -
+* scatter.properties -
+* scatter.color -
+* scatter.opacity -
+* scatter.tip -
+* scatter.end -
+* scatter.chart -
+* scatter.data -
+* scatter.scales -
+* scatter.axes -
+* scatter.domains -
+* scatter.draw -
+* scatter.select -
+* scatter.selectAll -
+
 ## Timeline
 
+Timeline layer module.
+
+Methods for generating timeline layers.
+
+* timeline.x -
+* timeline.y -
+* timeline.series -
+* timeline.colors -
+* timeline.timeParse -
+* timeline.area -
+* timeline.color -
+* timeline.end -
+* timeline.chart -
+* timeline.data -
+* timeline.scales -
+* timeline.axes -
+* timeline.domains -
+* timeline.draw -
+
 ## Treemap
+
+Treemap layer module.
+
+Methods for generating treemap layers.
+
+* treemap.end -
+* treemap.size -
+* treemap.colorScale -
+* treemap.padding -
+* treemap.nestBy -
+* treemap.format -
+* treemap.labels -
+* treemap.tip -
+* treemap.chart -
+* treemap.scales -
+* treemap.axes -
+* treemap.domains -
+* treemap.isValidStructure -
+* treemap.formatNestedData -
+* treemap.data -
+* treemap.draw -
