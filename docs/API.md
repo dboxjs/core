@@ -86,3 +86,24 @@ Methods for generating timeline layers.
 * timeline.draw -
 
 ## Treemap
+
+Treemap layer module.
+
+Methods for generating treemap layers.
+
+* treemap.end -
+* treemap.size -
+* treemap.colorScale -
+* treemap.padding -
+* treemap.nestBy -
+* treemap.format -
+* treemap.labels -
+* treemap.tip -
+* treemap.chart -
+* treemap.scales -
+* treemap.axes -
+* treemap.domains -
+* treemap.isValidStructure -
+* treemap.formatNestedData -
+* treemap.data -
+* treemap.draw -
