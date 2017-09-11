@@ -66,4 +66,23 @@ Methods for generating scatter layers.
 
 ## Timeline
 
+Timeline layer module.
+
+Methods for generating timeline layers.
+
+* timeline.x -
+* timeline.y -
+* timeline.series -
+* timeline.colors -
+* timeline.timeParse -
+* timeline.area -
+* timeline.color -
+* timeline.end -
+* timeline.chart -
+* timeline.data -
+* timeline.scales -
+* timeline.axes -
+* timeline.domains -
+* timeline.draw -
+
 ## Treemap
