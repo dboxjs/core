@@ -42,6 +42,28 @@ Methods for generating heatmap layers.
 
 ## Scatter
 
+Scatter layer module.
+
+Methods for generating scatter layers.
+
+* scatter.x -
+* scatter.y -
+* scatter.radius -
+* scatter.radiusRange -
+* scatter.properties -
+* scatter.color -
+* scatter.opacity -
+* scatter.tip -
+* scatter.end -
+* scatter.chart -
+* scatter.data -
+* scatter.scales -
+* scatter.axes -
+* scatter.domains -
+* scatter.draw -
+* scatter.select -
+* scatter.selectAll -
+
 ## Timeline
 
 ## Treemap
