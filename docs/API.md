@@ -21,6 +21,23 @@ Methods for generating layers.
 
 ## Heatmap
 
+Heatmap layer module.
+
+Methods for generating heatmap layers.
+
+* heatmap.x -
+* heatmap.y -
+* heatmap.color -
+* heatmap.tip -
+* heatmap.buckets -
+* heatmap.end -
+* heatmap.chart -
+* heatmap.data -
+* heatmap.scales -
+* heatmap.axes -
+* heatmap.domains -
+* heatmap.draw -
+
 ## Radar
 
 ## Scatter
