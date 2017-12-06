@@ -47,6 +47,7 @@
   "devDependencies": {
     "@dboxjs/bars": "0.x",
     "@dboxjs/heatmap": "0.x",
+    "@dboxjs/map": "0.0.x",
     "@dboxjs/radar": "0.x",
     "@dboxjs/scatter": "0.x",
     "@dboxjs/timeline": "0.x",

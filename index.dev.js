@@ -36,3 +36,7 @@ export {
 export {
   default as treemap,
 } from "../treemap/treemap.js";
+
+export {
+  default as map,
+} from "../map/map.js";
