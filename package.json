@@ -1,6 +1,6 @@
 {
   "name": "@dboxjs/core",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A library to create easy reusable charts",
   "main": "dist/dbox.js",
   "module": "dist/dbox.mjs",
