@@ -36,3 +36,7 @@ export {
 export {
   default as treemap,
 } from "@dboxjs/treemap";
+
+export {
+  default as map,
+} from "@dboxjs/map";
