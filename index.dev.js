@@ -27,7 +27,7 @@ export {
 
 export {
   default as scatter,
-} from "../scatter/scatter.js"
+} from "../scatter/scatter.js";
 
 export {
   default as timeline,

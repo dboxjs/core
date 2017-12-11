@@ -32,6 +32,7 @@ npm install
 ```
 4. In @dboxjs/core 
     * Duplicate rollup.conf.js save as rollup.config.dev.js
+    * Modify entry as `entry: 'index.dev.js'`
     * Modify targets > dest to the desired destination
       ```javascript
        targets: [
