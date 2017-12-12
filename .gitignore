@@ -5,3 +5,4 @@
 rollup.config.dev.js
 *.log
 .DS_Store
+package-lock.json
