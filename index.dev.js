@@ -10,7 +10,7 @@
 /* Core */
 export {
   default as chart,
-} from './lib/chart/chart';
+} from './lib/chart';
 
 /* Chart modules */
 export {
