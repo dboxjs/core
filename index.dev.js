@@ -10,12 +10,12 @@
 /* Core */
 export {
   default as chart,
-} from "./lib/chart/chart";
+} from './lib/chart/chart';
 
 /* Chart modules */
 export {
   default as bars
-} from "../bars/bars.js"
+} from '../bars/bars.js';
 
 export {
   default as heatmap,

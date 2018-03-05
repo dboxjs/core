@@ -15,7 +15,7 @@ export {
 /* Chart modules */
 export {
   default as bars
-} from "@dboxjs/bars"
+} from "@dboxjs/bars";
 
 export {
   default as heatmap,
@@ -23,11 +23,11 @@ export {
 
 export {
   default as radar
-} from "@dboxjs/radar"
+} from "@dboxjs/radar";
 
 export {
   default as scatter,
-} from "@dboxjs/scatter"
+} from "@dboxjs/scatter";
 
 export {
   default as timeline,
