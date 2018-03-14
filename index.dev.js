@@ -40,3 +40,8 @@ export {
 export {
   default as map,
 } from "../map/map.js";
+
+
+export {
+  default as leaflet,
+} from "../leaflet/leaflet.js";
