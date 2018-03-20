@@ -19,24 +19,24 @@ export {
 
 export {
   default as heatmap,
-} from "../heatmap/heatmap.js";
+} from '../heatmap/heatmap.js';
 
 export {
   default as radar
-} from "../radar/radar.js";
+} from '../radar/radar.js';
 
 export {
   default as scatter,
-} from "../scatter/scatter.js";
+} from '../scatter/scatter.js';
 
 export {
   default as timeline,
-} from "../timeline/timeline.js";
+} from '../timeline/timeline.js';
 
 export {
   default as treemap,
-} from "../treemap/treemap.js";
+} from '../treemap/treemap.js';
 
 export {
   default as map,
-} from "../map/map.js";
+} from '../map/map.js';
