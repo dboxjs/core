@@ -1,5 +1,13 @@
 #!/bin/bash
 
+install:
+	for dir in ../*/ ; \
+	do \
+		echo "$$dir"; \
+		cd $$dir; \
+		npm install; \
+		cd ../core; \
+
 pull: 
 
 	for file in ../*/ ; \
