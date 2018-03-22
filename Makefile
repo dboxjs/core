@@ -1,15 +1,15 @@
 #!/bin/bash
 
 install:
-	for dir in ../*/ ; \
+	for file in ../*/ ; \
 	do \
-		echo "$$dir"; \
-		cd $$dir; \
+		echo "$$file"; \
+		cd $$file; \
 		npm install; \
 		cd ../core; \
+	done
 
 pull: 
-
 	for file in ../*/ ; \
 	do \
 		echo "$$file"; \
