@@ -48,7 +48,3 @@ export {
 export {
   default as leaflet,
 } from '../leaflet/leaflet.js';
-
-export {
-  default as spineplot,
-} from '../spineplot/spineplot.js';
