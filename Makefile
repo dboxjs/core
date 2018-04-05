@@ -7,8 +7,9 @@ install:
 		cd $$dir; \
 		npm install; \
 		cd ../core; \
+	done
 
-pull: 
+pull:
 
 	for file in ../*/ ; \
 	do \
