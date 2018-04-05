@@ -18,6 +18,10 @@ export {
 } from '../bars/bars.js';
 
 export {
+  default as spineplot
+} from '../spineplot/spineplot.js';
+
+export {
   default as heatmap,
 } from '../heatmap/heatmap.js';
 
