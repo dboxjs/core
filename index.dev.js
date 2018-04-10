@@ -8,6 +8,8 @@
  */
 
 /* Core */
+import * as _ from 'lodash';
+
 export {
   default as chart,
 } from './lib/chart';
