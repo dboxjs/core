@@ -35,3 +35,12 @@ status:
 		git status; \
 		cd ../core; \
 	done
+
+fetch:
+	for file in ../*/ ; \
+	do \
+		echo "$$file"; \
+		cd $$file; \
+		git fetch --prune; \
+		cd ../core; \
+	done
