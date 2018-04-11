@@ -1,14 +1,13 @@
-import resolve from "rollup-plugin-node-resolve";
+import resolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
 import babelrc from 'babelrc-rollup';
-
 import istanbul from 'rollup-plugin-istanbul';
 
 let pkg = require('./package.json');
 let external = Object.keys(pkg.dependencies);
 
 export default {
-  entry: 'index.js',
+  input: 'index.js',
   plugins: [
     resolve(),
     'external-helpers',
@@ -21,12 +20,12 @@ export default {
     'cartodb':'cartodb',
     'textures':'textures'
   },
-  targets: [
+  output: [
     {
-      dest: pkg.main,
+      file: pkg.main,
       format: 'umd',
-      moduleName: 'dbox',
-      sourceMap: true
+      name: 'dbox',
+      sourcemap: true
     }
   ]
 };
