@@ -63,10 +63,7 @@
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "mocha-phantomjs": "^4.1.0",
-<<<<<<< HEAD
     "rollup": "^0.57.1",
-=======
->>>>>>> c0d59def0ca7408e8a9878608e66eb606e3ba0bb
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^9.1.0",
     "rollup-plugin-istanbul": "^1.1.0",
