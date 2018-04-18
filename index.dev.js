@@ -55,6 +55,3 @@ export {
   default as treemap,
 } from '../treemap/treemap.js';
 
-export {
-  default as distro,
-} from '../distro/distro.js';
