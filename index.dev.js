@@ -20,6 +20,10 @@ export {
 } from '../bars/bars.js';
 
 export {
+  default as distro
+} from '../distro/distro.js';
+
+export {
   default as heatmap,
 } from '../heatmap/heatmap.js';
 
@@ -50,3 +54,4 @@ export {
 export {
   default as treemap,
 } from '../treemap/treemap.js';
+
