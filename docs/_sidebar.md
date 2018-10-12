@@ -1,0 +1,9 @@
+* [Home](/)
+* [Getting started](/?id=dbox)
+  * [Installation](/?id=installation)
+  * [Usage](/?id=usage)
+* [@dboxjs/bar](bars/index?id=package)
+  * [One Page Demo](/bars/example?id=one page demo)
+  * [Usage](/bars/index?id=usage)
+  * [Methods](/bars/methods?id=methods)
+  

@@ -44,3 +44,23 @@ fetch:
 		git fetch --prune; \
 		cd ../core; \
 	done
+
+eslint:
+	for file in ../*/ ; \
+	do \
+		echo "$$file"; \
+		cd $$file; \
+		( PKG=eslint-config-airbnb-base; npm info "$$PKG@latest" peerDependencies --json | command sed 's/[\{\},]//g ; s/: /@/g' | xargs npm install --save-dev "$$PKG@latest"); \
+		cd ../core; \
+	done
+
+babel:
+	for file in ../*/ ; \
+	do \
+		echo "$$file"; \
+		cd $$file; \
+		npm install --save-dev babel-preset-airbnb; \
+		cd ../core; \
+	done
+
+

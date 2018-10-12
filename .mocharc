@@ -1,3 +1,0 @@
-test
---require babel-polyfill
---compilers js:babel-register
