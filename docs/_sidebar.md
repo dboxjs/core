@@ -7,3 +7,4 @@
   * [Usage](/bars/index?id=usage)
   * [Methods](/bars/methods?id=methods)
   
+* [Development Setup](/dev/index?id=development setup )
