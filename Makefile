@@ -27,6 +27,15 @@ checkout_dev:
 		cd ../core; \
 	done
 
+checkout_feature-docs-eslint:
+	for file in ../*/ ; \
+	do \
+		echo "$$file"; \
+		cd $$file; \
+		git checkout feature-docs-eslint; \
+		cd ../core; \
+	done
+
 status:
 	for file in ../*/ ; \
 	do \

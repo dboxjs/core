@@ -28,7 +28,7 @@ git clone git@github.com:dboxjs/treemap.git
 3. execute make file 
 ```
 cd core 
-make checkout_dev
+make checkout_dev || checkout_feature-docs-eslint
 make pull 
 make install 
 make eslint
