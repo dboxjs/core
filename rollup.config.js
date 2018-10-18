@@ -1,10 +1,7 @@
 import commonjs from 'rollup-plugin-commonjs';
-// import legacy from 'rollup-plugin-legacy';
 import resolve from "rollup-plugin-node-resolve";
 import babel from 'rollup-plugin-babel';
-import babelrc from 'babelrc-rollup';
 import eslint from 'rollup-plugin-eslint';
-// import istanbul from 'rollup-plugin-istanbul';
 
 const pkg = require('./package.json');
 
@@ -17,15 +14,16 @@ export default {
     commonjs({
       ignoreGlobal: true,
     }),
-    eslint({
+    /*eslint({
       exclude: 'node_modules/**',
-    }),
-    'external-helpers',
-    babel(babelrc()),
+    }),*/
+    babel({
+      exclude: 'node_modules/**'
+    })
   ],
   external,
   output: {
-    file: './dis/dbox.js',
+    file: './dist/dbox.js',
     format: 'umd',
     name: 'dbox',
     sourcemap: true,

@@ -13,8 +13,7 @@ import * as _ from 'lodash';
 export {
   default as chart,
 } from './lib/chart';
-
-/* Chart modules */
+/*
 export {
   default as bars
 } from '../bars/bars.js';
@@ -26,7 +25,13 @@ export {
 export {
   default as heatmap,
 } from '../heatmap/heatmap.js';
+*/
 
+export {
+  default as layer,
+} from '../layer-scaffold/layer.js';
+
+/*
 export {
   default as leaflet,
 } from '../leaflet/leaflet.js';
@@ -55,3 +60,4 @@ export {
   default as treemap,
 } from '../treemap/treemap.js';
 
+*/
