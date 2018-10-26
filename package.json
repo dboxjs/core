@@ -11,6 +11,7 @@
     "dev": "rollup -c rollup.config.dev.js -w",
     "pretest": "npm run build",
     "test": "mocha",
+    "docs": "jsdoc -c jsdocs.config.json",
     "prepublish": "npm test"
   },
   "repository": {
@@ -60,6 +61,7 @@
     "babelrc-rollup": "^3.0.0",
     "eslint": "^3.12.2",
     "istanbul": "^0.4.5",
+    "jsdoc": "^3.5.5",
     "mocha": "^5.1.1",
     "mocha-phantomjs": "^4.1.0",
     "rollup": "^0.57.1",
