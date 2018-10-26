@@ -10,33 +10,37 @@
 /* Core */
 export {
   default as chart,
-} from "./lib/chart/chart";
+} from './lib/chart';
 
 /* Chart modules */
 export {
   default as bars
-} from "@dboxjs/bars"
+} from '@dboxjs/bars';
+
+export {
+  default as spineplot
+} from '@dboxjs/spineplot';
 
 export {
   default as heatmap,
-} from "@dboxjs/heatmap";
+} from '@dboxjs/heatmap';
 
 export {
   default as radar
-} from "@dboxjs/radar"
+} from '@dboxjs/radar';
 
 export {
   default as scatter,
-} from "@dboxjs/scatter"
+} from '@dboxjs/scatter';
 
 export {
   default as timeline,
-} from "@dboxjs/timeline";
+} from '@dboxjs/timeline';
 
 export {
   default as treemap,
-} from "@dboxjs/treemap";
+} from '@dboxjs/treemap';
 
 export {
   default as map,
-} from "@dboxjs/map";
+} from '@dboxjs/map';

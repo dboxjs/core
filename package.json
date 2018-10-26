@@ -11,6 +11,7 @@
     "dev": "rollup -c rollup.config.dev.js -w",
     "pretest": "npm run build",
     "test": "mocha",
+    "docs": "jsdoc -c jsdocs.config.json",
     "prepublish": "npm test"
   },
   "repository": {
@@ -37,9 +38,9 @@
   "homepage": "https://github.com/dboxjs/dbox#readme",
   "dependencies": {
     "cartodb": "^0.5.1",
-    "d3": "^4.6.0",
-    "d3-queue": "^3.0.3",
-    "d3-tip": "^0.7.1",
+    "d3": "^4.13.0",
+    "d3-queue": "^3.0.7",
+    "d3-tip": "^0.9.1",
     "lodash": "^4.17.4",
     "textures": "^1.0.4",
     "topojson": "^2.2.0"
@@ -52,6 +53,7 @@
     "@dboxjs/scatter": "0.x",
     "@dboxjs/timeline": "0.x",
     "@dboxjs/treemap": "0.x",
+    "babel": "^6.23.0",
     "babel-eslint": "^7.1.1",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.0",
@@ -59,12 +61,15 @@
     "babelrc-rollup": "^3.0.0",
     "eslint": "^3.12.2",
     "istanbul": "^0.4.5",
-    "mocha": "^3.2.0",
+    "jsdoc": "^3.5.5",
+    "mocha": "^5.1.1",
     "mocha-phantomjs": "^4.1.0",
-    "rollup": "^0.37.0",
-    "rollup-plugin-babel": "^2.7.1",
+    "rollup": "^0.57.1",
+    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-commonjs": "^9.1.0",
     "rollup-plugin-istanbul": "^1.1.0",
-    "rollup-plugin-node-resolve": "^2.0.0",
+    "rollup-plugin-legacy": "^1.0.0",
+    "rollup-plugin-node-resolve": "^2.1.1",
     "rollup-watch": "^2.5.0",
     "uglify-js": "^2.8.10"
   },
