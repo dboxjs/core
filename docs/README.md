@@ -2,7 +2,7 @@
 ---
 A library to create easy reusable charts
 
-## Instalation
+## Installation
 
 Using npm
 ```
@@ -41,7 +41,6 @@ Check examples on [dboxjs.org](http://dboxjs.org)
 ## Dependencies
 Dbox uses ```cartodb```, ```d3```, ```d3-queue```, ```d3-tip```, ```lodash```, ```topojson```
 
-
 ---
 # Layers
 ---
@@ -59,9 +58,8 @@ dbox.js has several layers currently implemented. Each layer is developed indepe
 | .tip(*function*)      | Specify the html to render on mouse hover                         |  -  |
 | .format(*function*)   | Pending                                                           |  -  |
 
-                 
-                                           
 
+​                                           
 
 ---
 # @dboxjs/bar
@@ -200,9 +198,8 @@ ___
 | -------------   | -----|
 | columns         | Array of columns to groupBy in the xAxis | 
 
-
 ---
-# Development Setup  
+# Contribute
 ---
 
 Setting up a development environment 
@@ -230,7 +227,6 @@ git clone git@github.com:dboxjs/timeline.git
 git clone git@github.com:dboxjs/treemap.git
 ```
 
-
 3. In all the repositories execute 
 ```
 npm install
@@ -238,19 +234,21 @@ npm install
 4. In @dboxjs/core 
     * Duplicate rollup.conf.js save as rollup.config.dev.js
     * Modify entry as `entry: 'index.dev.js'`
-    * Modify targets > dest to the desired destination
+    * Modify output > file to the desired destination
       ```javascript
-       targets: [
+       output: [
         {
-          dest: "your/desired/folder",
-          format: 'umd',
-          moduleName: 'dbox',
-          sourceMap: true
+          file: "your/desired/folder",
+          format    : 'umd',
+          name      : 'dbox',
+          sourcemap : true
         }
       ```
+```
 
 6. Run rollup
 ```
 npm run dev
 ```
 
+```
