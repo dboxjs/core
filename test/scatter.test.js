@@ -5,6 +5,4 @@ describe('Scatter chart', () => {
   it('Should be defined on dbox', () => {
     assert.ok(dbox.scatter);
   });
-
-  
 });
