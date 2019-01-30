@@ -27,11 +27,6 @@ export default {
   external: external,
   output: [
     {
-      //dest: '/Users/alecsgarza/d4/impunidad-cero-tai/src/assets/js/dbox.js',
-      //file: '/Users/alecsgarza/d4/dbox.js',
-      //file: '/Users/alecsgarza/d4/oxfam-mapa-vuetify/node_modules/@dboxjs/core/dist/dbox.js',
-      //file: '/Users/alecsgarza/d4/conapred-graphs/node_modules/@dboxjs/core/dist/dbox.js',
-      //file: '/Users/alecsgarza/devf/devf/node_modules/@dboxjs/core/dist/dbox.js',
       file: '/Users/alecsgarza/vpress/one-page-demo/js/dbox.js',
       format: 'umd',
       name: 'dbox',

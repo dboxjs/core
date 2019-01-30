@@ -16,5 +16,4 @@ export {
 
 export {
   default as layer,
-} from '../layer-scaffold/layer.js';
-
+} from '../layer-scaffold/layer';
