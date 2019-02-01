@@ -7,57 +7,7 @@
  * this package does), let rollup bundle them into your dist file.
  */
 
-/* Core */
-import * as _ from 'lodash';
-
-export {
-  default as chart,
-} from './lib/chart';
-/*
-export {
-  default as bars
-} from '../bars/bars.js';
-
-export {
-  default as distro
-} from '../distro/distro.js';
-
-export {
-  default as heatmap,
-} from '../heatmap/heatmap.js';
-*/
-
+/* Plain D3 Layer */
 export {
   default as layer,
-} from '../layer-scaffold/layer.js';
-
-/*
-export {
-  default as leaflet,
-} from '../leaflet/leaflet.js';
-
-export {
-  default as map,
-} from '../map/map.js';
-
-export {
-  default as radar
-} from '../radar/radar.js';
-
-export {
-  default as scatter,
-} from '../scatter/scatter.js';
-
-export {
-  default as spineplot
-} from '../spineplot/spineplot.js';
-
-export {
-  default as timeline,
-} from '../timeline/timeline.js';
-
-export {
-  default as treemap,
-} from '../treemap/treemap.js';
-
-*/
+} from '../layer-scaffold/layer-plain-d3';

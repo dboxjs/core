@@ -7,13 +7,7 @@
  * this package does), let rollup bundle them into your dist file.
  */
 
-/* Core */
-import * as _ from 'lodash';
-
-export {
-  default as chart,
-} from './lib/chart';
-
+/* Plain D3 Layer */
 export {
   default as layer,
-} from '../layer-scaffold/layer';
+} from '../layer-scaffold/layer-plain-d3.js';
