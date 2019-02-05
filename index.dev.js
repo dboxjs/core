@@ -9,5 +9,5 @@
 
 /* Plain D3 Layer */
 export {
-  default as layer,
-} from '../layer-scaffold/layer-plain-d3';
+  default as demo,
+} from '../layer-scaffold/demo';
