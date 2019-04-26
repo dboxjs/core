@@ -36,13 +36,14 @@
   ],
   "homepage": "https://github.com/dboxjs/dbox#readme",
   "dependencies": {
+    "babelrc-rollup": "^3.0.0",
     "cartodb": "^0.5.1",
     "d3": "^4.6.0",
     "d3-queue": "^3.0.3",
+    "d3-tip": "^0.7.1",
     "lodash": "^4.17.4",
     "textures": "^1.0.4",
-    "topojson": "^2.2.0",
-    "d3-tip": "^0.7.1"
+    "topojson": "^2.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",

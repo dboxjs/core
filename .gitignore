@@ -3,6 +3,7 @@
 /coverage
 
 rollup.config.dev.js
+rollup.config.dev.old.js
 *.log
 .DS_Store
 package-lock.json
