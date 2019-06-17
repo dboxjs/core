@@ -719,16 +719,6 @@ caniuse-lite@^1.0.30000780:
   version "1.0.30000780"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000780.tgz#1f9095f2efd4940e0ba6c5992ab7a9b64cc35ba4"
 
-cartodb@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/cartodb/-/cartodb-0.5.1.tgz#347af4357264b2b7858d096cedb1045e4e3f9782"
-  dependencies:
-    command-line-args "^2.1.6"
-    debug "~0.7.2"
-    mustache "^2.2.1"
-    openurl "^1.1.1"
-    request latest
-
 caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"

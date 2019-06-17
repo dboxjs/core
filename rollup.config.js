@@ -30,7 +30,6 @@ export default {
     globals: {
       lodash: '_',
       d3: 'd3',
-      cartodb: 'cartodb',
       textures: 'textures',
       d3Tip: 'd3-tip',
     },

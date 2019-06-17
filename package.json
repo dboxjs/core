@@ -36,8 +36,8 @@
   ],
   "homepage": "https://github.com/dboxjs/dbox#readme",
   "dependencies": {
+    "babel-loader": "^8.0.6",
     "babelrc-rollup": "^3.0.0",
-    "cartodb": "^0.5.1",
     "d3": "^4.6.0",
     "d3-queue": "^3.0.3",
     "d3-tip": "^0.7.1",
