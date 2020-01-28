@@ -36,6 +36,9 @@
     "docs"
   ],
   "homepage": "https://github.com/dboxjs/dbox#readme",
+  "prettier": {
+    "singleQuote": true
+  },
   "dependencies": {
     "cartodb": "^0.5.1",
     "d3": "^4.13.0",
