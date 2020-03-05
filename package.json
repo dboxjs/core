@@ -37,11 +37,10 @@
   ],
   "homepage": "https://github.com/dboxjs/dbox#readme",
   "dependencies": {
-    "cartodb": "^0.5.1",
     "d3": "^4.13.0",
     "d3-queue": "^3.0.7",
     "d3-tip": "^0.9.1",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.15",
     "textures": "^1.0.4",
     "topojson": "^2.2.0"
   },
@@ -62,7 +61,7 @@
     "d3-dispatch": "^1.0.5",
     "eslint": "^3.12.2",
     "istanbul": "^0.4.5",
-    "jsdoc": "^3.5.5",
+    "jsdoc": "^3.6.3",
     "mocha": "^5.1.1",
     "mocha-phantomjs": "^4.1.0",
     "redux": "^4.0.1",

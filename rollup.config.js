@@ -16,9 +16,8 @@ export default {
   external: external,
   globals: {
     'lodash': '_',
-    'd3':'d3',
-    'cartodb':'cartodb',
-    'textures':'textures'
+    'd3': 'd3',
+    'textures': 'textures'
   },
   output: [
     {
