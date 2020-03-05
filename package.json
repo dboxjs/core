@@ -36,6 +36,9 @@
     "docs"
   ],
   "homepage": "https://github.com/dboxjs/dbox#readme",
+  "prettier": {
+    "singleQuote": true
+  },
   "dependencies": {
     "d3": "^4.13.0",
     "d3-queue": "^3.0.7",
