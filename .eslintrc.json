@@ -1,33 +1,29 @@
 {
   "env": {
-      "browser": true,
-      "commonjs": true,
-      "es6": true,
-      "node": true
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true
   },
   "globals": {
     "ENV": true
   },
   "extends": "eslint:recommended",
   "parserOptions": {
-      "sourceType": "module"
+    "sourceType": "module"
   },
   "rules": {
-      "indent": [
-          "error",
-          2
-      ],
-      "linebreak-style": [
-          "error",
-          "unix"
-      ],
-      "quotes": [
-          "error",
-          "single"
-      ],
-      "semi": [
-          "error",
-          "always"
-      ]
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "one-line": [
+      true,
+      "check-open-brace",
+      "check-catch",
+      "check-else",
+      "check-whitespace"
+    ],
+    "no-console": ["warn", "always"]
   }
 }
