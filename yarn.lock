@@ -7,40 +7,55 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.8.7.tgz#7b8facf95d25fef9534aad51c4ffecde1a61e26a"
   integrity sha512-9JWls8WilDXFGxs0phaXAZgpxTZhSk/yOYH2hTHC0X1yC7Z78IJfvR1vJ+rmJKq3I35td2XzXzN6ZLYlna+r/A==
 
-"@dboxjs/bars@0.x":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@dboxjs/bars/-/bars-0.0.2.tgz#b3b91f2cfa9e044d96db233573127169ad8fac2f"
-  integrity sha1-s7kfLPqeBE2W2yM1cxJxaa2PrC8=
+"@dboxjs/bars@^0.x":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@dboxjs/bars/-/bars-0.1.0.tgz#afa86fadd5c954e703a17cffcb418ab0de669d62"
+  integrity sha512-nVvi6ps5RwoDDp4wTKxAo1Tgt/bYDQjIrCsm+uwlaHXT7ie9ESGcX6hejhnuDoYNf4k6QAXpK0axwasRDwkNUQ==
 
-"@dboxjs/heatmap@0.x":
+"@dboxjs/distro@^0.x":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@dboxjs/distro/-/distro-0.1.0.tgz#733143240a5121d483cc18b6c46c8a37033f3130"
+  integrity sha512-1d46T2kuhiGgXBIlKexPxKWWYYQ7MScKfwiIhxw1DEQQ79NFhKLr8zTZCkdNyCrmybWs1GYEz6//G6wnbd03Bg==
+
+"@dboxjs/heatmap@^0.x":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@dboxjs/heatmap/-/heatmap-0.1.0.tgz#4bd08bc825cb50c10e54e43d502fb001eb0e40dd"
+  integrity sha512-QGsFAXWvuOZPReclcm6U78pQ1ACPf8W3GryQazyrTOXV/Dsj0EVQCpsyDuojRYIpPUwHyTxHWvkTSt1sENZirA==
+
+"@dboxjs/leaflet@^0.x":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@dboxjs/leaflet/-/leaflet-0.1.0.tgz#5e9536edde55a99b5b3ffb72b7e92b2f43e99c42"
+  integrity sha512-wNMDs65wZRKzUmYWri+4d1WxdQBMUWVG9ZPm7hgNoBpdtYmbluihyR82FqgMM5CrYllTGkz6SCbc4ctWEXCIzQ==
+
+"@dboxjs/map@^0.x":
   version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@dboxjs/heatmap/-/heatmap-0.0.3.tgz#9640678459b67aed2abd0653f2200201fbf1cede"
-  integrity sha1-lkBnhFm2eu0qvQZT8iACAfvxzt4=
+  resolved "https://registry.yarnpkg.com/@dboxjs/map/-/map-0.0.3.tgz#96168ebff056f0e0cf2acff62b0d416ea8a0da79"
+  integrity sha512-gAvWZKf9lCJpicOFCYt0IVRS6I0u6g1uhGR2zl/BDWA2nZZHPMZPRx1gsHQXZXu0tt+OOGq9aWZlJmAwxalPuA==
 
-"@dboxjs/map@0.0.x":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@dboxjs/map/-/map-0.0.2.tgz#eb1379777b94a2f37de94fc645964fd341bea786"
-  integrity sha1-6xN5d3uUovN96U/GRZZP00G+p4Y=
-
-"@dboxjs/radar@0.x":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@dboxjs/radar/-/radar-0.0.2.tgz#bceeb6b5bb1876a3edd2c12f27bc61d2b3418a15"
-  integrity sha1-vO62tbsYdqPt0sEvJ7xh0rNBihU=
-
-"@dboxjs/scatter@0.x":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@dboxjs/scatter/-/scatter-0.0.4.tgz#2899ac2053cca7e0de2bb261146d1a87fcb66f9c"
-  integrity sha1-KJmsIFPMp+DeK7JhFG0ah/y2b5w=
-
-"@dboxjs/timeline@0.x":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@dboxjs/timeline/-/timeline-0.0.1.tgz#ddd78c76a7d543d3b6900c688dc92a393cfd9e9c"
-  integrity sha1-3deMdqfVQ9O2kAxojckqOTz9npw=
-
-"@dboxjs/treemap@0.x":
+"@dboxjs/radar@^0.x":
   version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@dboxjs/treemap/-/treemap-0.0.3.tgz#e45a05697943825a44a9afc43208f23dcd9287fd"
-  integrity sha1-5FoFaXlDglpEqa/EMgjyPc2Sh/0=
+  resolved "https://registry.yarnpkg.com/@dboxjs/radar/-/radar-0.0.3.tgz#22c3493ef12650589619d5cc312fb14c1c02b98f"
+  integrity sha512-3nygSKg0LLKhkg68zkCv0MuH0G+I9EcS0r0S3I8O1Pxa3TRoI3vZZHCYWaLg4IGSYDy2Jg+c61/eZO5VCIv0Fw==
+
+"@dboxjs/scatter@^0.x":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@dboxjs/scatter/-/scatter-0.1.0.tgz#445ccff6a302ac5654b650afb18eba429d704f2c"
+  integrity sha512-OpMjyoKV0P4ITV5I2/UMI/rwJrZ/HH/DSJy2DNo4358fjYvlSUuYc8pYLpWQP0erq8WYdJWPk+TGcHNMLyUTNQ==
+
+"@dboxjs/spineplot@^0.x":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@dboxjs/spineplot/-/spineplot-0.1.0.tgz#0b3064931250d1f4657bd6c342a82906f6baa2ea"
+  integrity sha512-lYLNxtIyV+e1fjv0XWOLRMgx3ykh0Sekx3p5ZyfRb4V4G+cI0+s0kawY5TKoweOjhdAvRyUhSIfA2jZFQUNN3w==
+
+"@dboxjs/timeline@^0.x":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@dboxjs/timeline/-/timeline-0.1.0.tgz#30b281c4bdf5716a7264ab98fac5c35dea6e99c8"
+  integrity sha512-+2cgzfuv31/QllQvIfhhV0NoFdcP5BBrODomPNL0xHqBse7g0sn7bvBY1AOnwvNvAPhulqrrJTz86aderfj/qg==
+
+"@dboxjs/treemap@^0.x":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@dboxjs/treemap/-/treemap-0.1.0.tgz#0dffd2c33c23d235b7c6f99a5775112dff4d9c90"
+  integrity sha512-r+p+/nzRrHkBSeh8zYMy+WSQpSrwNSKNuUU8fcdFvVSTFDubkhVuigd8a22qQqzjATIOnNsdH7666bp2r0qhhw==
 
 "@types/acorn@^4.0.3":
   version "4.0.5"
@@ -1018,7 +1033,7 @@ d3-color@1.0.3:
   resolved "https://registry.yarnpkg.com/d3-color/-/d3-color-1.0.3.tgz#bc7643fca8e53a8347e2fbdaffa236796b58509b"
   integrity sha1-vHZD/KjlOoNH4vva/6I2eWtYUJs=
 
-d3-dispatch@1, d3-dispatch@^1.0.5:
+d3-dispatch@1:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/d3-dispatch/-/d3-dispatch-1.0.6.tgz#00d37bcee4dd8cd97729dd893a0ac29caaba5d58"
   integrity sha512-fVjoElzjhCEy+Hbn8KygnmMS7Or0a9sI2UzGwoB7cCtvI1XpVN9GpoYlnb3xt2YV66oXYb1fLJ8GMvP4hdU1RA==

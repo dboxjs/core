@@ -40,6 +40,14 @@
     "singleQuote": true
   },
   "dependencies": {
+    "d3": "^4.13.0",
+    "d3-queue": "^3.0.7",
+    "d3-tip": "^0.9.1",
+    "lodash": "^4.17.15",
+    "textures": "^1.0.4",
+    "topojson": "^2.2.0"
+  },
+  "devDependencies": {
     "@dboxjs/bars": "^0.x",
     "@dboxjs/distro": "^0.x",
     "@dboxjs/heatmap": "^0.x",
@@ -50,14 +58,6 @@
     "@dboxjs/spineplot": "^0.x",
     "@dboxjs/timeline": "^0.x",
     "@dboxjs/treemap": "^0.x",
-    "d3": "^4.13.0",
-    "d3-queue": "^3.0.7",
-    "d3-tip": "^0.9.1",
-    "lodash": "^4.17.15",
-    "textures": "^1.0.4",
-    "topojson": "^2.2.0"
-  },
-  "devDependencies": {
     "babel": "^6.23.0",
     "babel-eslint": "^7.1.1",
     "babel-plugin-external-helpers": "^6.22.0",
