@@ -13,10 +13,10 @@ describe('Helper.utils', function() {
       var result = chart.helper.utils.format(null, true)(430958);
       assert.equal(result, '431.0 mil');
     });
-    it('Should format 6234 to 6.2 mil', function() {
+    it('Should format 6234 to 6,234', function() {
       var chart = dbox.chart();
       var result = chart.helper.utils.format(null, true)(6234);
-      assert.equal(result, '6.2 mil');
+      assert.equal(result, '6,234');
     });
     it('Should format 345.23 to 345.2', function() {
       var chart = dbox.chart();
