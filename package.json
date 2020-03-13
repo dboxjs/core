@@ -3,8 +3,8 @@
   "version": "0.0.9",
   "description": "A library to create easy reusable charts",
   "main": "dist/dbox.js",
-  "module": "dist/dbox.mjs",
-  "jsnext:main": "dist/dbox.mjs",
+  "module": "dist/dbox.min.js",
+  "jsnext:main": "dist/dbox.min.js",
   "scripts": {
     "eslint": "eslint -c .eslintrc lib test",
     "build": "rollup -c && uglifyjs ./dist/dbox.js -c -m -o ./dist/dbox.min.js",
@@ -73,7 +73,6 @@
     "rollup": "^0.57.1",
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-commonjs": "^9.1.0",
-    "rollup-plugin-istanbul": "^1.1.0",
     "rollup-plugin-legacy": "^1.0.0",
     "rollup-plugin-node-resolve": "^2.1.1",
     "rollup-watch": "^2.5.0",
