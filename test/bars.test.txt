@@ -30,7 +30,7 @@ describe('Bar chart', () => {
     assert.equal(chart._config.bindTo, 'body');
   });
 
-  it('Should be defined in dbox', () => {
+  it('Bars should be defined in dbox', () => {
     assert.ok(dbox.bars);
   });
 
