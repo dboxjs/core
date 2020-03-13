@@ -8,16 +8,12 @@ let external = Object.keys(pkg.dependencies);
 
 export default {
   input: 'index.js',
-  plugins: [
-    resolve(),
-    'external-helpers',
-    babel(babelrc())
-  ],
+  plugins: [resolve(), 'external-helpers', babel(babelrc())],
   external: external,
   globals: {
-    'lodash': '_',
-    'd3': 'd3',
-    'textures': 'textures'
+    lodash: '_',
+    d3: 'd3',
+    textures: 'textures'
   },
   output: [
     {

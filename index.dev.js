@@ -9,48 +9,25 @@
 
 /* Core */
 
-export {
-  default as chart,
-} from './lib/chart';
+export { default as chart } from './lib/chart';
 
 /* Chart modules */
-export {
-  default as bars
-} from '../bars/bars.js';
+export { default as bars } from '../bars/bars.js';
 
-export {
-  default as distro
-} from '../distro/distro.js';
+export { default as distro } from '../distro/distro.js';
 
-export {
-  default as heatmap,
-} from '../heatmap/heatmap.js';
+export { default as heatmap } from '../heatmap/heatmap.js';
 
-export {
-  default as leaflet,
-} from '../leaflet/leaflet.js';
+export { default as leaflet } from '../leaflet/leaflet.js';
 
-export {
-  default as map,
-} from '../map/map.js';
+export { default as map } from '../map/map.js';
 
-export {
-  default as radar
-} from '../radar/radar.js';
+export { default as radar } from '../radar/radar.js';
 
-export {
-  default as scatter,
-} from '../scatter/scatter.js';
+export { default as scatter } from '../scatter/scatter.js';
 
-export {
-  default as spineplot
-} from '../spineplot/spineplot.js';
+export { default as spineplot } from '../spineplot/spineplot.js';
 
-export {
-  default as timeline,
-} from '../timeline/timeline.js';
+export { default as timeline } from '../timeline/timeline.js';
 
-export {
-  default as treemap,
-} from '../treemap/treemap.js';
-
+export { default as treemap } from '../treemap/treemap.js';
