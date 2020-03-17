@@ -27,7 +27,7 @@
         d3: {}
       }
     };
-    Helper.utils.d3.tip = d3Tip;
+    Helper.utils.d3.tip = typeof d3Tip === 'function' ? d3Tip : d3Tip.default;
 
     /**
      * Generate scale based on data and config
