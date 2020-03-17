@@ -40,7 +40,7 @@ yarn.lock
 .cache
 
 # rollup.js default build output
-dist/
+# dist/
 rollup.config.dev.js
 
 # Temporary folders
