@@ -2,7 +2,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('d3'), require('lodash')) :
   typeof define === 'function' && define.amd ? define(['exports', 'd3', 'lodash'], factory) :
   (factory((global.dbox = {}),global.d3,global._));
-}(this, (function (exports,d3$1,_$1) { 'use strict';
+}(this, (function (exports,d3,_$1) { 'use strict';
 
   var d3Tip = require('d3-tip');
   var _$2 = require('lodash');
@@ -56,15 +56,15 @@
         domains = config.column;
       } else if (config.groupBy == 'data') {
         // Considering the highest value on all the columns for each groupBy column
-        domains = [0, d3$1.max(data, function (d) {
-          return d3$1.max(config.column, function (column) {
+        domains = [0, d3.max(data, function (d) {
+          return d3.max(config.column, function (column) {
             return d[column];
           });
         })];
       } else if (config.stackBy == 'data') {
         // Using a d3.stack()
-        domains = [0, d3$1.max(data, function (serie) {
-          return d3$1.max(serie, function (d) {
+        domains = [0, d3.max(data, function (serie) {
+          return d3.max(serie, function (d) {
             return d[1];
           });
         })];
@@ -76,11 +76,11 @@
       } else if (config.type === 'linear') {
         // Axis of type numeric
         if (config.minZero) {
-          domains = [0, d3$1.max(data, function (d) {
+          domains = [0, d3.max(data, function (d) {
             return +d[config.column];
           })];
         } else {
-          domains = d3$1.extent(data, function (d) {
+          domains = d3.extent(data, function (d) {
             return +d[config.column];
           });
         }
@@ -98,38 +98,38 @@
       if (config.type) {
         switch (config.type) {
           case 'linear':
-            scale = d3$1.scaleLinear().rangeRound(config.range).domain(domains).nice();
+            scale = d3.scaleLinear().rangeRound(config.range).domain(domains).nice();
             break;
 
           case 'time':
-            scale = d3$1.scaleTime().range(config.range);
+            scale = d3.scaleTime().range(config.range);
             // .domain(domains);
             break;
 
           case 'ordinal':
-            scale = d3$1.scaleBand().rangeRound(config.range).padding(0.1).domain(domains);
+            scale = d3.scaleBand().rangeRound(config.range).padding(0.1).domain(domains);
             break;
 
           case 'band':
-            scale = d3$1.scaleBand().rangeRound(config.range).domain(domains).padding(0.1);
+            scale = d3.scaleBand().rangeRound(config.range).domain(domains).padding(0.1);
             break;
 
           case 'quantile':
-            scale = d3$1.scaleBand().rangeRound(config.range).padding(0.1).domain(data.map(function (d) {
+            scale = d3.scaleBand().rangeRound(config.range).padding(0.1).domain(data.map(function (d) {
               return d[config.column];
             }));
             if (!config.bins) {
               config.bins = 10;
             }
-            scale = d3$1.scaleQuantile().range(d3$1.range(config.bins));
+            scale = d3.scaleQuantile().range(d3.range(config.bins));
             break;
 
           default:
-            scale = d3$1.scaleLinear().rangeRound(config.range).domain(domains).nice();
+            scale = d3.scaleLinear().rangeRound(config.range).domain(domains).nice();
             break;
         }
       } else {
-        scale = d3$1.scaleLinear().rangeRound(config.range).domain(domains).nice();
+        scale = d3.scaleLinear().rangeRound(config.range).domain(domains).nice();
       }
 
       return scale;
@@ -173,7 +173,7 @@
 
         if (smallNumber) {
           var currentAxis = config.axis;
-          var mean = currentAxis ? d3$1.mean(vm._scales[currentAxis.replace('Axis', '')].ticks()) : d;
+          var mean = currentAxis ? d3.mean(vm._scales[currentAxis.replace('Axis', '')].ticks()) : d;
 
           if (mean >= 1000000000000) {
             if (currentAxis) {
@@ -210,9 +210,9 @@
         }
 
         if (Number.isInteger(d)) {
-          value += d3$1.format(',.0f')(d);
+          value += d3.format(',.0f')(d);
         } else if (d > 1) {
-          value += d3$1.format(',.' + floatingPoints + 'f')(d);
+          value += d3.format(',.' + floatingPoints + 'f')(d);
         } else {
           var floats = d.toString().split('.')[1];
           var points = 1;
@@ -225,7 +225,7 @@
                 break;
               }
             }
-            value += d3$1.format(',.' + points + 'f')(d);
+            value += d3.format(',.' + points + 'f')(d);
           }
         }
         value += suffix;
@@ -240,7 +240,7 @@
     // wrap function used in x axis labels
     Helper.utils.wrap = function (text, width, tooltip) {
       text.each(function () {
-        var text = d3$1.select(this),
+        var text = d3.select(this),
             words = text.text().split(/\s+/).reverse(),
             word,
             line = [],
@@ -381,7 +381,7 @@
               if (typeof vm._config.events.onClickLegend === 'function') {
                 vm._config.events.onClickLegend.call(this, d, i);
               }
-              d3$1.event.stopPropagation();
+              d3.event.stopPropagation();
             });
 
             rowSelection.order();
@@ -390,7 +390,7 @@
             rowUpdateSelection.call(update);
 
             rowUpdateSelection.each(function (d, i) {
-              d3$1.select(this).attr('font-weight', 'bold').attr('transform', function (d) {
+              d3.select(this).attr('font-weight', 'bold').attr('transform', function (d) {
                 return 'translate(0,' + (vm._config.legendTitle && lineNumber > 1 ? lineNumber * lineHeight + i : 1 + i) * 21 + ')';
               });
             });
@@ -406,13 +406,13 @@
 
         virtualscroller.render = render;
         var isFirefox = typeof InstallTrigger !== 'undefined';
-        var support = 'onwheel' in d3$1.select('.legendBox') ? 'wheel' // Modern browsers support "wheel"
+        var support = 'onwheel' in d3.select('.legendBox') ? 'wheel' // Modern browsers support "wheel"
         : document.onmousewheel !== undefined ? 'mousewheel' // Webkit and IE support at least "mousewheel"
         : 'wheel'; // let's assume that remaining browsers are older Firefox
-        d3$1.select('.legendBox').on(support, function () {
+        d3.select('.legendBox').on(support, function () {
           // isFirefox ? 'wheel' : 'mousewheel.zoom'
           //Chrome & IE: mousewheel.zoom | Firefox: DOMMouseScroll (not supported yet).
-          var evt = d3$1.event;
+          var evt = d3.event;
           evt.preventDefault();
           scrollTop = isFirefox ? evt.deltaY : evt.wheelDelta;
           render(true);
@@ -422,7 +422,7 @@
       }
 
       function drawScrollLegend(visibleRows) {
-        var scrollLegend = d3$1.select('.legendBox').append('g').attr('class', 'scroll-legend').append('text').attr('transform', 'translate(0,' + visibleRows * 25 + ')');
+        var scrollLegend = d3.select('.legendBox').append('g').attr('class', 'scroll-legend').append('text').attr('transform', 'translate(0,' + visibleRows * 25 + ')');
 
         scrollLegend.append('tspan').attr('class', 'material-icons expand-more').text('mouse');
 
@@ -431,9 +431,9 @@
         scrollLegend.append('tspan').attr('x', 60).attr('y', -1).text('cursor');
 
         if (totalRows < visibleRows) {
-          d3$1.selectAll('.scroll-legend').style('display', 'none');
+          d3.selectAll('.scroll-legend').style('display', 'none');
         } else {
-          d3$1.selectAll('.scroll-legend').style('display', 'flex');
+          d3.selectAll('.scroll-legend').style('display', 'flex');
         }
       }
 
@@ -934,69 +934,69 @@
       if (vm._config.xAxis && vm._config.xAxis.scale) {
         switch (vm._config.xAxis.scale) {
           case 'linear':
-            scales.x = d3$1.scaleLinear().range([0, vm._width]);
+            scales.x = d3.scaleLinear().range([0, vm._width]);
             break;
 
           case 'time':
-            scales.x = d3$1.scaleTime().range([0, vm._width]);
+            scales.x = d3.scaleTime().range([0, vm._width]);
             break;
 
           case 'ordinal':
-            scales.x = d3$1.scaleOrdinal().range([0, vm._width], 0.1);
+            scales.x = d3.scaleOrdinal().range([0, vm._width], 0.1);
             break;
 
           case 'band':
-            scales.x = d3$1.scaleBand().rangeRound([0, vm._width]).padding(0.1);
+            scales.x = d3.scaleBand().rangeRound([0, vm._width]).padding(0.1);
             break;
 
           case 'quantile':
-            scales.x = d3$1.scaleOrdinal().range([0, vm._width], 0.1);
+            scales.x = d3.scaleOrdinal().range([0, vm._width], 0.1);
 
-            scales.q = d3$1.scaleQuantile().range(d3$1.range(vm._config.xAxis.buckets));
+            scales.q = d3.scaleQuantile().range(d3.range(vm._config.xAxis.buckets));
             break;
 
           default:
-            scales.x = d3$1.scaleLinear().range([0, vm._width]);
+            scales.x = d3.scaleLinear().range([0, vm._width]);
             break;
         }
       } else {
-        scales.x = d3$1.scaleLinear().range([0, vm._width]);
+        scales.x = d3.scaleLinear().range([0, vm._width]);
       }
 
       //yAxis scale
       if (vm._config.yAxis && vm._config.yAxis.scale) {
         switch (vm._config.yAxis.scale) {
           case 'linear':
-            scales.y = d3$1.scaleLinear().range([vm._height, 0]);
+            scales.y = d3.scaleLinear().range([vm._height, 0]);
             break;
 
           case 'time':
-            scales.y = d3$1.scaleTime().range([vm._height, 0]);
+            scales.y = d3.scaleTime().range([vm._height, 0]);
             break;
 
           case 'ordinal':
-            scales.y = d3$1.scaleOrdinal().range([vm._height, 0], 0.1);
+            scales.y = d3.scaleOrdinal().range([vm._height, 0], 0.1);
             break;
 
           case 'band':
-            scales.y = d3$1.scaleBand().rangeRound([vm._height, 0]).padding(0.1);
+            scales.y = d3.scaleBand().rangeRound([vm._height, 0]).padding(0.1);
             break;
 
           case 'quantile':
-            scales.y = d3$1.scaleOrdinal().range([0, vm._width], 0.1);
+            scales.y = d3.scaleOrdinal().range([0, vm._width], 0.1);
 
-            scales.q = d3$1.scaleQuantile().range(d3$1.range(vm._config.yAxis.buckets));
+            scales.q = d3.scaleQuantile().range(d3.range(vm._config.yAxis.buckets));
             break;
 
           default:
-            scales.y = d3$1.scaleLinear().range([vm._height, 0]);
+            scales.y = d3.scaleLinear().range([vm._height, 0]);
             break;
         }
       } else {
-        scales.y = d3$1.scaleLinear().range([vm._height, 0]);
+        scales.y = d3.scaleLinear().range([vm._height, 0]);
       }
 
-      scales.color = d3$1.scaleOrdinal(d3$1.schemeCategory10);
+      scales.color = d3.scaleOrdinal(d3.schemeCategory10);
       if (vm._config.legend && vm._config.legend.length > 0) {
         scales.color.domain(vm._config.legend.map(function (o) {
           return o.name;
@@ -1011,8 +1011,8 @@
     Chart.axes = function () {
       var vm = this,
           axes = {};
-      axes.x = d3$1.axisBottom(vm._scales.x);
-      axes.y = d3$1.axisLeft(vm._scales.y);
+      axes.x = d3.axisBottom(vm._scales.x);
+      axes.y = d3.axisLeft(vm._scales.y);
 
       //remove corners in axis line
       axes.x.tickSizeOuter(0);
@@ -1096,23 +1096,23 @@
       var q;
 
       if (vm._config.data.tsv) {
-        q = d3$1.queue().defer(d3$1.tsv, vm._config.data.tsv);
+        q = d3.queue().defer(d3.tsv, vm._config.data.tsv);
       }
 
       if (vm._config.data.json) {
-        q = d3$1.queue().defer(d3$1.json, vm._config.data.json);
+        q = d3.queue().defer(d3.json, vm._config.data.json);
       }
 
       if (vm._config.data.csv) {
-        q = d3$1.queue().defer(d3$1.csv, vm._config.data.csv);
+        q = d3.queue().defer(d3.csv, vm._config.data.csv);
       }
 
       if (vm._config.data.raw) {
-        q = d3$1.queue().defer(vm.mapData, vm._config.data.raw);
+        q = d3.queue().defer(vm.mapData, vm._config.data.raw);
       }
 
       if (vm._config.map && vm._config.map.topojson && vm._config.map.topojson.url) {
-        q.defer(d3$1.json, vm._config.map.topojson.url);
+        q.defer(d3.json, vm._config.map.topojson.url);
       }
 
       return q;
@@ -1132,20 +1132,20 @@
       var vm = this;
 
       //Remove any previous svg
-      d3$1.select(vm._config.bindTo).select('svg').remove();
-      d3$1.select(vm._config.bindTo).html('');
+      d3.select(vm._config.bindTo).select('svg').remove();
+      d3.select(vm._config.bindTo).html('');
 
       //Add the css template class
       if (vm._config.template) {
-        d3$1.select(vm._config.bindTo).classed(vm._config.template, true);
+        d3.select(vm._config.bindTo).classed(vm._config.template, true);
       }
 
       //Add title to the chart
       if (vm._config && vm._config.title) {
-        d3$1.select(vm._config.bindTo).append('div').attr('class', 'chart-title').html(vm._config.title).style('display', 'flex').style('justify-content', 'center').style('align-items', 'center').style('font-size', vm._addStyle.title.fontSize).style('font-weight', vm._addStyle.title.fontWeight).style('color', vm._addStyle.title.textColor).style('text-align', vm._addStyle.title.textAlign);
+        d3.select(vm._config.bindTo).append('div').attr('class', 'chart-title').html(vm._config.title).style('display', 'flex').style('justify-content', 'center').style('align-items', 'center').style('font-size', vm._addStyle.title.fontSize).style('font-weight', vm._addStyle.title.fontWeight).style('color', vm._addStyle.title.textColor).style('text-align', vm._addStyle.title.textAlign);
 
         if (vm._addStyle.title.hr.enabled) {
-          d3$1.select(vm._config.bindTo).append('hr').attr('class', 'hr-title').style('width', '80%').style('margin-left', '10%').style('margin-top', '0.5em').style('border-width', vm._addStyle.title.hr.borderWidth).style('border-color', vm._addStyle.title.hr.borderColor);
+          d3.select(vm._config.bindTo).append('hr').attr('class', 'hr-title').style('width', '80%').style('margin-left', '10%').style('margin-top', '0.5em').style('border-width', vm._addStyle.title.hr.borderWidth).style('border-color', vm._addStyle.title.hr.borderColor);
         }
       }
 
@@ -1153,7 +1153,7 @@
       //@TODO - PASS THE STYLES TO DBOX.CSS
       //@TODO - ALLOW DIFFERENT POSSITIONS FOR THE LEGEND
       if (vm._config.legend && vm._config.legend.enabled === true && vm._config.legend.position === 'top') {
-        var legend = d3$1.select(vm._config.bindTo).append('div').attr('class', 'chart-legend-top');
+        var legend = d3.select(vm._config.bindTo).append('div').attr('class', 'chart-legend-top');
 
         var html = '';
         html += '<div style="background-color:#E2E2E1;text-align:center;height: 40px;margin: 0px 15px">';
@@ -1167,7 +1167,7 @@
       var width = vm._width + vm._margin.left + vm._margin.right;
       var height = vm._height + vm._margin.top + vm._margin.bottom;
       //Create the svg
-      vm._fullSvg = d3$1.select(vm._config.bindTo).append('svg').style('font-size', vm._config.chart ? vm._config.chart['font-size'] ? vm._config.chart['font-size'] : '12px' : '12px').attr('width', width).attr('height', height).attr('viewBox', '0 0 ' + width + ' ' + height);
+      vm._fullSvg = d3.select(vm._config.bindTo).append('svg').style('font-size', vm._config.chart ? vm._config.chart['font-size'] ? vm._config.chart['font-size'] : '12px' : '12px').attr('width', width).attr('height', height).attr('viewBox', '0 0 ' + width + ' ' + height);
 
       vm._svg = vm._fullSvg.append('g').attr('transform', 'translate(' + vm._margin.left + ',' + vm._margin.top + ')');
 
@@ -1178,7 +1178,7 @@
 
       //Apply background color
 
-      d3$1.select(vm._config.bindTo + ' svg').style('background-color', vm._addStyle.chart.backgroundColor.color);
+      d3.select(vm._config.bindTo + ' svg').style('background-color', vm._addStyle.chart.backgroundColor.color);
 
       // Legend for average lines
       /*
@@ -1219,7 +1219,7 @@
           marginTop = vm._config.size.margin.top + 10;
       // Set color domain
       if (!vm._scales.color && vm._config.colors) {
-        vm._scales.color = d3$1.scaleOrdinal(vm._config.colors);
+        vm._scales.color = d3.scaleOrdinal(vm._config.colors);
       }
       if (vm._config.legend && vm._config.legend.length > 0) {
         vm._scales.color.domain(vm._config.legend.map(function (o) {
@@ -1239,7 +1239,7 @@
         legendBox.append('g').attr('width', '150px').append('text').attr('class', 'legend-title').attr('x', 5).style('font-weight', 'bold').text(vm._config.legendTitle);
         // wrap legend title if text size exceeds 70% of container
         var lWidth = vm._config.size.margin.right;
-        var text = d3$1.selectAll('.legend-title'),
+        var text = d3.selectAll('.legend-title'),
             words = text.text().split(/\s+/).reverse(),
             word,
             line = [],
@@ -1290,7 +1290,7 @@
             y: _y + size / 10
           }];
 
-          var line = d3$1.line().x(function (d) {
+          var line = d3.line().x(function (d) {
             return d.x;
           }).y(function (d) {
             return d.y;
@@ -1301,7 +1301,7 @@
             // External function call. It must be after all the internal code; allowing the user to overide
             return d.active;
           }).attr('opacity', function () {
-            if (d3$1.select(this).property('checked')) {
+            if (d3.select(this).property('checked')) {
               return 1;
             } else {
               return 0;
@@ -1329,10 +1329,10 @@
               // getComputedTextLenght: Returns a float representing the computed length for the text within the element.
               if (this.getComputedTextLength() > lbWidth) {
                 (function () {
-                  d3$1.select(_this).attr('title', d.name).on('mouseover', legendTip.show).on('mouseout', legendTip.hide);
+                  d3.select(_this).attr('title', d.name).on('mouseover', legendTip.show).on('mouseout', legendTip.hide);
                   var i = 1;
                   while (_this.getComputedTextLength() > lbWidth) {
-                    d3$1.select(_this).text(function (d) {
+                    d3.select(_this).text(function (d) {
                       return d['name'].slice(0, -i) + '...';
                     });
                     ++i;
@@ -1367,10 +1367,10 @@
               // getComputedTextLenght: Returns a float representing the computed length for the text within the element.
               if (this.getComputedTextLength() > lbWidth) {
                 (function () {
-                  d3$1.select(_this2).attr('title', d.name).on('mouseover', legendTip.show).on('mouseout', legendTip.hide);
+                  d3.select(_this2).attr('title', d.name).on('mouseover', legendTip.show).on('mouseout', legendTip.hide);
                   var i = 1;
                   while (_this2.getComputedTextLength() > lbWidth) {
-                    d3$1.select(_this2).text(function (d) {
+                    d3.select(_this2).text(function (d) {
                       return d['name'].slice(0, -i) + '...';
                     });
                     ++i;
@@ -1385,7 +1385,7 @@
 
         var legendExit = function legendExit(legendCheck) {};
 
-        virtualScroller = vm.helper.utils.VirtualScroller().rowHeight(size).enter(legendEnter).update(legendUpdate).exit(legendExit).svg(vm._fullSvg).totalRows(vm._config.legend.length).viewport(d3$1.select('.empty-chart')).lineNumber(lineNumber);
+        virtualScroller = vm.helper.utils.VirtualScroller().rowHeight(size).enter(legendEnter).update(legendUpdate).exit(legendExit).svg(vm._fullSvg).totalRows(vm._config.legend.length).viewport(d3.select('.empty-chart')).lineNumber(lineNumber);
 
         virtualScroller.data(vm._config.legend, function (d) {
           return d.name;
@@ -1432,10 +1432,10 @@
           if (typeof d.name === 'string') {
             if (this.getComputedTextLength() > _lbWidth) {
               (function () {
-                d3$1.select(_this3).attr('title', d.name).on('mouseover', legendTip.show).on('mouseout', legendTip.hide);
+                d3.select(_this3).attr('title', d.name).on('mouseover', legendTip.show).on('mouseout', legendTip.hide);
                 var i = 1;
                 while (_this3.getComputedTextLength() > _lbWidth) {
-                  d3$1.select(_this3).text(function (d) {
+                  d3.select(_this3).text(function (d) {
                     return d['name'].slice(0, -i) + '...';
                   });
                   ++i;
@@ -1456,7 +1456,7 @@
 
       //Prevent default scrolling of all elements inside legendBox
       var isFirefox = typeof InstallTrigger !== 'undefined';
-      var support = 'onwheel' in d3$1.select('.legendBox') ? 'wheel' // Modern browsers support 'wheel'
+      var support = 'onwheel' in d3.select('.legendBox') ? 'wheel' // Modern browsers support 'wheel'
       : document.onmousewheel !== undefined ? 'mousewheel' // Webkit and IE support at least 'mousewheel'
       : 'DOMMouseScroll'; // let's assume that remaining browsers are older Firefox
       if (isFirefox) {
@@ -1464,28 +1464,28 @@
         // DOMMouseScroll is not supported yet.
         support = 'wheel';
       }
-      d3$1.select('.legendBoxBackground').on(support, function () {
-        var evt = d3$1.event;
+      d3.select('.legendBoxBackground').on(support, function () {
+        var evt = d3.event;
         evt.preventDefault();
       });
 
-      d3$1.select('.scroll-legend').on(support, function () {
-        var evt = d3$1.event;
+      d3.select('.scroll-legend').on(support, function () {
+        var evt = d3.event;
         evt.preventDefault();
       });
 
       legendBox.selectAll('text').on(support, function () {
-        var evt = d3$1.event;
+        var evt = d3.event;
         evt.preventDefault();
       });
 
       legendBox.selectAll('rect').on(support, function () {
-        var evt = d3$1.event;
+        var evt = d3.event;
         evt.preventDefault();
       });
 
       legendBox.selectAll('path').on(support, function () {
-        var evt = d3$1.event;
+        var evt = d3.event;
         evt.preventDefault();
       });
     };
@@ -1534,16 +1534,16 @@
       if (vm._config.yAxis.domain && vm._config.yAxis.domain.hasOwnProperty('enabled')) {
         if (vm._config.yAxis.ticks) {
           if (vm._config.yAxis.domain.enabled === false && vm._config.yAxis.ticks.enabled === false) {
-            d3$1.select('g.y.axis .domain').remove();
-            d3$1.selectAll('g.y.axis .tick').remove();
+            d3.select('g.y.axis .domain').remove();
+            d3.selectAll('g.y.axis .tick').remove();
           } else if (vm._config.yAxis.domain.enabled === false && vm._config.yAxis.ticks.enabled === true) {
-            d3$1.select('g.y.axis .domain').remove();
+            d3.select('g.y.axis .domain').remove();
             //d3.selectAll('g.y.axis .tick text').remove();
           }
         } else {
           if (vm._config.yAxis.domain.enabled === false) {
-            d3$1.select('g.y.axis .domain').remove();
-            d3$1.selectAll('g.y.axis .tick').remove();
+            d3.select('g.y.axis .domain').remove();
+            d3.selectAll('g.y.axis .tick').remove();
           }
         }
       }
@@ -1558,10 +1558,10 @@
           if (typeof d === 'string') {
             if (this.getComputedTextLength() > 0.8 * vm._margin.left) {
               (function () {
-                d3$1.select(element).on('mouseover', axesTip.show).on('mouseout', axesTip.hide);
+                d3.select(element).on('mouseover', axesTip.show).on('mouseout', axesTip.hide);
                 var i = 1;
                 while (_this4.getComputedTextLength() > 0.8 * vm._margin.left) {
-                  d3$1.select(_this4).text(function (d) {
+                  d3.select(_this4).text(function (d) {
                     return d.slice(0, -i) + '...';
                   }).attr('title', d);
                   ++i;
@@ -1576,7 +1576,7 @@
 
       //Dropdown Y axis
       if (vm._config.yAxis && vm._config.yAxis.dropdown && vm._config.yAxis.dropdown.enabled === true) {
-        var yAxisDropDown = d3$1.select(vm._config.bindTo).append('div').attr('class', 'dbox-yAxis-select').append('select').on('change', function () {
+        var yAxisDropDown = d3.select(vm._config.bindTo).append('div').attr('class', 'dbox-yAxis-select').append('select').on('change', function () {
           vm.updateAxis('y', this.value);
         });
 
@@ -1588,8 +1588,8 @@
                               })
         */
 
-        var x = -1 * d3$1.select(vm._config.bindTo).node().getBoundingClientRect().width / 2 + vm._margin.left / 2.5;
-        var y = -1 * d3$1.select(vm._config.bindTo).node().getBoundingClientRect().height / 1.5;
+        var x = -1 * d3.select(vm._config.bindTo).node().getBoundingClientRect().width / 2 + vm._margin.left / 2.5;
+        var y = -1 * d3.select(vm._config.bindTo).node().getBoundingClientRect().height / 1.5;
 
         if (vm._config.yAxis.dropdown.styles) {
           var styles = vm._config.yAxis.dropdown.styles;
@@ -1599,13 +1599,13 @@
           styles['text-align'] = 'center';
           styles['text-align-last'] = 'center';
 
-          d3$1.select('.dbox-yAxis-select select').styles(styles);
+          d3.select('.dbox-yAxis-select select').styles(styles);
 
-          d3$1.select('.dbox-yAxis-select select option').styles({
+          d3.select('.dbox-yAxis-select select option').styles({
             'text-align': 'left'
           });
         } else {
-          d3$1.select('.dbox-yAxis-select select').styles({
+          d3.select('.dbox-yAxis-select select').styles({
             display: 'block',
             transform: 'translate(' + x + 'px,' + y + 'px) rotate(-90deg)',
             margin: 'auto',
@@ -1613,7 +1613,7 @@
             'text-align-last': 'center'
           });
 
-          d3$1.select('.dbox-yAxis-select select option').styles({
+          d3.select('.dbox-yAxis-select select option').styles({
             'text-align': 'left'
           });
         }
@@ -1677,23 +1677,23 @@
       if (vm._config.xAxis.domain !== undefined && vm._config.xAxis.domain.hasOwnProperty('enabled')) {
         if (vm._config.xAxis.ticks) {
           if (vm._config.xAxis.domain.enabled === false && vm._config.xAxis.ticks.enabled === false) {
-            d3$1.select(vm._config.bindTo + ' g.x.axis .domain').remove();
-            d3$1.selectAll('g.x.axis .tick').remove();
+            d3.select(vm._config.bindTo + ' g.x.axis .domain').remove();
+            d3.selectAll('g.x.axis .tick').remove();
           } else if (vm._config.xAxis.domain.enabled === false && vm._config.xAxis.ticks.enabled === true) {
-            d3$1.select(vm._config.bindTo + ' g.x.axis .domain').remove();
+            d3.select(vm._config.bindTo + ' g.x.axis .domain').remove();
             //d3.selectAll('g.x.axis .tick text').remove();
           }
         } else {
           if (vm._config.xAxis.domain.enabled === false) {
-            d3$1.select(vm._config.bindTo + ' g.x.axis .domain').remove();
-            d3$1.selectAll(vm._config.bindTo + ' g.x.axis .tick').remove();
+            d3.select(vm._config.bindTo + ' g.x.axis .domain').remove();
+            d3.selectAll(vm._config.bindTo + ' g.x.axis .tick').remove();
           }
         }
       }
 
       //Dropdown X axis
       if (vm._config.xAxis && vm._config.xAxis.dropdown && vm._config.xAxis.dropdown.enabled === true) {
-        var xAxisDropDown = d3$1.select(vm._config.bindTo).append('div').attr('class', 'dbox-xAxis-select').append('select').on('change', function () {
+        var xAxisDropDown = d3.select(vm._config.bindTo).append('div').attr('class', 'dbox-xAxis-select').append('select').on('change', function () {
           vm.updateAxis('x', this.value);
         });
 
@@ -1704,20 +1704,20 @@
           styles['text-align'] = 'center';
           styles['text-align-last'] = 'center';
 
-          d3$1.select('.dbox-xAxis-select select').styles(styles);
+          d3.select('.dbox-xAxis-select select').styles(styles);
 
-          d3$1.select('.dbox-xAxis-select select option').styles({
+          d3.select('.dbox-xAxis-select select option').styles({
             'text-align': 'left'
           });
         } else {
-          d3$1.select('.dbox-xAxis-select select').styles({
+          d3.select('.dbox-xAxis-select select').styles({
             display: 'block',
             margin: 'auto',
             'text-align': 'center',
             'text-align-last': 'center'
           });
 
-          d3$1.select('.dbox-xAxis-select select option').styles({
+          d3.select('.dbox-xAxis-select select option').styles({
             'text-align': 'left'
           });
         }
@@ -1777,7 +1777,7 @@
         vm._xAxis.selectAll('.tick text').attr('font-size', vm._addStyle.xAxis.labels.fontSize).attr('font-weight', vm._addStyle.xAxis.labels.fontWeight).attr('fill', vm._addStyle.xAxis.labels.textColor).attr('text-anchor', vm._addStyle.xAxis.labels.textAnchor).attr('transform', vm._addStyle.xAxis.labels.rotate ? 'translate(0,55) rotate(' + vm._addStyle.xAxis.axis.labels.rotate + ')' : 'translate(0, ' + vm._addStyle.xAxis.axis.paddingTick + ')');
       }
 
-      var biggestLabelWidth = d3$1.max(d3$1.select('.x.axis').selectAll('text').nodes().map(function (o) {
+      var biggestLabelWidth = d3.max(d3.select('.x.axis').selectAll('text').nodes().map(function (o) {
         return o.getComputedTextLength();
       }));
       if (!vm._config.xAxis || vm._config.xAxis && vm._config.xAxis.enabled !== false) {
@@ -1795,14 +1795,14 @@
 
             if (typeof d === 'string') {
               // Vertical labels
-              d3$1.select(this).attr('text-anchor', 'end').attr('dy', 0).attr('transform', 'translate(-6,12)rotate(-90)');
+              d3.select(this).attr('text-anchor', 'end').attr('dy', 0).attr('transform', 'translate(-6,12)rotate(-90)');
               // Still doesn't fit!
               if (this.getComputedTextLength() > 0.8 * vm._config.size.margin.bottom) {
                 (function () {
-                  d3$1.select(_this5).on('mouseover', axesTip.show).on('mouseout', axesTip.hide);
+                  d3.select(_this5).on('mouseover', axesTip.show).on('mouseout', axesTip.hide);
                   var i = 1;
                   while (_this5.getComputedTextLength() > 0.8 * vm._config.size.margin.bottom) {
-                    d3$1.select(_this5).text(function (d) {
+                    d3.select(_this5).text(function (d) {
                       return d.slice(0, -i) + '...';
                     }).attr('title', d);
                     ++i;
@@ -1818,7 +1818,7 @@
 
       if (vm._config.xAxis.enabled !== false && vm._addStyle.xAxis.enabled) {
         //axis title
-        vm._xAxis.selectAll('.axis-title').attr('font-size', vm._addStyle.xAxis.title.fontSize).attr('font-weight', vm._addStyle.xAxis.title.fontWeight).attr('fill', vm._addStyle.xAxis.title.textColor).attr('text-anchor', vm._addStyle.xAxis.title.textAnchor).attr('transform', 'translate(0, ' + (vm._addStyle.xAxis.labels.rotate ? d3$1.min([vm._config.size.margin.bottom * 0.7, biggestLabelWidth]) : vm._addStyle.xAxis.axis.paddingTick) + ')');
+        vm._xAxis.selectAll('.axis-title').attr('font-size', vm._addStyle.xAxis.title.fontSize).attr('font-weight', vm._addStyle.xAxis.title.fontWeight).attr('fill', vm._addStyle.xAxis.title.textColor).attr('text-anchor', vm._addStyle.xAxis.title.textAnchor).attr('transform', 'translate(0, ' + (vm._addStyle.xAxis.labels.rotate ? d3.min([vm._config.size.margin.bottom * 0.7, biggestLabelWidth]) : vm._addStyle.xAxis.axis.paddingTick) + ')');
       }
 
       /**
@@ -1846,18 +1846,18 @@
           case 'straightLine':
             break;
           case 'dashLine':
-            d3$1.selectAll('g.y.axis .tick line').attr('stroke-dasharray', '5, 5');
+            d3.selectAll('g.y.axis .tick line').attr('stroke-dasharray', '5, 5');
             break;
         }
       }
       //To be replaced with *addStyle -checked
       if (vm._config.yAxis.domain && vm._config.yAxis.domain.enabled && vm._config.yAxis.domain.stroke) {
-        d3$1.select('g.y.axis .domain').attr('stroke', vm._config.yAxis.domain.stroke);
+        d3.select('g.y.axis .domain').attr('stroke', vm._config.yAxis.domain.stroke);
       }
 
       //To be replaced with *addStyle -checked
       if (vm._config.yAxis.domain && vm._config.yAxis.domain.enabled && vm._config.yAxis.domain['stroke-width']) {
-        d3$1.select('g.y.axis .domain').attr('stroke-width', vm._config.yAxis.domain['stroke-width']);
+        d3.select('g.y.axis .domain').attr('stroke-width', vm._config.yAxis.domain['stroke-width']);
       }
 
       // y
@@ -1885,7 +1885,7 @@
             case 'straightLine':
               break;
             case 'dashLine':
-              d3$1.selectAll(vm._config.bindTo + ' g.x.axis .tick line').attr('stroke-dasharray', '5, 5');
+              d3.selectAll(vm._config.bindTo + ' g.x.axis .tick line').attr('stroke-dasharray', '5, 5');
               break;
           }
         }
@@ -1893,12 +1893,12 @@
 
       //to be replaced with *addStyle -checked
       if (vm._config.xAxis.domain && vm._config.xAxis.domain.enabled && vm._config.xAxis.domain.stroke) {
-        d3$1.select(vm._config.bindTo + ' g.x.axis .domain').attr('stroke', vm._config.xAxis.domain.stroke);
+        d3.select(vm._config.bindTo + ' g.x.axis .domain').attr('stroke', vm._config.xAxis.domain.stroke);
       }
 
       //to be replaced with *addStyle -checked
       if (vm._config.xAxis.domain && vm._config.xAxis.domain.enabled && vm._config.xAxis.domain['stroke-width']) {
-        d3$1.select(vm._config.bindTo + ' g.x.axis .domain').attr('stroke-width', vm._config.xAxis.domain['stroke-width']);
+        d3.select(vm._config.bindTo + ' g.x.axis .domain').attr('stroke-width', vm._config.xAxis.domain['stroke-width']);
       }
     };
 
@@ -1937,7 +1937,7 @@
       }
     };
 
-    Chart.dispatch = d3$1.dispatch('load', 'change');
+    Chart.dispatch = d3.dispatch('load', 'change');
 
     Chart.mapData = function (data, callback) {
       callback(null, data);
@@ -1985,14 +1985,14 @@
       if (vm._config.xAxis && vm._config.xAxis.scale) {
         switch (vm._config.xAxis.scale) {
           case 'linear':
-            minMax = d3$1.extent(data, function (d) {
+            minMax = d3.extent(data, function (d) {
               return d.x;
             });
             domains.x = minMax;
             break;
 
           case 'time':
-            minMax = d3$1.extent(data, function (d) {
+            minMax = d3.extent(data, function (d) {
               return d.x;
             });
             domains.x = minMax;
@@ -2026,19 +2026,19 @@
               domains.q.push(d.x);
             });
 
-            domains.x = d3$1.range(vm._config.xAxis.buckets);
+            domains.x = d3.range(vm._config.xAxis.buckets);
 
             break;
 
           default:
-            minMax = d3$1.extent(data, function (d) {
+            minMax = d3.extent(data, function (d) {
               return d.x;
             });
             domains.x = minMax;
             break;
         }
       } else {
-        minMax = d3$1.extent(data, function (d) {
+        minMax = d3.extent(data, function (d) {
           return d.x;
         });
         domains.x = minMax;
@@ -2048,7 +2048,7 @@
       if (vm._config.yAxis && vm._config.yAxis.scale) {
         switch (vm._config.yAxis.scale) {
           case 'linear':
-            minMax = d3$1.extent(data, function (d) {
+            minMax = d3.extent(data, function (d) {
               return d.y;
             });
 
@@ -2061,7 +2061,7 @@
             break;
 
           case 'time':
-            minMax = d3$1.extent(data, function (d) {
+            minMax = d3.extent(data, function (d) {
               return d.y;
             });
             domains.y = minMax;
@@ -2077,7 +2077,7 @@
                 domains.y.push(d.x);
               });
             } else {
-              domains.y = d3$1.map(data, function (d) {
+              domains.y = d3.map(data, function (d) {
                 return d.y;
               }).keys().sort(function (a, b) {
                 return vm.utils.sortAscending(a, b);
@@ -2087,14 +2087,14 @@
             break;
 
           default:
-            minMax = d3$1.extent(data, function (d) {
+            minMax = d3.extent(data, function (d) {
               return d.y;
             });
             domains.y = minMax;
             break;
         }
       } else {
-        minMax = d3$1.extent(data, function (d) {
+        minMax = d3.extent(data, function (d) {
           return d.y;
         });
         domains.y = minMax;
@@ -2105,7 +2105,7 @@
 
     Chart.destroy = function () {
       var vm = this;
-      d3$1.select(vm._config.bindTo).html('');
+      d3.select(vm._config.bindTo).html('');
     };
 
     Chart.init(config);
@@ -2214,7 +2214,7 @@
       if (typeof format == 'function' || format instanceof Function) {
         vm.utils.format = format;
       } else {
-        vm.utils.format = d3$1.format(format);
+        vm.utils.format = d3.format(format);
       }
       return vm;
     };
@@ -2243,7 +2243,7 @@
 
       if (vm._config.hasOwnProperty('stackBy') && Array.isArray(vm._config.stackBy) && vm._config.stackBy.length > 0) {
         // Used in a stackbar, transpose the data into layers
-        vm._data = d3$1.stack().keys(vm._config.stackBy)(data);
+        vm._data = d3.stack().keys(vm._config.stackBy)(data);
       } else {
         // Normal bar, save the data as numbers
         vm._data = data.map(function (d) {
@@ -2262,7 +2262,7 @@
 
       if (vm._config.hasOwnProperty('quantiles')) {
         vm._quantiles = vm._setQuasecondntile(data);
-        vm._minMax = d3$1.extent(data, function (d) {
+        vm._minMax = d3.extent(data, function (d) {
           return +d[vm._config.fill];
         });
       }
@@ -2447,9 +2447,9 @@
 
       if (!vm._scales.color || vm._scales.color && vm._scales.color.domain().length === 0) {
         if (vm._config.hasOwnProperty('colors')) {
-          vm._scales.color = d3$1.scaleOrdinal(vm._config.colors);
+          vm._scales.color = d3.scaleOrdinal(vm._config.colors);
         } else {
-          vm._scales.color = d3$1.scaleOrdinal(d3$1.schemeCategory10);
+          vm._scales.color = d3.scaleOrdinal(d3.schemeCategory10);
         }
         if (vm._data && vm._data.length > 0) {
           vm._scales.color.domain(_$1.uniq(vm._data.map(function (d) {
@@ -2589,11 +2589,11 @@
       }).style('opacity', 0.9).on('mouseover', function (d, i) {
         if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
           //OnHover colors
-          d3$1.select(this).attr('fill', function (d) {
+          d3.select(this).attr('fill', function (d) {
             return vm._getQuantileColor(d[vm._config.fill], 'onHover');
           });
         }
-        vm._tip.show(d, d3$1.select(this).node());
+        vm._tip.show(d, d3.select(this).node());
 
         if (vm._config.hasOwnProperty('onmouseover')) {
           //External function call, must be after all the internal code; allowing the user to overide
@@ -2602,7 +2602,7 @@
       }).on('mouseout', function (d, i) {
         if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
           //OnHover reset default color
-          d3$1.select(this).attr('fill', function (d) {
+          d3.select(this).attr('fill', function (d) {
             return vm._getQuantileColor(d[vm._config.fill], 'default');
           });
         }
@@ -2633,8 +2633,8 @@
       vm.chart.svg().selectAll('.grouped').each(function () {
         var el = this;
 
-        d3$1.select(this).selectAll('rect').each(function (dat, index) {
-          d3$1.select(el).append('text').attr('class', 'dbox-label').attr('transform', function (d) {
+        d3.select(this).selectAll('rect').each(function (dat, index) {
+          d3.select(el).append('text').attr('class', 'dbox-label').attr('transform', function (d) {
             var barReference = vm._scales.groupBy.bandwidth();
             if (vm._config.x) {
               //if (Math.abs(vm._scales.y(d[vm._config.groupBy[index]]) - vm._scales.y(0)) < 50) {
@@ -2648,7 +2648,7 @@
             return d[vm._config.groupBy[index]] ? vm.utils.format(undefined, true)(d[vm._config.groupBy[index]]) : '';
           });
 
-          d3$1.select(el).append('text').attr('class', 'dbox-label-coefficient').attr('transform', function (d) {
+          d3.select(el).append('text').attr('class', 'dbox-label-coefficient').attr('transform', function (d) {
             if (vm._config.x) {
               if (Math.abs(vm._scales.y(d[vm._config.groupBy[index]]) - vm._scales.y(0)) < 50) {
                 return 'translate(' + (vm._scales.groupBy(vm._config.groupBy[index]) + 30) + ',' + vm._scales.y(d[vm._config.groupBy[index]]) + ')';
@@ -2702,11 +2702,11 @@
       }).on('mouseover', function (d, i) {
         if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
           //OnHover colors
-          d3$1.select(this).attr('fill', function (d) {
+          d3.select(this).attr('fill', function (d) {
             return vm._getQuantileColor(d[vm._config.fill], 'onHover');
           });
         }
-        vm._tip.show(d, d3$1.select(this).node());
+        vm._tip.show(d, d3.select(this).node());
 
         if (vm._config.hasOwnProperty('onmouseover')) {
           //External function call. It must be after all the internal code; allowing the user to overide
@@ -2715,7 +2715,7 @@
       }).on('mouseout', function (d, i) {
         if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
           // OnHover colors
-          d3$1.select(this).attr('fill', function (d) {
+          d3.select(this).attr('fill', function (d) {
             return vm._getQuantileColor(d[vm._config.fill], 'default');
           });
         }
@@ -2772,11 +2772,11 @@
       }).on('mouseover', function (d, i) {
         if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
           //OnHover colors
-          d3$1.select(this).attr('fill', function (d) {
+          d3.select(this).attr('fill', function (d) {
             return vm._getQuantileColor(d[vm._config.fill], 'onHover');
           });
         }
-        vm._tip.show(d, d3$1.select(this).node());
+        vm._tip.show(d, d3.select(this).node());
 
         if (vm._config.hasOwnProperty('onmouseover')) {
           //External function call. It must be after all the internal code; allowing the user to overide
@@ -2785,7 +2785,7 @@
       }).on('mouseout', function (d, i) {
         if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
           //OnHover reset default color
-          d3$1.select(this).attr('fill', function (d) {
+          d3.select(this).attr('fill', function (d) {
             return vm._getQuantileColor(d[vm._config.fill], 'default');
           });
         }
@@ -2813,7 +2813,7 @@
       groups.each(function (data) {
         var _this = this;
 
-        var stacks = d3$1.select(this).selectAll('rect').nodes();
+        var stacks = d3.select(this).selectAll('rect').nodes();
         // Get rect height to condition label drawing
         data.forEach(function (d) {
           var el = _this;
@@ -2823,7 +2823,7 @@
           var rectH = rect.getBBox().height;
           //var rectW = rect.getBBox().width;
           if (rectH > 35) {
-            d3$1.select(el).append('text').attr('class', 'dbox-label').attr('text-anchor', 'middle').attr('transform', function () {
+            d3.select(el).append('text').attr('class', 'dbox-label').attr('text-anchor', 'middle').attr('transform', function () {
               var barReference;
               if (vm._config.x) {
                 barReference = vm._scales.x.bandwidth();
@@ -2875,11 +2875,11 @@
       }).on('mouseover', function (d, i) {
         if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
           //OnHover colors
-          d3$1.select(this).attr('fill', function (d) {
+          d3.select(this).attr('fill', function (d) {
             return vm._getQuantileColor(d[vm._config.fill], 'onHover');
           });
         }
-        vm._tip.show(d, d3$1.select(this).node());
+        vm._tip.show(d, d3.select(this).node());
 
         if (vm._config.hasOwnProperty('onmouseover')) {
           //External function call. It must be after all the internal code; allowing the user to overide
@@ -2888,7 +2888,7 @@
       }).on('mouseout', function (d, i) {
         if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
           //OnHover reset default color
-          d3$1.select(this).attr('fill', function (d) {
+          d3.select(this).attr('fill', function (d) {
             return vm._getQuantileColor(d[vm._config.fill], 'default');
           });
         }
@@ -2939,11 +2939,11 @@
       }).on('mouseover', function (d, i) {
         if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
           //OnHover colors
-          d3$1.select(this).attr('fill', function (d) {
+          d3.select(this).attr('fill', function (d) {
             return vm._getQuantileColor(d[vm._config.fill], 'onHover');
           });
         }
-        vm._tip.show(d, d3$1.select(this).node());
+        vm._tip.show(d, d3.select(this).node());
 
         if (vm._config.hasOwnProperty('onmouseover')) {
           //External function call. It must be after all the internal code; allowing the user to overide
@@ -2952,7 +2952,7 @@
       }).on('mouseout', function (d, i) {
         if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
           //OnHover reset default color
-          d3$1.select(this).attr('fill', function (d) {
+          d3.select(this).attr('fill', function (d) {
             return vm._getQuantileColor(d[vm._config.fill], 'default');
           });
         }
@@ -2984,7 +2984,7 @@
         values.push(+d[vm._config.fill]);
       });
 
-      values.sort(d3$1.ascending);
+      values.sort(d3.ascending);
 
       //@TODO use quantile scale instead of manual calculations
       if (vm._config && vm._config.quantiles && vm._config.quantiles.buckets) {
@@ -2998,22 +2998,22 @@
           quantile.push(0);
 
           for (var i = 1; i <= vm._config.quantiles.buckets - 1; i++) {
-            quantile.push(d3$1.quantile(aux, i * 1 / (vm._config.quantiles.buckets - 1)));
+            quantile.push(d3.quantile(aux, i * 1 / (vm._config.quantiles.buckets - 1)));
           }
         } else {
-          quantile.push(d3$1.quantile(values, 0));
+          quantile.push(d3.quantile(values, 0));
           for (var j = 1; j <= vm._config.quantiles.buckets; j++) {
-            quantile.push(d3$1.quantile(values, j * 1 / vm._config.quantiles.buckets));
+            quantile.push(d3.quantile(values, j * 1 / vm._config.quantiles.buckets));
           }
         }
       } else {
-        quantile = [d3$1.quantile(values, 0), d3$1.quantile(values, 0.2), d3$1.quantile(values, 0.4), d3$1.quantile(values, 0.6), d3$1.quantile(values, 0.8), d3$1.quantile(values, 1)];
+        quantile = [d3.quantile(values, 0), d3.quantile(values, 0.2), d3.quantile(values, 0.4), d3.quantile(values, 0.6), d3.quantile(values, 0.8), d3.quantile(values, 1)];
       }
 
       //@TODO - VALIDATE WHEN ZEROS NEED TO BE PUT ON QUANTILE 1 AND RECALCULATE NON ZERO VALUES INTO THE REST OF THE BUCKETS
       if (vm._config.quantiles && vm._config.quantiles.buckets && vm._config.quantiles.buckets === 5) {
         if (quantile[1] === quantile[2] && quantile[2] === quantile[3] && quantile[3] === quantile[4] && quantile[4] === quantile[5]) {
-          quantile = [d3$1.quantile(values, 0), d3$1.quantile(values, 0.2)];
+          quantile = [d3.quantile(values, 0), d3.quantile(values, 0.2)];
         }
       }
 
@@ -3128,7 +3128,7 @@
           chartSize: { width: 800, height: 400 },
           margin: { top: 15, right: 60, bottom: 40, left: 50 },
           constrainExtremes: false,
-          color: d3$1.scaleOrdinal(d3$1.schemeCategory10)
+          color: d3.scaleOrdinal(d3.schemeCategory10)
       };
       for (var setting in settings) {
           chart.settings[setting] = settings[setting];
@@ -3136,19 +3136,19 @@
 
       function formatAsFloat(d) {
           if (d % 1 !== 0) {
-              return d3$1.format(",.2f")(d);
+              return d3.format(",.2f")(d);
           } else {
-              return d3$1.format(",.0f")(d);
+              return d3.format(",.0f")(d);
           }
       }
       function formatNumber(d) {
           var value = '';
           if (d % 1 == 0) {
-              value = d3$1.format(',.0f')(d);
+              value = d3.format(',.0f')(d);
           } else if (d < 1 && d > 0) {
-              value = d3$1.format(',.2f')(d);
+              value = d3.format(',.2f')(d);
           } else {
-              value = d3$1.format(',.1f')(d);
+              value = d3.format(',.1f')(d);
           }
           return value;
       }
@@ -3158,11 +3158,11 @@
           var value = '';
           for (var i = 0; i < range.length; i++) {
               if (range[i] % 1 == 0) {
-                  value += d3$1.format(',.0f')(range[i]);
+                  value += d3.format(',.0f')(range[i]);
               } else if (range[i] < 1 && range[i] > 0) {
-                  value += d3$1.format(',.2f')(range[i]);
+                  value += d3.format(',.2f')(range[i]);
               } else {
-                  value += d3$1.format(',.1f')(range[i]);
+                  value += d3.format(',.1f')(range[i]);
               }
               if (i === 0) {
                   value += ' - ';
@@ -3207,7 +3207,7 @@
                       colorMap[key] = colorOptions[index];
                   });
               } else {
-                  Object.keys(chart.groupObjs).sort(d3$1.ascending).forEach(function (key, index) {
+                  Object.keys(chart.groupObjs).sort(d3.ascending).forEach(function (key, index) {
                       colorMap[key] = colorOptions[index];
                   });
               }
@@ -3220,7 +3220,7 @@
                   return colorOptions[group];
               };
           } else {
-              return d3$1.scaleOrdinal(d3$1.schemeCategory10);
+              return d3.scaleOrdinal(d3.schemeCategory10);
           }
       }
 
@@ -3312,12 +3312,12 @@
                   min: null
               };
 
-              metrics.min = d3$1.min(values);
-              metrics.quartile1 = d3$1.quantile(values, 0.25);
-              metrics.median = d3$1.median(values);
-              metrics.mean = d3$1.mean(values);
-              metrics.quartile3 = d3$1.quantile(values, 0.75);
-              metrics.max = d3$1.max(values);
+              metrics.min = d3.min(values);
+              metrics.quartile1 = d3.quantile(values, 0.25);
+              metrics.median = d3.median(values);
+              metrics.mean = d3.mean(values);
+              metrics.quartile3 = d3.quantile(values, 0.75);
+              metrics.max = d3.max(values);
               metrics.iqr = metrics.quartile3 - metrics.quartile1;
 
               //The inner fences are the closest value to the IQR without going past it (assumes sorted lists)
@@ -3403,12 +3403,12 @@
                   }
 
                   chart.groupObjs[cName].valuesInfo.sort(function (x, y) {
-                      return d3$1.ascending(x.value, y.value);
+                      return d3.ascending(x.value, y.value);
                   });
               }
 
               //original
-              chart.groupObjs[cName].values.sort(d3$1.ascending);
+              chart.groupObjs[cName].values.sort(d3.ascending);
               chart.groupObjs[cName].metrics = {};
               chart.groupObjs[cName].metrics = calcMetrics(chart.groupObjs[cName].values);
           }
@@ -3435,10 +3435,10 @@
           }
 
           if (chart.settings.scale === 'log') {
-              chart.yScale = d3$1.scaleLog();
+              chart.yScale = d3.scaleLog();
               chart.yFormatter = logFormatNumber;
           } else {
-              chart.yScale = d3$1.scaleLinear();
+              chart.yScale = d3.scaleLinear();
           }
 
           if (chart.settings.constrainExtremes === true) {
@@ -3447,9 +3447,9 @@
                   fences.push(chart.groupObjs[cName].metrics.lowerInnerFence);
                   fences.push(chart.groupObjs[cName].metrics.upperInnerFence);
               }
-              chart.range = d3$1.extent(fences);
+              chart.range = d3.extent(fences);
           } else {
-              chart.range = d3$1.extent(chart.data, function (d) {
+              chart.range = d3.extent(chart.data, function (d) {
                   return d[chart.settings.yName];
               });
           }
@@ -3462,14 +3462,14 @@
           if (chart.settings.xSort === null) {
               domain = Object.keys(chart.groupObjs);
           } else {
-              domain = Array.isArray(chart.settings.xSort) ? chart.settings.xSort : Object.keys(chart.groupObjs).sort(d3$1.ascending);
+              domain = Array.isArray(chart.settings.xSort) ? chart.settings.xSort : Object.keys(chart.groupObjs).sort(d3.ascending);
           }
-          chart.xScale = d3$1.scaleBand().domain(domain).rangeRound([0, chart.width]);
+          chart.xScale = d3.scaleBand().domain(domain).rangeRound([0, chart.width]);
 
           //Build Axes Functions
-          chart.objs.yAxis = d3$1.axisLeft().scale(chart.yScale).tickFormat(chart.yFormatter).tickSizeOuter(0).tickSizeInner(-chart.width + (chart.margin.right + chart.margin.left));
+          chart.objs.yAxis = d3.axisLeft().scale(chart.yScale).tickFormat(chart.yFormatter).tickSizeOuter(0).tickSizeInner(-chart.width + (chart.margin.right + chart.margin.left));
           //chart.objs.yAxis.ticks(chart.objs.yAxis.ticks()*chart.settings.yTicks);
-          chart.objs.xAxis = d3$1.axisBottom().scale(chart.xScale)
+          chart.objs.xAxis = d3.axisBottom().scale(chart.xScale)
           //.tickFormat(chart.xFormatter)
           .tickSizeOuter(0).tickSize(5);
       }();
@@ -3508,13 +3508,13 @@
        */
       !function prepareChart() {
           // Build main div and chart div
-          chart.objs.mainDiv = d3$1.select(chart.settings.selector).style("width", chart.divWidth + "px").style("height", chart.divHeight + "px");
+          chart.objs.mainDiv = d3.select(chart.settings.selector).style("width", chart.divWidth + "px").style("height", chart.divHeight + "px");
           // Add all the divs to make it centered and responsive
           chart.objs.mainDiv.append("div").attr("class", "inner-wrapper").style("padding-bottom", "5%").style("height", chart.divHeight + "px").append("div").attr("class", "outer-box").append("div").attr("class", "inner-box");
           // Capture the inner div for the chart (where the chart actually is)
           chart.selector = chart.settings.selector + " .inner-box";
-          chart.objs.chartDiv = d3$1.select(chart.selector);
-          d3$1.select(window).on('resize.' + chart.selector, chart.update);
+          chart.objs.chartDiv = d3.select(chart.selector);
+          d3.select(window).on('resize.' + chart.selector, chart.update);
 
           // Create the svg
           chart.objs.g = chart.objs.chartDiv.append("svg").attr("class", "chart-area").attr("width", chart.width + (chart.margin.left + chart.margin.right)).attr("height", chart.height + (chart.margin.top + chart.margin.bottom)).append("g").attr("transform", "translate(" + chart.margin.left + "," + chart.margin.top + ")");
@@ -3565,7 +3565,7 @@
               resolution: 100,
               bandwidth: 20,
               width: 50,
-              curve: d3$1.curveCardinal,
+              curve: d3.curveCardinal,
               clamp: 1,
               colors: chart.colorFunct,
               _yDomainVP: null // If the Violin plot is set to close all violin plots, it may need to extend the domain, that extended domain is stored here
@@ -3651,13 +3651,13 @@
                       //
                       // When clamp is 0, calculate the min and max that is needed to bring the violin plot to a point
                       // interpolateMax = the Minimum value greater than the max where y = 0
-                      interpolateMax = d3$1.min(cViolinPlot.kdedata.filter(function (d) {
+                      interpolateMax = d3.min(cViolinPlot.kdedata.filter(function (d) {
                           return d.x > chart.groupObjs[cName].metrics.max && d.y == 0;
                       }), function (d) {
                           return d.x;
                       });
                       // interpolateMin = the Maximum value less than the min where y = 0
-                      interpolateMin = d3$1.max(cViolinPlot.kdedata.filter(function (d) {
+                      interpolateMin = d3.max(cViolinPlot.kdedata.filter(function (d) {
                           return d.x < chart.groupObjs[cName].metrics.min && d.y == 0;
                       }), function (d) {
                           return d.x;
@@ -3721,17 +3721,17 @@
                   var objBounds = getObjWidth(vOpts.width, cName);
                   var width = (objBounds.right - objBounds.left) / 2;
 
-                  var yVScale = d3$1.scaleLinear().range([width, 0]).domain([0, d3$1.max(cViolinPlot.kdedata, function (d) {
+                  var yVScale = d3.scaleLinear().range([width, 0]).domain([0, d3.max(cViolinPlot.kdedata, function (d) {
                       return d.y;
                   })]).clamp(true);
 
-                  var area = d3$1.area().curve(vOpts.curve).x(function (d) {
+                  var area = d3.area().curve(vOpts.curve).x(function (d) {
                       return xVScale(d.x);
                   }).y0(width).y1(function (d) {
                       return yVScale(d.y);
                   });
 
-                  var line = d3$1.line().curve(vOpts.curve).x(function (d) {
+                  var line = d3.line().curve(vOpts.curve).x(function (d) {
                       return xVScale(d.x);
                   }).y(function (d) {
                       return yVScale(d.y);
@@ -3792,7 +3792,7 @@
           function kernelDensityEstimator(kernel, x) {
               return function (sample) {
                   return x.map(function (x) {
-                      return { x: x, y: d3$1.mean(sample, function (v) {
+                      return { x: x, y: d3.mean(sample, function (v) {
                               return kernel(x - v);
                           }) };
                   });
@@ -3809,7 +3809,7 @@
           // Given an array, find the value for a single point, even if it is not in the domain
           function eKernelTest(kernel, array) {
               return function (testX) {
-                  return d3$1.mean(array, function (v) {
+                  return d3.mean(array, function (v) {
                       return kernel(testX - v);
                   });
               };
@@ -3817,7 +3817,7 @@
 
           chart.violinPlots.prepareViolin();
 
-          d3$1.select(window).on('resize.' + chart.selector + '.violinPlot', chart.violinPlots.update);
+          d3.select(window).on('resize.' + chart.selector + '.violinPlot', chart.violinPlots.update);
           chart.violinPlots.update();
           return chart;
       };
@@ -4054,7 +4054,7 @@
                       cBoxPlot.objs.median = { line: null, circle: null };
                       cBoxPlot.objs.median.line = cBoxPlot.objs.g.append("line").attr("class", "median");
                       cBoxPlot.objs.median.circle = cBoxPlot.objs.g.append("circle").attr("class", "median").attr('r', bOpts.medianCSize).style("fill", chart.boxPlots.colorFunct(cName)).on("mouseover", function () {
-                          chart.objs.tooltip.style("display", null).style("left", d3$1.event.pageX + "px").style("top", d3$1.event.pageY - 28 + "px");
+                          chart.objs.tooltip.style("display", null).style("left", d3.event.pageX + "px").style("top", d3.event.pageY - 28 + "px");
                       }).on("mouseout", function () {
                           chart.objs.tooltip.style("display", "none");
                       }).on("mousemove", tooltipHover(cName, chart.groupObjs[cName].metrics, '', '', 'median'));
@@ -4065,7 +4065,7 @@
                       cBoxPlot.objs.mean = { line: null, circle: null };
                       cBoxPlot.objs.mean.line = cBoxPlot.objs.g.append("line").attr("class", "mean");
                       cBoxPlot.objs.mean.circle = cBoxPlot.objs.g.append("circle").attr("class", "mean").attr('r', bOpts.medianCSize).style("fill", chart.boxPlots.colorFunct(cName)).on("mouseover", function () {
-                          chart.objs.tooltip.style("display", null).style("left", d3$1.event.pageX + "px").style("top", d3$1.event.pageY - 28 + "px");
+                          chart.objs.tooltip.style("display", null).style("left", d3.event.pageX + "px").style("top", d3.event.pageY - 28 + "px");
                       }).on("mouseout", function () {
                           chart.objs.tooltip.style("display", "none");
                       }).on("mousemove", tooltipHover(cName, chart.groupObjs[cName].metrics, '', '', 'mean'));
@@ -4104,7 +4104,7 @@
           };
           chart.boxPlots.prepareBoxPlot();
 
-          d3$1.select(window).on('resize.' + chart.selector + '.boxPlot', chart.boxPlots.update);
+          d3.select(window).on('resize.' + chart.selector + '.boxPlot', chart.boxPlots.update);
           chart.boxPlots.update();
           return chart;
       };
@@ -4304,7 +4304,7 @@
           };
           chart.notchBoxes.prepareNotchBoxes();
 
-          d3$1.select(window).on('resize.' + chart.selector + '.notchBox', chart.notchBoxes.update);
+          d3.select(window).on('resize.' + chart.selector + '.notchBox', chart.notchBoxes.update);
           chart.notchBoxes.update();
           return chart;
       };
@@ -4420,7 +4420,7 @@
                   if (cPlot.objs.points) {
                       if (dOpts.plotType == 'beeswarm') {
                           var swarmBounds = getObjWidth(100, cName);
-                          var yPtScale = chart.yScale.copy().range([Math.floor(chart.yScale.range()[0] / dOpts.pointSize), 0]).interpolate(d3$1.interpolateRound).domain(chart.yScale.domain());
+                          var yPtScale = chart.yScale.copy().range([Math.floor(chart.yScale.range()[0] / dOpts.pointSize), 0]).interpolate(d3.interpolateRound).domain(chart.yScale.domain());
                           var maxWidth = Math.floor(chart.xScale.bandwidth() / dOpts.pointSize);
                           var ptsObj = {};
                           var cYBucket = null;
@@ -4501,7 +4501,7 @@
                               y: chart.groupObjs[cGroup].metrics[cMetric]
                           });
                       }
-                      chart.dataPlots.objs.lines[cMetric].line = d3$1.line().curve(d3$1.curveCardinal).y(function (d) {
+                      chart.dataPlots.objs.lines[cMetric].line = d3.line().curve(d3.curveCardinal).y(function (d) {
                           return chart.yScale(d.y);
                       });
                       chart.dataPlots.objs.lines[cMetric].g = chart.dataPlots.objs.g.append("path").attr("class", "line " + cMetric).attr("data-metric", cMetric).style("fill", 'none').style("stroke", chart.colorFunct(cMetric));
@@ -4526,7 +4526,7 @@
                               return id ? 'distro-' + valInfo.id : '';
                           }).attr('r', dOpts.pointSize / 2) // Options is diameter, r takes radius so divide by 2
                           .style("fill", chart.dataPlots.colorFunct(cName)).style("fill-opacity", 0.6).style("stroke", chart.dataPlots.colorFunct(cName)).style("stroke-width", "2px").on('mouseover', function () {
-                              chart.objs.tooltip.style("display", null).style("left", d3$1.event.pageX + "px").style("top", d3$1.event.pageY - 28 + "px");
+                              chart.objs.tooltip.style("display", null).style("left", d3.event.pageX + "px").style("top", d3.event.pageY - 28 + "px");
                           }).on("mouseout", function () {
                               chart.objs.tooltip.style("display", "none");
                           }).on("mousemove", tooltipHover(cName, chart.groupObjs[cName].metrics, valInfo.idName, val)).on('click', function () {
@@ -4553,7 +4553,7 @@
           };
           chart.dataPlots.preparePlots();
 
-          d3$1.select(window).on('resize.' + chart.selector + '.dataPlot', chart.dataPlots.update);
+          d3.select(window).on('resize.' + chart.selector + '.dataPlot', chart.dataPlots.update);
           chart.dataPlots.update();
           return chart;
       };
@@ -4703,7 +4703,7 @@
       });
 
       if (vm.chart.config.styles) {
-        d3$1.select('#distro .tooltip').style('background-color', vm.chart.style.tooltip.backgroundColor).style('line-height', 1).style('font-weight', vm.chart.style.tooltip.text.fontWeight).style('font-size', vm.chart.style.tooltip.text.fontSize).style('color', vm.chart.style.tooltip.text.textColor).style('font-family', vm.chart.style.tooltip.text.fontFamily).style('background-color', vm.chart.style.tooltip.backgroundColor).style('padding', vm.chart.style.tooltip.text.padding).style('border', vm.chart.style.tooltip.border.width + ' solid ' + vm.chart.style.tooltip.border.color).style('border-radius', vm.chart.style.tooltip.border.radius);
+        d3.select('#distro .tooltip').style('background-color', vm.chart.style.tooltip.backgroundColor).style('line-height', 1).style('font-weight', vm.chart.style.tooltip.text.fontWeight).style('font-size', vm.chart.style.tooltip.text.fontSize).style('color', vm.chart.style.tooltip.text.textColor).style('font-family', vm.chart.style.tooltip.text.fontFamily).style('background-color', vm.chart.style.tooltip.backgroundColor).style('padding', vm.chart.style.tooltip.text.padding).style('border', vm.chart.style.tooltip.border.width + ' solid ' + vm.chart.style.tooltip.border.color).style('border-radius', vm.chart.style.tooltip.border.radius);
       }
 
       chart1.renderBoxPlot();
@@ -4790,11 +4790,11 @@
     };
 
     Distro.select = function (id) {
-      return d3$1.select('#distro .distro-' + id);
+      return d3.select('#distro .distro-' + id);
     };
 
     Distro.selectAll = function (id) {
-      return d3$1.selectAll('#distro ' + id);
+      return d3.selectAll('#distro ' + id);
     };
 
     Distro.init(config);
@@ -4804,180 +4804,384 @@
   /*
    * Heatmap Chart
    */
+  function heatmap (config, helper) {
+    var Heatmap = Object.create(helper);
 
-  function heatmap (config) {
-
-    function Heatmap(config) {
+    Heatmap.init = function (config) {
       var vm = this;
       vm._config = config ? config : {};
+      if (!vm._config.size.legendTranslate) {
+        vm._config.size.legendTranslate = 100;
+      }
       vm._data = [];
       vm._scales = {};
       vm._axes = {};
-      vm._gridSize = Math.floor(vm._config.size.width / 16);
-      vm._legendElementWidth = vm._gridSize;
 
-      vm._config._format = d3.format(",.1f");
+      vm._legendElementWidth = vm._gridWidth;
 
-      vm._tip = d3.tip().attr('class', 'd3-tip');
-    }
+      vm._tip = vm.utils.d3.tip().attr('class', 'd3-tip ' + (vm._config.tooltip && vm._config.tooltip.classed ? vm._config.tooltip.classed : '')).direction('n').html(vm._config.tip || function (d) {
+        var html = d.x;
+        if (d.x !== d.y) {
+          html += '<br>' + d.y;
+        }
+        html += '<br>' + vm.utils.format()(d.value);
+        return html;
+      });
+    };
 
     //-------------------------------
     //User config functions
-    Heatmap.prototype.x = function (columns) {
+    Heatmap.x = function (column) {
       var vm = this;
-      vm._config.x = columns;
+      vm._config.x = column;
       return vm;
     };
 
-    Heatmap.prototype.y = function (columns) {
+    Heatmap.y = function (column) {
       var vm = this;
-      vm._config.y = columns;
+      vm._config.y = column;
       return vm;
     };
 
-    Heatmap.prototype.colors = function (colors) {
+    Heatmap.fill = function (column) {
+      var vm = this;
+      vm._config.fill = column;
+      return vm;
+    };
+
+    Heatmap.colors = function (colors) {
       var vm = this;
       vm._config.colors = colors;
       return vm;
     };
 
-    Heatmap.prototype.tip = function (tip) {
+    Heatmap.colorLegend = function (legendTitle) {
+      var vm = this;
+      vm._config.legendTitle = legendTitle;
+      return vm;
+    };
+
+    /**
+     * Personalize border radius (rx, ry) for each rect
+     * @param {number} radius - value to be set, default is 5
+     */
+    Heatmap.borderRadius = function (radius) {
+      var vm = this;
+      vm._config.borderRadius = radius;
+      return vm;
+    };
+
+    Heatmap.sortBy = function (sortBy) {
+      var vm = this;
+      vm._config.sortBy = sortBy;
+      return vm;
+    };
+
+    Heatmap.tip = function (tip) {
       var vm = this;
       vm._config.tip = tip;
       vm._tip.html(vm._config.tip);
       return vm;
     };
 
-    Heatmap.prototype.buckets = function (b) {
-      var vm = this;
-      vm._config.buckets = buckets;
-      return vm;
-    };
-
-    Heatmap.prototype.end = function () {
-      var vm = this;
-      return vm._chart;
-    };
-
     //-------------------------------
-    //Triggered by the chart.js;
-    Heatmap.prototype.chart = function (chart) {
+    //Triggered by chart.js;
+    Heatmap.data = function (data) {
       var vm = this;
-      vm._chart = chart;
-      return vm;
-    };
+      var xSort = vm.utils.sortAscending;
+      var ySort = vm.utils.sortAscending;
 
-    Heatmap.prototype.data = function (data) {
-      var vm = this;
+      if (typeof vm._config.sortBy === 'string') {
+        if (vm._config.hasOwnProperty('sortBy') && vm._config.sortBy === 'desc') xSort = vm.utils.sortDescending;
+      }
+
+      if (_typeof(vm._config.sortBy) === 'object') {
+        if (vm._config.hasOwnProperty('sortBy') && vm._config.sortBy.hasOwnProperty('x') && vm._config.sortBy.x === 'desc') xSort = vm.utils.sortDescending;
+        if (vm._config.hasOwnProperty('sortBy') && vm._config.sortBy.hasOwnProperty('y') && vm._config.sortBy.y === 'desc') ySort = vm.utils.sortDescending;
+      }
+
+      vm._config.xCategories = d3.nest().key(function (d) {
+        return d[vm._config.x];
+      }).sortKeys(xSort).entries(data).map(function (d) {
+        return d.key;
+      });
+
+      vm._config.yCategories = d3.nest().key(function (d) {
+        return d[vm._config.y];
+      }).sortKeys(ySort).entries(data).map(function (d) {
+        return d.key;
+      });
+
+      vm._config.fillValues = d3.nest().key(function (d) {
+        return d[vm._config.fill];
+      }).entries(data).map(function (d) {
+        return Number(d.key);
+      });
+
+      /**
+       * Calculate grid width and height according to chart size
+       */
+      vm._gridWidth = Math.floor((vm._config.size.width - (vm._config.size.margin.left + vm._config.size.margin.right)) / vm._config.xCategories.length);
+
+      vm._gridHeight = Math.floor((vm._config.size.height - (vm._config.size.margin.top + vm._config.size.margin.bottom)) / vm._config.yCategories.length);
+
       vm._data = data.map(function (d) {
         var m = {
-          y: d.edad_mujer,
-          x: d.edad_hombre,
-          value: +d.tot,
-          percentage: +d.por
+          y: d[vm._config.y],
+          x: d[vm._config.x],
+          value: +d[vm._config.fill]
         };
+        if (d.coefficient) {
+          m.coefficient = d.coefficient.toFixed(2);
+        }
         return m;
       });
+
       return vm;
     };
 
-    Heatmap.prototype.scales = function (s) {
-      var vm = this;
-      vm._scales = s;
-      return vm;
-    };
-
-    Heatmap.prototype.axes = function (a) {
-      var vm = this;
-      vm._axes = a;
-      return vm;
-    };
-
-    Heatmap.prototype.domains = function () {
+    Heatmap.scales = function () {
       var vm = this;
       return vm;
     };
 
-    Heatmap.prototype.draw = function () {
+    Heatmap.drawColorLegend = function () {
+      var vm = this;
+
+      var domain = vm._config.colors;
+      var quantilePosition = d3.scaleBand().rangeRound([vm._config.size.height * 0.8, 0]).domain(domain);
+      //Add gradient legend
+      //defaults to right position
+      var legend = d3.select(vm._config.bindTo).select('svg').append('g').attr('class', 'legend quantized').attr('transform', 'translate(' + (vm._config.size.width - vm._config.size.legendTranslate) + ',' + vm._config.size.height * 0.1 + ')');
+
+      // legend background
+      legend.append('rect').attr('x', -50).attr('y', -35).attr('width', 100).attr('height', vm._config.size.height - 10).attr('rx', 10).attr('ry', 10).attr('class', 'legend-background').attr('fill', 'rgba(255,255,255,0.6)');
+
+      // legend title
+      legend.append('text').attr('x', 0).attr('y', -12).attr('class', 'legend-title').attr('text-anchor', 'middle').text(vm._config.legendTitle);
+
+      var quantiles = legend.selectAll('.quantile').data(vm._config.colors).enter().append('g').attr('class', 'quantile').attr('transform', function (d) {
+        return 'translate(-20, ' + quantilePosition(d) + ')';
+      });
+
+      // Rect
+      quantiles.append('rect').attr('x', -15).attr('y', 0).attr('width', 18).attr('height', quantilePosition.bandwidth()).attr('fill', function (d) {
+        return d;
+      });
+
+      //top text is the max value
+      quantiles.append('text').attr('x', 17).attr('y', 5).attr('class', 'top-label').attr('text-anchor', 'left').text(function (d) {
+        var max = vm._scales.color.invertExtent(d)[1];
+        if (vm._config.legendTitle === 'Porcentaje' && max > 100) {
+          max = 100;
+        }
+        return vm.utils.format()(max);
+      });
+
+      //top text is the min value
+      quantiles.append('text').attr('x', 17).attr('y', vm._config.size.height / 5 - 18).attr('class', 'bottom-label').attr('text-anchor', 'left').text(function (d, i) {
+        if (i === 0) {
+          var min = vm._scales.color.invertExtent(d)[0];
+          return vm.utils.format()(min);
+        } else {
+          return '';
+        }
+      });
+    };
+
+    Heatmap.drawLabels = function () {
+      var vm = this;
+      var cards = vm.chart.svg().selectAll('.dbox-label').data(vm._data, function (d) {
+        return d.y + ':' + d.x;
+      });
+      // AXIS
+      /*cards.enter().append('text')
+        .attr('transform', 'translate(' + (-vm._gridWidth/2) + ', 10)')
+        .attr('dx', function(d){ 
+          return (((vm._config.xCategories.indexOf(String(d.x))) + 1) * vm._gridWidth);
+        })
+        .attr('dy', function(d) {
+          return (vm._config.yCategories.indexOf(String(d.y))) * vm._gridHeight;
+        })
+        .attr('class', 'dbox-label')
+        .text( function(d) { return d.x });
+       cards.enter().append('text')
+        .attr('transform', 'translate(' + (-vm._gridWidth/2) + ', 30)')
+        .attr('dx', function(d){
+          return (((vm._config.xCategories.indexOf(String(d.x))) + 1) * vm._gridWidth)
+        })
+        .attr('dy', function(d) {
+          return (vm._config.yCategories.indexOf(String(d.y))) * vm._gridHeight;
+        })
+        .attr('class', 'dbox-label')
+        .text( function(d) { return d.y });*/
+
+      cards.enter().append('text').attr('text-anchor', 'middle').attr('transform', 'translate(' + (-vm._gridWidth / 2 + 17) + ', 20)').attr('dx', function (d) {
+        return (vm._config.xCategories.indexOf(String(d.x)) + 1) * vm._gridWidth;
+      }).attr('dy', function (d) {
+        return vm._config.yCategories.indexOf(String(d.y)) * vm._gridHeight;
+      }).attr('class', 'dbox-label').text(function (d) {
+        return d.value ? vm.utils.format()(d.value) : '';
+      });
+
+      //COEFFICIENT
+      cards.enter().append('text').attr('transform', 'translate(' + -vm._gridWidth / 2 + ', 40)').attr('dx', function (d) {
+        return (vm._config.xCategories.indexOf(String(d.x)) + 1) * vm._gridWidth;
+      }).attr('dy', function (d) {
+        return vm._config.yCategories.indexOf(String(d.y)) * vm._gridHeight;
+      }).attr('class', 'dbox-label-coefficient').text(function (d) {
+        return d.coefficient ? '(' + parseFloat(d.coefficient).toFixed(1) + ')' : '';
+      });
+    };
+
+    Heatmap.draw = function () {
       var vm = this;
 
       //Call the tip
-      vm._chart._svg.call(vm._tip);
+      vm.chart.svg().call(vm._tip);
 
-      if (vm._config.xAxis) {
-        vm._config.xAxis.y = vm._config.y.length * vm._gridSize + 25;
-      } else {
-        vm._config.xAxis = { 'y': vm._config.y.length * vm._gridSize };
+      var axesTip = vm.utils.d3.tip().html(function (d) {
+        return '<div class="title-tip">' + d + '</div>';
+      });
+      vm.chart.svg().call(axesTip);
+
+      vm._yLabels = vm.chart.svg().append('g').attr('class', 'y axis').attr('transform', 'translate(17,0)').selectAll('.tick').data(vm._config.yCategories).enter().append('g').attr('class', 'tick').attr('transform', function (d, i) {
+        return 'translate(0,' + i * vm._gridHeight + ')';
+      }).append('text').attr('text-anchor', 'end').attr('transform', 'translate(-6,' + vm._gridHeight / 1.5 + ')').text(function (d) {
+        return d;
+      });
+
+      vm._yLabels.each(function (d) {
+        var _this = this;
+
+        if (this.getComputedTextLength() > vm._config.size.margin.left * 0.9) {
+          (function () {
+            d3.select(_this).on('mouseover', axesTip.show).on('mouseout', axesTip.hide);
+            var i = 1;
+            while (_this.getComputedTextLength() > vm._config.size.margin.left * 0.8) {
+              d3.select(_this).text(function (d) {
+                return d.slice(0, -i) + '...';
+              }).attr('title', d);
+              ++i;
+            }
+          })();
+        }
+      });
+
+      /** Y axis title */
+      if (vm._config.yAxis && vm._config.yAxis.text) {
+        var yAxis = vm.chart.svg().select('.y.axis');
+        yAxis.selectAll('.y-title').remove();
+        vm._yTitle = yAxis.append('g').attr('class', 'y-title').attr('transform', function (d, i) {
+          return 'translate(0,' + i * vm._gridHeight + ')';
+        }).append('text').attr('class', 'axis-title').attr('font-size', 17).attr('font-weight', 600).attr('text-anchor', 'middle').attr('transform', 'translate(-' + (vm._config.size.margin.left - 3) + ', ' + (vm._config.size.height - vm._config.size.margin.bottom) / 2 + ' )rotate(-90)').text(vm._config.yAxis.text);
       }
 
-      vm._dayLabels = vm._chart._svg.selectAll(".dayLabel").data(vm._config.y).enter().append("text").text(function (d) {
+      vm._xLabels = vm.chart.svg().append('g').attr('class', 'x axis').attr('transform', 'translate(23,0)').selectAll('.tick').data(vm._config.xCategories).enter().append('g').attr('class', 'tick').attr('transform', function (d, i) {
+        return 'translate(' + (i * vm._gridWidth + vm._gridWidth / 2) + ',' + (vm._config.yCategories.length * vm._gridHeight + 20) + ')';
+      }).append('text').attr('text-anchor', 'middle').text(function (d) {
         return d;
-      }).attr("x", 0).attr("y", function (d, i) {
-        return i * vm._gridSize;
-      }).style("text-anchor", "end").attr("transform", "translate(-6," + vm._gridSize / 1.5 + ")").attr("class", "dayLabel mono axis");
-      //.attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); });
+      });
 
-      vm._timeLabels = vm._chart._svg.selectAll(".timeLabel").data(vm._config.x).enter().append("text").text(function (d) {
-        return d;
-      }).attr("x", function (d, i) {
-        return i * vm._gridSize;
-      }).attr("y", vm._config.xAxis.y).style("text-anchor", "middle").attr("transform", "translate(" + vm._gridSize / 2 + ", -6)").attr("class", "timeLabel mono axis");
-      //.attr("class", function(d, i) { return ((i >= 7 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); });
+      var biggestLabelWidth = d3.max(d3.select('.x.axis').selectAll('text').nodes().map(function (o) {
+        return o.getComputedTextLength();
+      })); // Biggest label computed text length
+      var xBandWidth = vm._gridWidth;
+      var labelMaxWidth = xBandWidth;
+      if (biggestLabelWidth > xBandWidth) {
+        // Biggest label doesn't fit
+        vm._xLabels.each(function (d) {
+          var _this2 = this;
 
+          d3.select(this).attr('text-anchor', 'end').attr('dy', 0).attr('transform', 'translate(-5,-10)rotate(-90)');
+          // Still doesn't fit!
+          labelMaxWidth = 0.75 * vm._config.size.margin.bottom;
+          if (this.getComputedTextLength() > labelMaxWidth) {
+            (function () {
+              d3.select(_this2).on('mouseover', axesTip.show).on('mouseout', axesTip.hide);
+              var i = 1;
+              while (_this2.getComputedTextLength() > labelMaxWidth) {
+                d3.select(_this2).text(function (d) {
+                  return d.slice(0, -i) + '...';
+                }).attr('title', d);
+                ++i;
+              }
+            })();
+          } else {
+            return d;
+          }
+        });
+      }
 
-      var colorScale = d3.scaleQuantile().domain([0, d3.max(vm._data, function (d) {
+      if (vm._config.xAxis && vm._config.xAxis.text) {
+        var xAxis = vm.chart.svg().select('.x.axis');
+        xAxis.selectAll('.x-title').remove();
+        vm._xTitle = xAxis.append('g').attr('class', 'x-title').attr('transform', function (d, i) {
+          return 'translate(0,' + i * vm._gridHeight + ')';
+        }).append('text').attr('class', 'axis-title').attr('font-size', 17).attr('font-weight', 600).attr('text-anchor', 'middle').attr('transform', 'translate(' + (vm._config.size.width - vm._config.size.margin.left - vm._config.size.margin.right) / 2 + ', ' + (vm._config.size.height - 20) + ')').text(vm._config.xAxis.text);
+      }
+
+      vm._scales.color = d3.scaleQuantile().domain(vm._data.map(function (d) {
         return d.value;
-      })]).range(vm._config.colors);
+      }).sort()).range(vm._config.colors);
 
-      var cards = vm._chart._svg.selectAll(".hour").data(vm._data, function (d) {
+      var cards = vm.chart.svg().append('g').attr('class', 'grid-container').attr('transform', 'translate(17, 0)').selectAll('.grid-cell').data(vm._data, function (d) {
         return d.y + ':' + d.x;
       });
 
-      cards.enter().append("rect").attr("x", function (d) {
-        return vm._config.x.indexOf(d.x) * vm._gridSize;
-      }).attr("y", function (d) {
-        return vm._config.y.indexOf(d.y) * vm._gridSize;
-      }).attr("rx", 4).attr("ry", 4).attr("class", "hour bordered").attr("id", function (d) {
+      cards.enter().append('rect').attr('x', function (d) {
+        return vm._config.xCategories.indexOf(String(d.x)) * vm._gridWidth;
+      }).attr('y', function (d) {
+        return vm._config.yCategories.indexOf(String(d.y)) * vm._gridHeight;
+      }).attr('rx', vm._config.borderRadius || 5).attr('ry', vm._config.borderRadius || 5).attr('class', 'grid-cell').attr('stroke', '#fff').attr('stroke-width', '2px').attr('id', function (d) {
         return 'x' + d.x + 'y' + d.y;
-      }).attr("width", vm._gridSize).attr("height", vm._gridSize).on('mouseover', function (d, i) {
-        /*if(vm._config.data.mouseover){
-          vm._config.data.mouseover.call(vm, d,i);
-        }*/
+      }).attr('width', vm._gridWidth).attr('height', vm._gridHeight).on('mouseover', function (d, i) {
         vm._tip.show(d, d3.select(this).node());
-      }).on('mouseout', function (d, i) {
-        /*if(vm._config.data.mouseout){
-          vm._config.data.mouseout.call(this, d,i);
-        }*/
-        vm._tip.hide(d, d3.select(this).node());
-      }).on("click", function (d, i) {
-        if (vm._config.data.onclick) {
-          vm._config.data.onclick.call(this, d, i);
+        if (vm._config.hasOwnProperty('mouseover')) {
+          vm._config.mouseover.call(vm, d, i);
         }
-      }).style("fill", vm._config.colors[0]).transition().duration(3000).ease(d3.easeLinear).style("fill", function (d) {
-        return colorScale(d.value);
+      }).on('mouseout', function (d, i) {
+        vm._tip.hide(d, d3.select(this).node());
+        if (vm._config.hasOwnProperty('mouseout')) {
+          vm._config.mouseout.call(this, d, i);
+        }
+      }).on('click', function (d, i) {
+        if (vm._config.hasOwnProperty('onclick')) {
+          vm._config.onclick.call(this, d, i);
+        }
+      }).attr('fill', function (d) {
+        return vm._scales.color(d.value);
       });
 
+      Heatmap.drawLabels();
+
+      if (vm._config.hasOwnProperty('legendTitle')) {
+        Heatmap.drawColorLegend();
+      }
+
       /*
-        var legend = vm._chart._svg.selectAll(".legend")
+        var legend = vm.chart.svg().selectAll('.legend')
             .data([0].concat(colorScale.quantiles()), function(d) { return d; });
-         var lgroup = legend.enter().append("g")
-            .attr("class", "legend");
-         lgroup.append("rect")
-            .attr("x", function(d, i) {  return vm._legendElementWidth * i; })
-            .attr("y", vm._config.size.height - vm._config.size.margin.bottom*2)
-            .attr("width", vm._legendElementWidth)
-            .attr("height", vm._gridSize / 2)
-            .style("fill", function(d, i) { return vm._config.colors[i]; });
-         lgroup.append("text")
-            .attr("class", "mono")
-            .text(function(d) { return "≥ " + Math.round(d); })
-            .attr("x", function(d, i) { return vm._legendElementWidth * i; })
-            .attr("y", vm._config.size.height - vm._config.size.margin.bottom*2 + vm._gridSize);
+         var lgroup = legend.enter().append('g')
+            .attr('class', 'legend');
+         lgroup.append('rect')
+            .attr('x', function(d, i) {  return vm._legendElementWidth * i; })
+            .attr('y', vm._config.size.height - vm._config.size.margin.bottom*2)
+            .attr('width', vm._legendElementWidth)
+            .attr('height', vm._gridWidth / 2)
+            .style('fill', function(d, i) { return vm._config.colors[i]; });
+         lgroup.append('text')
+            .attr('class', 'mono')
+            .text(function(d) { return '≥ ' + Math.round(d); })
+            .attr('x', function(d, i) { return vm._legendElementWidth * i; })
+            .attr('y', vm._config.size.height - vm._config.size.margin.bottom*2 + vm._gridWidth);
          legend.exit().remove();*/
       return vm;
     };
 
-    return new Heatmap(config);
+    Heatmap.init(config);
+
+    return Heatmap;
   }
 
   /**
@@ -4995,7 +5199,7 @@
       vm._axes = {};
       vm._data = [];
 
-      vm._scales.color = d3$1.scaleQuantize().range(["#fee5d9", "#fcae91", "#fb6a4a", "#de2d26", "#a50f15"]);
+      vm._scales.color = d3.scaleQuantize().range(["#fee5d9", "#fcae91", "#fb6a4a", "#de2d26", "#a50f15"]);
     };
 
     Leaflet.id = function (col) {
@@ -5046,7 +5250,7 @@
 
       vm._data = data;
       //vm._quantiles = vm._setQuantile(data);
-      vm._minMax = d3$1.extent(data, function (d) {
+      vm._minMax = d3.extent(data, function (d) {
         return +d[vm._config.fill];
       });
 
@@ -5099,10 +5303,10 @@
       var step = (vm._minMax[1] - vm._minMax[0]) / (range - 1);
       var domain = vm._config.colors;
 
-      var quantilePosition = d3$1.scaleBand().rangeRound([vm._config.size.height * 0.8, 0]).domain(domain);
+      var quantilePosition = d3.scaleBand().rangeRound([vm._config.size.height * 0.8, 0]).domain(domain);
       //Add gradient legend 
       //defaults to right position
-      var legend = d3$1.select('#' + vm._config.bindTo).append('svg').attr('width', 120).attr('height', vm._config.size.height).style('z-index', 401).style('position', 'absolute').style('top', '4px').style('right', '2px').append('g').attr('class', 'legend quantized').attr('transform', 'translate(50,25)');
+      var legend = d3.select('#' + vm._config.bindTo).append('svg').attr('width', 120).attr('height', vm._config.size.height).style('z-index', 401).style('position', 'absolute').style('top', '4px').style('right', '2px').append('g').attr('class', 'legend quantized').attr('transform', 'translate(50,25)');
 
       // legend background
       legend.append('rect').attr('x', -50).attr('y', -35).attr('width', 100).attr('height', vm._config.size.height - 10).attr('rx', 10).attr('ry', 10).attr('class', 'legend-background').attr('fill', 'rgba(255,255,255,0.6)');
@@ -5231,7 +5435,7 @@
         var html = '<div class="d3-tip" style="z-index: 99999;"><span>' + (d.feature.properties.NOM_ENT || d.feature.properties.NOM_MUN) + '</span><br/><span>' + vm.utils.format()(d.feature.properties[vm._config.fill]) + '</span></div>';
         return html;
       });
-      d3$1.select('#' + vm._config.bindTo).select('svg.leaflet-zoom-animated').call(tip);
+      d3.select('#' + vm._config.bindTo).select('svg.leaflet-zoom-animated').call(tip);
 
       /**
        * Set each layer
@@ -5242,7 +5446,7 @@
         if (!value) {
           // Remove polygons without data
           /** @todo validate what to do with NA's */
-          d3$1.select(layer._path).remove();
+          d3.select(layer._path).remove();
         } else {
           var fillColor = vm._scales.color(value);
 
@@ -5268,7 +5472,7 @@
       }
 
       function enterLayer(layer) {
-        tip.show(layer, d3$1.select(layer._path).node());
+        tip.show(layer, d3.select(layer._path).node());
       }
 
       function leaveLayer(layer) {
@@ -5293,12 +5497,12 @@
     Leaflet.drawLabel = function (layer) {
       var vm = this;
       var props = layer.feature.properties;
-      var path = d3$1.select(layer._path).node();
+      var path = d3.select(layer._path).node();
       var bbox = path.getBBox();
-      var svg = d3$1.select('#' + vm._config.bindTo).select('svg.leaflet-zoom-animated');
+      var svg = d3.select('#' + vm._config.bindTo).select('svg.leaflet-zoom-animated');
 
       if (props[vm._config.fill] !== undefined) {
-        svg.append('text').attr('class', 'dbox-label').attr('x', bbox.x + bbox.width / 2).attr('y', bbox.y + d3$1.min([bbox.height / 2, 30])).attr('text-anchor', 'middle').text((props.NOM_ENT || props.NOM_MUN) + ': ' + vm.utils.format(props[vm._config.fill]));
+        svg.append('text').attr('class', 'dbox-label').attr('x', bbox.x + bbox.width / 2).attr('y', bbox.y + d3.min([bbox.height / 2, 30])).attr('text-anchor', 'middle').text((props.NOM_ENT || props.NOM_MUN) + ': ' + vm.utils.format(props[vm._config.fill]));
       }
       return vm;
     };
@@ -5309,30 +5513,29 @@
   }
 
   /*
-   * Map 
+   * Map
    */
 
   function map (config) {
-
     function Map(config) {
       var vm = this;
       vm._config = config ? config : {};
       vm._data = [];
       vm._scales = {};
       vm._axes = {};
-      vm._tip = d3.tip().attr('class', 'd3-tip');
+      vm._tip = vm.utils.d3.tip().attr('class', 'd3-tip ' + (vm._config.tooltip && vm._config.tooltip.classed ? vm._config.tooltip.classed : ''));
 
-      vm._formatWithZeroDecimals = d3.format(",.0f");
-      vm._formatWithOneDecimal = d3.format(",.1f");
-      vm._formatWithTwoDecimals = d3.format(",.2f");
-      vm._formatWithThreeDecimals = d3.format(",.3f");
+      vm._formatWithZeroDecimals = d3.format(',.0f');
+      vm._formatWithOneDecimal = d3.format(',.1f');
+      vm._formatWithTwoDecimals = d3.format(',.2f');
+      vm._formatWithThreeDecimals = d3.format(',.3f');
 
       vm._format = {};
       vm._format.total = vm._formatWithZeroDecimals;
       vm._format.percentage = function (d) {
-        return d3.format(",.1f")(d) + '%';
+        return d3.format(',.1f')(d) + '%';
       };
-      vm._format.change = d3.format(",.1f");
+      vm._format.change = d3.format(',.1f');
     }
 
     //-------------------------------
@@ -5379,8 +5582,11 @@
     Map.prototype.data = function (data) {
       var vm = this;
 
+      vm._topojson = data[1] ? data[1] : false; //Topojson
+      var data = data[0]; //User data
+
       if (vm._config.data.filter) {
-        data = data.filter(vm._config.data.filter);
+        data = data[0].filter(vm._config.data.filter);
       }
 
       vm._data = data;
@@ -5419,97 +5625,85 @@
       var urlTopojson = vm._config.map.topojson.url;
       var objects = vm._config.map.topojson.objects; //'states'
       var tran = vm._config.map.topojson.translate; //var tran = [2580, 700];
-      var scale = vm._config.map.topojson.scale;
+      var scale = vm._config.map.topojson.scale; //1300
 
-      /*function(d) {
-          d.id = d.properties.state_code.toString();
-          if(d.id.length === 1) d.id = '0'+d.id;
-          return d.id;
-      }*/
       var parser = vm._config.map.topojson.parser;
-      /*function(d) {
-              return "state-" + d.id;
-          }
-      */
+
       var id = vm._config.map.topojson.id;
 
       //Call the tip
       vm._chart._svg.call(vm._tip);
 
-      vm._projection = d3.geoMercator()
-      //.scale(1300)
-      .scale(scale).translate(tran);
+      vm._projection = d3.geoMercator().scale(scale).translate(tran);
 
       vm.path = d3.geoPath().projection(vm._projection);
 
-      vm._polygons = vm._chart._svg.append("g").attr("id", "dbox-map-polygons").style('display', 'true').attr("transform", function () {
-        return "translate(" + vm._config.size.translateX + ",100) scale(" + vm._config.size.scale + ")";
+      vm._polygons = vm._chart._svg.append('g').attr('id', 'dbox-map-polygons').style('display', 'true').attr('transform', function () {
+        return 'translate(' + vm._config.size.translateX + ',100) scale(' + vm._config.size.scale + ')';
       });
 
-      d3.json(urlTopojson, function (error, t) {
-        var features = topojson.feature(t, t.objects[objects]).features;
-        //console.log('topojson features', features);
-        if (typeof vm._config.map.topojson.filter != 'undefined') {
-          var filter = vm._config.map.topojson.filter;
-          console.log(filter);
-          Object.keys(filter).map(function (key) {
-            features = features.filter(function (feature) {
-              return feature.properties[key] === filter[key];
-            });
+      var features = topojson.feature(vm._topojson, vm._topojson.objects[objects]).features;
+
+      if (typeof vm._config.map.topojson.filter != 'undefined') {
+        var filter = vm._config.map.topojson.filter;
+        Object.keys(filter).map(function (key) {
+          features = features.filter(function (feature) {
+            return feature.properties[key] === filter[key];
+          });
+        });
+      }
+
+      vm._polygons.selectAll('path').data(features, parser).enter().append('path').attr('d', d3.geoPath().projection(vm._projection)).attr('id', id).attr('data-geotype', objects).attr('fill', '#808080').attr('stroke', '#a0a0a0').style('stroke-width', '1px').on('mouseover', function (d, i) {
+        if (vm._config.map.quantiles.colorsOnHover) {
+          //OnHover colors
+          d3.select(this).attr('fill', function (d) {
+            return vm._getQuantileColor(d[vm._config.color], 'onHover');
           });
         }
-        vm._polygons.selectAll("path").data(features, parser).enter().append("path").attr("d", d3.geoPath().projection(vm._projection)).attr("id", id).attr("data-geotype", objects).attr("fill", "#808080").attr('stroke', '#a0a0a0').style('stroke-width', '1px').on('mouseover', function (d, i) {
-          if (vm._config.data.onmouseover) {
-            //External function call
-            vm._config.data.onmouseover.call(this, d, i);
-          }
 
-          if (vm._config.map.quantiles.colorsOnHover) {
-            //OnHover colors
-            d3.select(this).attr('fill', function (d) {
-              return vm._getQuantileColor(d[vm._config.color], 'onHover');
-            });
-          }
+        //vm._tip.show(d, d3.select(this).node()) //Show TIP
 
-          vm._tip.show(d, d3.select(this).node()); //Show TIP
-        }).on('mouseout', function (d, i) {
-          if (vm._config.data.onmouseout) {
-            //External function call
-            vm._config.data.onmouseout.call(this, d, i);
-          }
+        if (vm._config.data.onmouseover) {
+          //External function call
+          vm._config.data.onmouseover.call(this, d, i);
+        }
+      }).on('mouseout', function (d, i) {
+        if (vm._config.map.quantiles.colorsOnHover) {
+          //OnHover reset default color
+          d3.select(this).attr('fill', function (d) {
+            return vm._getQuantileColor(d[vm._config.color], 'default');
+          });
+        }
+        //Hide tip
+        //vm._tip.hide(d, d3.select(this).node())
 
-          if (vm._config.map.quantiles.colorsOnHover) {
-            //OnHover reset default color
-            d3.select(this).attr('fill', function (d) {
-              return vm._getQuantileColor(d[vm._config.color], 'default');
-            });
-          }
-          //Hide tip
-          vm._tip.hide(d, d3.select(this).node());
-        }).on("click", function (d, i) {
-          if (vm._config.data.onclick) {
-            vm._config.data.onclick.call(this, d, i);
-          }
-        });
+        if (vm._config.data.onmouseout) {
+          //External function call
+          vm._config.data.onmouseout.call(this, d, i);
+        }
+      }).on('click', function (d, i) {
+        if (vm._config.data.onclick) {
+          vm._config.data.onclick.call(this, d, i);
+        }
+      });
 
-        vm._polygonsDefault = vm._polygons.selectAll("path").data();
+      vm._polygonsDefault = vm._polygons.selectAll('path').data();
 
-        vm._polygons.selectAll("path").attr("stroke", "#333").attr('stroke-width', 0.2);
-        vm._polygons.selectAll("path").attr("fill", "red");
-        vm._polygons.selectAll("path").attr('data-total', null);
-        vm._polygons.selectAll("path").data(vm._data, function (d) {
-          //@TODO WHY THE F..K IS D3 ITERATING OVER THE OLD DATA
-          return d.id ? d.id : d[vm._config.id];
-        }).attr('fill', function (d) {
-          return vm._getQuantileColor(d[vm._config.color], 'default');
-        }).attr('data-total', function (d) {
-          return +d[vm._config.color];
-        });
+      vm._polygons.selectAll('path').attr('stroke', '#333').attr('stroke-width', 0.2);
+      vm._polygons.selectAll('path').attr('fill', 'red');
+      vm._polygons.selectAll('path').attr('data-total', null);
+      vm._polygons.selectAll('path').data(vm._data, function (d) {
+        //@TODO WHY THE F..K IS D3 ITERATING OVER THE OLD DATA
+        return d.id ? d.id : d[vm._config.id];
+      }).attr('fill', function (d) {
+        return vm._getQuantileColor(d[vm._config.color], 'default');
+      }).attr('data-total', function (d) {
+        return +d[vm._config.color];
+      });
 
-        //Resets the map paths data to topojson
-        vm._polygons.selectAll("path").data(vm._polygonsDefault, function (d) {
-          return d.id;
-        });
+      //Resets the map paths data to topojson
+      vm._polygons.selectAll('path').data(vm._polygonsDefault, function (d) {
+        return d.id;
       });
     };
 
@@ -5528,14 +5722,13 @@
 
       values.sort(d3.ascending);
 
-      //@TODO use quantile scale instead of manual calculations 
+      //@TODO use quantile scale instead of manual calculations
       if (vm._config && vm._config.map && vm._config.map.quantiles && vm._config.map.quantiles.buckets) {
-
         if (vm._config.map.quantiles.ignoreZeros === true) {
           var aux = _.dropWhile(values, function (o) {
             return o <= 0;
           });
-          //aux.unshift(values[0]);  
+          //aux.unshift(values[0]);
 
           quantile.push(values[0]);
           quantile.push(0);
@@ -5555,7 +5748,6 @@
 
       //@TODO - VALIDATE WHEN ZEROS NEED TO BE PUT ON QUANTILE 1 AND RECALCULATE NON ZERO VALUES INTO THE REST OF THE BUCKETS
       if (vm._config.map.quantiles && vm._config.map.quantiles.buckets && vm._config.map.quantiles.buckets === 5) {
-
         if (quantile[1] === quantile[2] && quantile[2] === quantile[3] && quantile[3] === quantile[4] && quantile[4] === quantile[5]) {
           quantile = [d3.quantile(values, 0), d3.quantile(values, 0.2)];
         }
@@ -5568,10 +5760,9 @@
       var vm = this;
       var total = parseFloat(d);
 
-      //@TODO use quantile scale instead of manual calculations 
+      //@TODO use quantile scale instead of manual calculations
       if (vm._config && vm._config.map && vm._config.map.quantiles && vm._config.map.quantiles.colors) {
         if (vm._quantiles.length > 2) {
-
           if (vm._config && vm._config.map && vm._config.map.min !== undefined && vm._config.map.max !== undefined) {
             if (total < vm._config.map.min || total > vm._config.map.max) {
               console.log('outOfRangeColor', total, vm._config.map.min, vm._config.map.max);
@@ -5632,7 +5823,6 @@
   /*
    * Build a radar chart.
    */
-
   function radar (config) {
     function Radar(config) {
       var vm = this,
@@ -5792,7 +5982,7 @@
       });
 
       sel.enter().append('text').text(function (d) {
-        return d;
+        return d.toFixed(1);
       }).attr('class', 'tick-label').attr('x', vm._center.x + margin).attr('y', function (d) {
         return vm._center.y - margin - vm._scale(d);
       }).attr('fill', vm._ifStyleDefaults('gray')).style('font-family', vm._ifStyleDefaults('sans-serif')).attr('opacity', 0).transition().duration(dur).attr('opacity', 1);
@@ -5874,30 +6064,45 @@
           svg = vm._chart._svg,
           duration = vm._config.transitionDuration,
           fromCenter = vm._radius + vm._config.axisLabelMargin,
-          labels;
+          labels,
+          rects;
+
+      rects = svg.selectAll('rect.axis-label').data(vm._axesData.list, function (d) {
+        return d.axis;
+      });
+
+      rects.enter().append('rect').attr('class', 'axis-label').attr('x', function (d) {
+        return vm.xOf(d.rads, fromCenter) - 50;
+      }).attr('y', function (d) {
+        return vm.yOf(d.rads, fromCenter) - 20;
+      }).attr('rx', '5px').attr('ry', '5px').attr('width', '100px').attr('height', '40px').attr('fill', '#A3A3AF').attr('opacity', 0).transition().duration(duration).attr('opacity', 1);
+
+      rects.exit().transition().duration(duration).attr('opacity', 0).remove();
 
       labels = svg.selectAll('text.axis-label').data(vm._axesData.list, function (d) {
         return d.axis;
       });
 
       labels.transition().duration(duration).attr('x', function (d) {
-        return vm.xOf(d.rads, fromCenter);
+        return vm.xOf(d.rads, fromCenter + 5);
       }).attr('y', function (d) {
-        return vm.yOf(d.rads, fromCenter);
+        return vm.yOf(d.rads, fromCenter + 5);
       });
 
-      labels.enter().append('text').attr('class', 'axis-label').attr('text-anchor', 'middle').attr('fill', vm._ifStyleDefaults('gray')).style('font-family', vm._ifStyleDefaults('sans-serif')).text(function (d) {
+      labels.enter().append('text').attr('class', 'axis-label').attr('text-anchor', 'middle').attr('fill', 'white') //vm._ifStyleDefaults('gray'))
+      .style('font-family', vm._ifStyleDefaults('sans-serif')).text(function (d) {
         return d.axis;
       }).attr('x', function (d) {
-        return vm.xOf(d.rads, fromCenter);
+        return vm.xOf(d.rads, fromCenter + 5);
       }).attr('y', function (d) {
-        return vm.yOf(d.rads, fromCenter);
+        return vm.yOf(d.rads, fromCenter + 5);
       }).attr('opacity', 0).transition().duration(duration).attr('opacity', 1);
 
       labels.exit().transition().duration(duration).attr('opacity', 0).remove();
     };
 
     Radar.prototype.drawPolygons = function () {
+
       var vm = this,
           data = vm._viewData,
           svg = vm._chart._svg,
@@ -5916,7 +6121,8 @@
             polygon: row.polygon,
             color: row.color,
             points: [],
-            values: []
+            values: [],
+            rawData: row.rawData
           });
         }
         bundle.polygons[polygIdx].values.push(row);
@@ -5928,7 +6134,9 @@
         return d.polygon + '-container';
       });
 
-      gsEnter = gs.enter().append('g').attr('class', 'polygon-container');
+      gsEnter = gs.enter().append('g').attr('class', 'polygon-container').attr('id', function (d) {
+        return 'radar-id-' + d.rawData.CVE_ENT;
+      });
 
       gsExit = gs.exit();
       gsExit.transition().duration(duration).remove();
@@ -6011,7 +6219,7 @@
 
       subtt = tt.append('text').attr('y', y).attr('x', x).style('fill', vm._ifStyleDefaults('white')).style('font-family', vm._ifStyleDefaults('sans-serif'));
 
-      subtt.append('tspan').text(val2);
+      subtt.append('tspan').text(Number(val2).toFixed(1));
 
       subtt.append('tspan').attr('dy', '-1.2em').attr('x', x).text(val1);
 
@@ -6208,6 +6416,11 @@
 
     Radar.prototype.data = function (data) {
       var vm = this;
+      //In case we want to filter observations
+      if (vm._config.data.filter) {
+        data = data.filter(vm._config.data.filter);
+      }
+
       vm._data = data;
       return vm;
     };
@@ -6236,7 +6449,8 @@
     Radar.prototype._calcDomains = function (data) {
       var vm = this;
       vm._minMax = vm.minMax(data);
-      vm._scale.domain([0, vm._minMax[1]]);
+      vm._scale.domain(vm._config.scales && vm._config.scales.x && vm._config.scales.x.domain && Array.isArray(vm._config.scales.x.domain) ? vm._config.scales.x.domain : [0, vm._minMax[1]]);
+
       vm._ticks = vm._scale.ticks(vm._config.ticks);
       // Exclude 0 from ticks if it is the first element.
       // We don't need to have the 0 actually rendered.
@@ -6285,166 +6499,252 @@
    * Simple Scatter chart
    */
 
-  function scatter (config) {
+  function scatter (config, helper) {
+    var Scatter = Object.create(helper);
 
-    function Scatter(config) {
+    Scatter.init = function (config) {
       var vm = this;
       vm._config = config ? config : {};
       vm._data = [];
       vm._scales = {};
       vm._axes = {};
-      vm._tip = d3.tip().attr('class', 'd3-tip');
-    }
+
+      var defaultTip = function defaultTip(d) {
+        var html;
+        if (vm.chart.config.styles) {
+          html = '<div style=\'\n        line-height: 1; \n        opacity: ' + vm.chart.style.tooltip.opacity + '; \n        font-weight: ' + vm.chart.style.tooltip.text.fontWeight + '; \n        font-size: ' + vm.chart.style.tooltip.text.fontSize + '; \n        color: ' + vm.chart.style.tooltip.text.textColor + ';\n        font-family: ' + vm.chart.style.tooltip.text.fontFamily + ';\n        background-color: ' + vm.chart.style.tooltip.backgroundColor + '; \n        padding: ' + vm.chart.style.tooltip.text.padding + ';   \n        border: ' + vm.chart.style.tooltip.border.width + ' solid ' + vm.chart.style.tooltip.border.color + ';  \n        border-radius:  ' + vm.chart.style.tooltip.border.radius + ';\'>';
+          html += '<strong style=\'color:' + vm.chart.style.tooltip.text.fontColor + ';\'>';
+        } else {
+          html = '<div> <strong>';
+        }
+        html += vm._config.idName ? d.datum[vm._config.idName] ? d.datum[vm._config.idName] + '<br>' : '' : '';
+        html += d.x ? '<span>(' + (Number.isNaN(+d.x) || vm._config.xAxis.scale !== 'linear' ? d.x : vm.utils.format(vm._config.xAxis)(d.x)) + '</span>' : '(NA';
+        html += d.y ? '<span>, &nbsp;' + (Number.isNaN(+d.y) || vm._config.yAxis.scale !== 'linear' ? d.y : vm.utils.format(vm._config.yAxis)(d.y)) + ')</span>' : ', NA)';
+        html += ' </strong><br>';
+        if (vm._config.magnitude && d.magnitude !== d.x && d.magnitude !== d.y) {
+          html += d.magnitude ? '<span>' + (Number.isNaN(+d.magnitude) || +d.magnitude >= 1993 && +d.magnitude <= 2019 ? d.magnitude : vm.utils.format()(d.magnitude)) + '</span>' : '';
+        }
+        if (d.color !== d.x && d.color !== d.y && d.color !== d.magnitude) {
+          html += d.color ? '<span> ' + (Number.isNaN(+d.color) || +d.color >= 1993 && +d.color <= 2019 ? d.color : vm.utils.format()(d.color)) + '</span>' : '';
+        }
+        html += '</div>';
+        return html;
+      };
+
+      vm._tip = this.utils.d3.tip().attr('class', 'd3-tip').html(vm._config.tip && vm._config.tip.html ? vm._config.tip.html : defaultTip);
+    };
 
     //-------------------------------
     //User config functions
-    Scatter.prototype.x = function (col) {
+
+    Scatter.id = function (col) {
+      var vm = this;
+      vm._config.id = col;
+      return vm;
+    };
+
+    Scatter.idName = function (col) {
+      var vm = this;
+      vm._config.idName = col;
+      return vm;
+    };
+
+    Scatter.x = function (col) {
       var vm = this;
       vm._config.x = col;
       return vm;
     };
 
-    Scatter.prototype.y = function (col) {
+    Scatter.y = function (col) {
       var vm = this;
       vm._config.y = col;
       return vm;
     };
 
-    Scatter.prototype.radius = function (radius) {
+    Scatter.radius = function (radius) {
       var vm = this;
       vm._config.radius = radius;
       return vm;
     };
 
-    Scatter.prototype.radiusRange = function (radiusRange) {
+    Scatter.magnitude = function (magnitude) {
+      var vm = this;
+      vm._config.magnitude = magnitude;
+      return vm;
+    };
+
+    Scatter.radiusRange = function (radiusRange) {
       var vm = this;
       vm._config.radiusRange = radiusRange;
       return vm;
     };
 
-    Scatter.prototype.properties = function (properties) {
+    Scatter.magnitudeRange = function (magnitudeRange) {
+      var vm = this;
+      vm._config.magnitudeRange = magnitudeRange;
+      return vm;
+    };
+
+    Scatter.properties = function (properties) {
       var vm = this;
       vm._config.properties = properties;
       return vm;
     };
 
-    Scatter.prototype.color = function (col) {
+    Scatter.figure = function (figureType) {
       var vm = this;
-      vm._config.color = col;
+      vm._config.figureType = figureType;
       return vm;
     };
 
-    Scatter.prototype.opacity = function (opacity) {
+    Scatter.colors = function (colors) {
+      var vm = this;
+      if (Array.isArray(colors)) {
+        //Using an array of colors for the range
+        vm._config.colors = colors;
+      } else {
+        //Using a preconfigured d3.scale
+        vm._scales.color = colors;
+      }
+      return vm;
+    };
+
+    Scatter.fill = function (col) {
+      var vm = this;
+      vm._config.fill = col;
+      return vm;
+    };
+
+    Scatter.opacity = function (opacity) {
       var vm = this;
       vm._config.opacity = opacity;
       return vm;
     };
 
-    Scatter.prototype.tip = function (tip) {
+    Scatter.regression = function (regression) {
+      var vm = this;
+      vm._config.regression = regression;
+      return vm;
+    };
+
+    Scatter.tip = function (tip) {
       var vm = this;
       vm._config.tip = tip;
       vm._tip.html(vm._config.tip);
       return vm;
     };
 
-    Scatter.prototype.end = function () {
+    Scatter.data = function (data) {
       var vm = this;
-      return vm._chart;
-    };
-
-    //-------------------------------
-    //Triggered by chart.js;
-    Scatter.prototype.chart = function (chart) {
-      var vm = this;
-      vm._chart = chart;
-      return vm;
-    };
-
-    Scatter.prototype.data = function (data) {
-      var vm = this;
+      var xr, yr, xMean, yMean, b1, b0, term1, term2;
       vm._data = [];
-      data.forEach(function (d, i) {
+
+      data.forEach(function (d) {
         var m = {};
         m.datum = d;
         m.x = vm._config.xAxis.scale == 'linear' ? +d[vm._config.x] : d[vm._config.x];
         m.y = vm._config.yAxis.scale == 'linear' ? +d[vm._config.y] : d[vm._config.y];
-        m.color = vm._config.color.slice(0, 1) !== '#' ? d[vm._config.color] : vm._config.color;
-        m.radius = vm._config.radius !== undefined ? isNaN(vm._config.radius) ? +d[vm._config.radius] : vm._config.radius : 5;
+        if (vm._config.xAxis.scale == 'linear' && Number.isNaN(m.x)) {
+          m.x = 0;
+        }
+        if (vm._config.yAxis.scale == 'linear' && Number.isNaN(m.y)) {
+          m.y = 0;
+        }
+        m.color = vm._config.fill.slice(0, 1) !== '#' ? d[vm._config.fill] : vm._config.fill;
+        m.radius = vm._config.radius !== undefined ? isNaN(vm._config.radius) ? +d[vm._config.radius] : vm._config.radius : 7;
+
+        //vm._config.magnitude = 'FACTOR_HOG'; For testing
+
+        m.magnitude = vm._config.magnitude !== undefined ? isNaN(vm._config.magnitude) ? +d[vm._config.magnitude] : vm._config.magnitude : 7;
 
         if (vm._config.properties !== undefined && Array.isArray(vm._config.properties) && vm._config.properties.length > 0) {
           vm._config.properties.forEach(function (p) {
             m[p] = d[p];
           });
         }
+
         vm._data.push(m);
       });
+
+      if (vm._config.regression === true && vm._config.yAxis.scale === 'linear' && vm._config.xAxis.scale === 'linear') {
+        xMean = d3.mean(data.map(function (d) {
+          return !Number.isNaN(+d[vm._config.x]) ? +d[vm._config.x] : 0;
+        }));
+        yMean = d3.mean(data.map(function (d) {
+          return !Number.isNaN(+d[vm._config.y]) ? +d[vm._config.y] : 0;
+        }));
+        xr = 0;
+        yr = 0;
+        term1 = 0;
+        term2 = 0;
+
+        vm._data.forEach(function (m) {
+          xr = Number.isNaN(+m.x) ? -xMean : +m.x - xMean;
+          yr = Number.isNaN(+m.y) ? -yMean : +m.y - yMean;
+          term1 += xr * yr;
+          term2 += xr * xr;
+        });
+
+        b1 = term1 / term2;
+        b0 = yMean - b1 * xMean;
+
+        vm._data.forEach(function (m) {
+          m.yhat = b0 + Number(m.x) * b1;
+        });
+      }
+
+      if (vm._config.yAxis.scale !== 'linear') {
+        vm._data.sort(function (a, b) {
+          return vm.utils.sortAscending(a.y, b.y);
+        });
+      }
+      if (vm._config.xAxis.scale !== 'linear') {
+        vm._data.sort(function (a, b) {
+          return vm.utils.sortAscending(a.x, b.x);
+        });
+      }
+
       return vm;
     };
 
-    Scatter.prototype.scales = function (s) {
+    Scatter.scales = function () {
       var vm = this;
-      vm._scales = s;
-      return vm;
-    };
 
-    Scatter.prototype.axes = function (a) {
-      var vm = this;
-      vm._axes = a;
-      return vm;
-    };
+      if (vm._config.hasOwnProperty('x') && vm._config.hasOwnProperty('y')) {
+        config = {
+          column: 'x',
+          type: vm._config.xAxis.scale,
+          range: [0, vm.chart.width],
+          minZero: vm._config.xAxis.minZero ? vm._config.xAxis.minZero : false
+        };
+        vm._scales.x = vm.utils.generateScale(vm._data, config);
 
-    Scatter.prototype.domains = function () {
-      var vm = this;
-      var xMinMax = d3.extent(vm._data, function (d) {
-        return d.x;
-      }),
-          yMinMax = d3.extent(vm._data, function (d) {
-        return d.y;
-      }),
-          radiusMinMax = d3.extent(vm._data, function (d) {
+        config = {
+          column: 'y',
+          type: vm._config.yAxis.scale,
+          range: [vm.chart.height, 0],
+          minZero: vm._config.yAxis.minZero ? vm._config.yAxis.minZero : false
+        };
+        vm._scales.y = vm.utils.generateScale(vm._data, config);
+      }
+
+      if (vm._config.hasOwnProperty('colors')) {
+        vm._scales.color = d3.scaleOrdinal(vm._config.colors);
+      } else {
+        vm._scales.color = d3.scaleOrdinal(d3.schemeCategory20c);
+      }
+
+      var radiusMinMax = d3.extent(vm._data, function (d) {
         return d.radius;
       });
 
-      var arrOk = [0, 0];
+      var magnitudeMinMax = d3.extent(vm._data, function (d) {
+        return d.magnitude;
+      });
 
-      if (vm._config.fixTo45) {
-        if (xMinMax[1] > yMinMax[1]) {
-          arrOk[1] = xMinMax[1];
-        } else {
-          arrOk[1] = yMinMax[1];
-        }
+      vm._scales.radius = d3.scaleLinear().range(vm._config.radiusRange != undefined ? vm._config.radiusRange : [7, 20]).domain(radiusMinMax).nice();
 
-        if (xMinMax[0] < yMinMax[0]) {
-          //yMinMax = xMinMax;
-          arrOk[0] = xMinMax[0];
-        } else {
-          arrOk[0] = yMinMax[0];
-        }
-
-        vm._scales.x.domain(arrOk).nice();
-        vm._scales.y.domain(arrOk).nice();
-        vm._scales.radius = d3.scaleLinear().range(vm._config.radiusRange != undefined ? vm._config.radiusRange : [5, 15]).domain(radiusMinMax).nice();
-      } else {
-        vm._scales.x.domain(xMinMax); //.nice();
-        vm._scales.y.domain(yMinMax); //.nice();
-        if (vm._scales.x.nice) {
-          vm._scales.x.nice();
-        }
-        if (vm._scales.y.nice) {
-          vm._scales.y.nice();
-        }
-        vm._scales.radius = d3.scaleLinear().range(vm._config.radiusRange != undefined ? vm._config.radiusRange : [5, 15]).domain(radiusMinMax).nice();
-        if (vm._config.xAxis && vm._config.xAxis.scale !== 'linear') {
-          vm._scales.x.domain(vm._data.map(function (m) {
-            return m.x;
-          }));
-        }
-        if (vm._config.yAxis && vm._config.yAxis.scale !== 'linear') {
-          vm._scales.y.domain(vm._data.map(function (m) {
-            return m.y;
-          }));
-        }
-      }
+      vm._scales.magnitude = d3.scaleLinear().range(vm._config.magnitudeRange != undefined ? vm._config.magnitudeRange : [7, 20]).domain(magnitudeMinMax).nice();
 
       if (vm._config.xAxis.scaleDomain && Array.isArray(vm._config.xAxis.scaleDomain)) {
         vm._scales.x.domain(vm._config.xAxis.scaleDomain);
@@ -6455,54 +6755,194 @@
       return vm;
     };
 
-    Scatter.prototype.draw = function () {
+    Scatter.drawLabels = function () {
       var vm = this;
+      var yCoords = [];
+      var xCoords = [];
+      var repeat = [];
 
-      //Call the tip
-      vm._chart._svg.call(vm._tip);
+      vm.chart.svg().selectAll('.dbox-label').data(vm._data).enter().append('text').attr('class', 'dbox-label').attr('transform', function (d, index) {
+        var xCoord;
+        if (vm._config.xAxis.scale == 'ordinal' || vm._config.xAxis.scale == 'band') {
+          xCoord = vm._scales.x(d.x) + vm._scales.x.bandwidth() / 2 - vm._scales.magnitude(d.magnitude) / 2;
+        } else {
+          xCoord = vm._scales.x(d.x);
+        }
+        xCoords.push(d.datum[vm._config.x]);
 
-      var circles = vm._chart._svg.selectAll(".dot").data(vm._data)
-      //.data(vm._data, function(d){ return d.key})
-      .enter().append("circle").attr("class", "dot").attr("class", function (d, i) {
-        return d.properties !== undefined && d.properties.id !== undefined ? "scatter-" + d.properties.id : "scatter-" + i;
-      }).attr("r", function (d) {
-        return vm._scales.radius(d.radius);
-      }).attr("cx", function (d) {
-        if (vm._config.xAxis.scale == 'ordinal' || vm._config.xAxis.scale == 'band') return vm._scales.x(d.x) + Math.random() * (vm._scales.x.bandwidth() - d.size * 2);else return vm._scales.x(d.x);
-      }).attr("cy", function (d) {
-        if (vm._config.yAxis.scale == 'ordinal' || vm._config.yAxis.scale == 'band') return vm._scales.y(d.y) + Math.random() * (vm._scales.y.bandwidth() - d.size * 2);else return vm._scales.y(d.y);
-      }).style("fill", function (d) {
-        return d.color.slice(0, 1) !== '#' ? vm._scales.color(d.color) : d.color;
-      }).style("opacity", vm._config.opacity !== undefined ? vm._config.opacity : 1).on('mouseover', function (d, i) {
-        if (vm._config.mouseover) {
-          vm._config.mouseover.call(vm, d, i);
+        var yCoord;
+        var space = 15;
+        if (vm._config.yAxis.scale == 'ordinal' || vm._config.yAxis.scale == 'band') {
+          yCoord = vm._scales.y(d.y) + vm._scales.y.bandwidth() / 2 - vm._scales.magnitude(d.magnitude) / 2;
+          if (yCoords.indexOf(Math.ceil(yCoord)) !== -1) {
+            repeat.push(Math.ceil(yCoord));
+            var current = null;
+            var cnt = 0;
+            for (var i = 0; i < repeat.length; i++) {
+              if (repeat[i] != current) {
+                current = repeat[i];
+                cnt = 1;
+              } else {
+                cnt++;
+              }
+
+              space = space * cnt;
+            }
+            yCoord = yCoord + space;
+          }
+        } else {
+          yCoord = vm._scales.y(d.y);
+          if (yCoords.indexOf(Math.ceil(yCoord)) !== -1) {
+            repeat.push(Math.ceil(yCoord));
+            var _current = null;
+            var _cnt = 0;
+            for (var _i = 0; _i < repeat.length; _i++) {
+              if (repeat[_i] != _current) {
+                _current = repeat[_i];
+                _cnt = 1;
+              } else {
+                _cnt++;
+              }
+
+              space = space * _cnt;
+            }
+            yCoord = yCoord + space;
+          }
         }
-        vm._tip.show(d, d3.select(this).node());
-      }).on('mouseout', function (d, i) {
-        if (vm._config.mouseout) {
-          vm._config.mouseout.call(this, d, i);
+        yCoords.push(Math.ceil(yCoord));
+
+        if (xCoords[index - 1] !== d.datum[vm._config.x]) {
+          yCoords = [];
+          repeat = [];
         }
-        vm._tip.hide(d, d3.select(this).node());
-      }).on("click", function (d, i) {
-        if (vm._config.onclick) {
-          vm._config.onclick.call(this, d, i);
-        }
+
+        return 'translate(' + (xCoord + 10) + ',' + (yCoord - 20) + ')';
+      }).text(function (d) {
+        var allText = '';
+        allText += d.color ? d.color : '';
+        allText += ' ';
+        allText += d.datum[vm._config.magnitude] ? vm.utils.format(null, true)(d.datum[vm._config.magnitude]) : '';
+        return allText;
       });
+    };
+
+    Scatter.draw = function () {
+      var vm = this;
+      // Call the tip
+      vm.chart.svg().call(vm._tip);
+
+      // Squares
+      if (vm._config.figureType === 'square') {
+        vm.chart.svg().selectAll('square').data(vm._data).enter().append('rect').attr('class', 'square').attr('class', function (d, i) {
+          //Backward compability with d.properties
+          var id = d.properties !== undefined && d.properties.id !== undefined ? d.properties.id : false;
+          id = vm._config.id ? vm._config.id : false;
+          return id ? 'scatter-' + d.datum[id] : 'scatter-' + i;
+        }).attr('width', function (d) {
+          return vm._scales.magnitude(d.magnitude);
+        }).attr('height', function (d) {
+          return vm._scales.magnitude(d.magnitude);
+        }).attr('x', function (d) {
+          if (vm._config.xAxis.scale == 'ordinal' || vm._config.xAxis.scale == 'band') {
+            return vm._scales.x(d.x) + vm._scales.x.bandwidth() / 2 - vm._scales.magnitude(d.magnitude) / 2;
+          } else {
+            return vm._scales.x(d.x);
+          }
+        }).attr('y', function (d) {
+          if (vm._config.yAxis.scale == 'ordinal' || vm._config.yAxis.scale == 'band') {
+            return vm._scales.y(d.y) + vm._scales.y.bandwidth() / 2 - vm._scales.magnitude(d.magnitude) / 2;
+          } else {
+            return vm._scales.y(d.y);
+          }
+        }).style('fill', function (d) {
+          return String(d.color).slice(0, 1) !== '#' ? vm._scales.color(d.color) : d.color;
+        }).style('opacity', vm._config.opacity !== undefined ? vm._config.opacity : 1).on('mouseover', function (d, i) {
+          if (vm._config.events.mouseover) {
+            vm._config.events.mouseover.call(vm, d, i);
+          }
+          vm._tip.show(d, d3.select(this).node());
+        }).on('mouseout', function (d, i) {
+          if (vm._config.events.mouseout) {
+            vm._config.events.mouseout.call(this, d, i);
+          }
+          vm._tip.hide(d, d3.select(this).node());
+        }).on('click', function (d, i) {
+          if (vm._config.events.onClickElement) {
+            vm._config.events.onClickElement.call(this, d, i);
+          }
+        });
+      }
+      // Circles
+      else {
+          vm.chart.svg().selectAll('.dot').data(vm._data)
+          //.data(vm._data, function(d){ return d.key})
+          .enter().append('circle').attr('class', 'dot').attr('class', function (d, i) {
+            //Backward compability with d.properties
+            var id = d.properties !== undefined && d.properties.id !== undefined ? d.properties.id : false;
+            id = vm._config.id ? vm._config.id : false;
+            return id ? 'scatter-' + d.datum[id] : 'scatter-' + i;
+          }).attr('r', function (d) {
+            return vm._scales.radius(d.radius);
+          }).attr('cx', function (d) {
+            if (vm._config.xAxis.scale == 'ordinal' || vm._config.xAxis.scale == 'band') return vm._scales.x(d.x) + vm._scales.x.bandwidth() / 2;else return vm._scales.x(d.x);
+
+            /*  if(vm._config.xAxis.scale == 'ordinal' || vm._config.xAxis.scale == 'band')
+              return vm._scales.x(d.x) + (Math.random() * (vm._scales.x.bandwidth() - (d.size * 2)));
+            else 
+              return vm._scales.x(d.x); */
+          }).attr('cy', function (d) {
+            if (vm._config.yAxis.scale == 'ordinal' || vm._config.yAxis.scale == 'band') return vm._scales.y(d.y) + vm._scales.y.bandwidth() / 2;else return vm._scales.y(d.y);
+
+            /* if(vm._config.yAxis.scale == 'ordinal' || vm._config.yAxis.scale == 'band')
+              return vm._scales.y(d.y) + (Math.random() * (vm._scales.y.bandwidth() - (d.size * 2)));
+            else 
+              return vm._scales.y(d.y); */
+          }).style('fill', function (d) {
+            return String(d.color).slice(0, 1) !== '#' ? vm._scales.color(d.color) : d.color;
+          }).style('opacity', vm._config.opacity !== undefined ? vm._config.opacity : 1).on('mouseover', function (d, i) {
+            if (vm._config.events.mouseover) {
+              vm._config.events.mouseover.call(vm, d, i);
+            }
+            vm._tip.show(d, d3.select(this).node());
+          }).on('mouseout', function (d, i) {
+            if (vm._config.events.mouseout) {
+              vm._config.events.mouseout.call(this, d, i);
+            }
+            vm._tip.hide(d, d3.select(this).node());
+          }).on('click', function (d, i) {
+            if (vm._config.events.onClickElement) {
+              vm._config.events.onClickElement.call(this, d, i);
+            }
+          });
+        }
+
+      if (vm._config.regression === true) {
+        var line = d3.line().x(function (d) {
+          return vm._scales.x(d.x);
+        }).y(function (d) {
+          return vm._scales.y(d.yhat);
+        });
+
+        vm.chart.svg().append('path').datum(vm._data).attr('class', 'line').attr('d', line).style('stroke', 'rgb(251, 196, 58)');
+      }
+
+      Scatter.drawLabels();
 
       return vm;
     };
 
-    Scatter.prototype.select = function (id) {
+    Scatter.select = function (id) {
       var vm = this;
-      return vm._chart._svg.select("circle.scatter-" + id);
+      return vm.chart.svg().select('circle.scatter-' + id);
     };
 
-    Scatter.prototype.selectAll = function (id) {
+    Scatter.selectAll = function () {
       var vm = this;
-      return vm._chart._svg.selectAll("circle");
+      return vm.chart.svg().selectAll('circle');
     };
 
-    return new Scatter(config);
+    Scatter.init(config);
+    return Scatter;
   }
 
   /*
@@ -6601,7 +7041,7 @@
 
     Spineplot.format = function (format) {
       var vm = this;
-      if (typeof format == 'function' || format instanceof Function) vm.utils.format = format;else vm.utils.format = d3$1.format(format);
+      if (typeof format == 'function' || format instanceof Function) vm.utils.format = format;else vm.utils.format = d3.format(format);
       return vm;
     };
 
@@ -6650,8 +7090,8 @@
         d.x1 = total + d[vm._config.value];
         total += +d[vm._config.value];
         if (vm._config.hasOwnProperty('stackBy') && Array.isArray(vm._config.stackBy) && vm._config.stackBy.length > 0) {
-          d.stackValues = d3$1.stack().keys(vm._config.stackBy)([d]);
-          d.totalCollapse = d3$1.sum(d.stackValues, function (stack) {
+          d.stackValues = d3.stack().keys(vm._config.stackBy)([d]);
+          d.totalCollapse = d3.sum(d.stackValues, function (stack) {
             return stack[0][1] - stack[0][0];
           });
         }
@@ -6660,7 +7100,7 @@
 
       if (vm._config.hasOwnProperty('quantiles')) {
         vm._quantiles = vm._setQuantile(data);
-        vm._minMax = d3$1.extent(data, function (d) {
+        vm._minMax = d3.extent(data, function (d) {
           return +d[vm._config.fill];
         });
       }
@@ -6716,7 +7156,7 @@
           range: [vm.chart.height, 0],
           minZero: true
         };
-        vm._scales.y = d3$1.scaleLinear().range(config.range).domain([0, 1]);
+        vm._scales.y = d3.scaleLinear().range(config.range).domain([0, 1]);
       }
 
       //Stack bars on the yAxis
@@ -6728,7 +7168,7 @@
           range: [vm.chart.height, 0],
           minZero: true
         };
-        vm._scales.x = d3$1.scaleLinear().range(config.range).domain([0, 1]);
+        vm._scales.x = d3.scaleLinear().range(config.range).domain([0, 1]);
 
         /* Generate y scale */
         config = {
@@ -6742,7 +7182,7 @@
       //vm.chart.scales.x = vm._scales.x;
       //vm.chart.scales.y = vm._scales.y;
 
-      if (vm._config.hasOwnProperty('colors')) vm._scales.color = d3$1.scaleOrdinal(vm._config.colors);else vm._scales.color = d3$1.scaleOrdinal(d3$1.schemeCategory10);
+      if (vm._config.hasOwnProperty('colors')) vm._scales.color = d3.scaleOrdinal(vm._config.colors);else vm._scales.color = d3.scaleOrdinal(d3.schemeCategory10);
 
       return vm;
     };
@@ -6756,7 +7196,7 @@
           var rectW = vm._scales.x(sv[0].data[vm._config.value]);
           var rectH = vm._scales.y(sv[0][0] / sv[0].data.totalCollapse) - vm._scales.y(sv[0][1] / sv[0].data.totalCollapse);
           if (rectH > 25 && rectW > 112) {
-            d3$1.select(el).append('text').attr('class', 'dbox-label').attr('text-anchor', 'middle').attr('transform', function () {
+            d3.select(el).append('text').attr('class', 'dbox-label').attr('text-anchor', 'middle').attr('transform', function () {
               return 'translate(' + (vm._scales.x(sv[0].data.x0) + rectW / 2) + ',' + (sv[0][1] ? vm._scales.y(sv[0][1] / sv[0].data.totalCollapse) + 20 : vm._scales.y(0) + 20) + ')';
             }).text(function () {
               return 'X: ' + vm.utils.format(vm._config.xAxis)(sv[0].data[vm._config.value]) + ', Y: ' + vm.utils.format(vm._config.yAxis)(sv[0].data[sv.key]);
@@ -6795,10 +7235,10 @@
           return d[vm._config.category];
         });
 
-        var labelMaxWidth = d3$1.min(vm._data, function (d) {
+        var labelMaxWidth = d3.min(vm._data, function (d) {
           return (vm._scales.x(d.x1) - vm._scales.x(d.x0)) * 0.9;
         });
-        var largestLabelWidth = d3$1.max(vm._xLabels.nodes(), function (node) {
+        var largestLabelWidth = d3.max(vm._xLabels.nodes(), function (node) {
           return node.getComputedTextLength();
         });
 
@@ -6808,16 +7248,16 @@
           //const currentWidth = this.getComputedTextLength();
           //let labelMaxWidth = (vm._scales.x(d.x1) - vm._scales.x(d.x0)) * 0.9;
           if (largestLabelWidth < labelMaxWidth * 2) {
-            d3$1.select(this).call(vm.utils.wrap, labelMaxWidth, axesTip);
+            d3.select(this).call(vm.utils.wrap, labelMaxWidth, axesTip);
           } else {
-            d3$1.select(this).attr('text-anchor', 'end').attr('dy', 0).attr('transform', 'translate(3,-8)rotate(-90)');
+            d3.select(this).attr('text-anchor', 'end').attr('dy', 0).attr('transform', 'translate(3,-8)rotate(-90)');
             var newLabelMaxWidth = vm._config.size.margin.bottom * 0.9;
             if (this.getComputedTextLength() > newLabelMaxWidth) {
               (function () {
-                d3$1.select(_this).on('mouseover', axesTip.show).on('mouseout', axesTip.hide);
+                d3.select(_this).on('mouseover', axesTip.show).on('mouseout', axesTip.hide);
                 var i = 1;
                 while (_this.getComputedTextLength() > newLabelMaxWidth) {
-                  d3$1.select(_this).text(function (d) {
+                  d3.select(_this).text(function (d) {
                     return (d[vm._config.category] + '').slice(0, -i) + '...';
                   }).attr('title', d);
                   ++i;
@@ -6838,7 +7278,7 @@
 
             if (diffPos1 < numSize - 2 || diffPos2 < numSize - 2) {
               if (lessThanPrev || lessThanPost) {
-                d3$1.select(this).remove();
+                d3.select(this).remove();
               }
             }
           }
@@ -6859,11 +7299,11 @@
         }).attr('stroke', 'white').attr('stroke-width', 1).style('opacity', 0.9).on('mouseover', function (d, i) {
           if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
             //OnHover colors
-            d3$1.select(this).attr('fill', function (d) {
+            d3.select(this).attr('fill', function (d) {
               return vm._getQuantileColor(d[vm._config.fill], 'onHover');
             });
           }
-          vm._tip.show(d, d3$1.select(this).node());
+          vm._tip.show(d, d3.select(this).node());
 
           if (vm._config.hasOwnProperty('onmouseover')) {
             //External function call, must be after all the internal code; allowing the user to overide 
@@ -6872,7 +7312,7 @@
         }).on('mouseout', function (d, i) {
           if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
             //OnHover reset default color
-            d3$1.select(this).attr('fill', function (d) {
+            d3.select(this).attr('fill', function (d) {
               return vm._getQuantileColor(d[vm._config.fill], 'default');
             });
           }
@@ -6926,10 +7366,10 @@
         return d[vm._config.category];
       });
 
-      var labelMaxWidth = d3$1.min(vm._data, function (d) {
+      var labelMaxWidth = d3.min(vm._data, function (d) {
         return (vm._scales.x(d.x1) - vm._scales.x(d.x0)) * 0.9;
       });
-      var largestLabelWidth = d3$1.max(vm._xLabels.nodes(), function (node) {
+      var largestLabelWidth = d3.max(vm._xLabels.nodes(), function (node) {
         return node.getComputedTextLength();
       });
 
@@ -6939,16 +7379,16 @@
         //const currentWidth = this.getComputedTextLength();
         //let labelMaxWidth = (vm._scales.x(d.x1) - vm._scales.x(d.x0)) * 0.9;
         if (largestLabelWidth < labelMaxWidth * 2) {
-          d3$1.select(this).call(vm.utils.wrap, labelMaxWidth, axesTip);
+          d3.select(this).call(vm.utils.wrap, labelMaxWidth, axesTip);
         } else {
-          d3$1.select(this).attr('text-anchor', 'end').attr('dy', 0).attr('transform', 'translate(3,-8)rotate(-90)');
+          d3.select(this).attr('text-anchor', 'end').attr('dy', 0).attr('transform', 'translate(3,-8)rotate(-90)');
           var newLabelMaxWidth = vm._config.size.margin.bottom * 0.9;
           if (this.getComputedTextLength() > newLabelMaxWidth) {
             (function () {
-              d3$1.select(_this2).on('mouseover', axesTip.show).on('mouseout', axesTip.hide);
+              d3.select(_this2).on('mouseover', axesTip.show).on('mouseout', axesTip.hide);
               var i = 1;
               while (_this2.getComputedTextLength() > newLabelMaxWidth) {
-                d3$1.select(_this2).text(function (d) {
+                d3.select(_this2).text(function (d) {
                   return (d[vm._config.category] + '').slice(0, -i) + '...';
                 }).attr('title', d);
                 ++i;
@@ -6976,11 +7416,11 @@
       }).on('mouseover', function (d, i) {
         if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
           //OnHover colors
-          d3$1.select(this).attr('fill', function (d) {
+          d3.select(this).attr('fill', function (d) {
             return vm._getQuantileColor(d[vm._config.fill], 'onHover');
           });
         }
-        vm._tip.show(d, d3$1.select(this).node());
+        vm._tip.show(d, d3.select(this).node());
 
         if (vm._config.hasOwnProperty('onmouseover')) {
           //External function call. It must be after all the internal code; allowing the user to overide 
@@ -6989,7 +7429,7 @@
       }).on('mouseout', function (d, i) {
         if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
           //OnHover reset default color
-          d3$1.select(this).attr('fill', function (d) {
+          d3.select(this).attr('fill', function (d) {
             return vm._getQuantileColor(d[vm._config.fill], 'default');
           });
         }
@@ -7037,11 +7477,11 @@
       }).on('mouseover', function (d, i) {
         if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
           //OnHover colors
-          d3$1.select(this).attr('fill', function (d) {
+          d3.select(this).attr('fill', function (d) {
             return vm._getQuantileColor(d[vm._config.fill], 'onHover');
           });
         }
-        vm._tip.show(d, d3$1.select(this).node());
+        vm._tip.show(d, d3.select(this).node());
 
         if (vm._config.hasOwnProperty('onmouseover')) {
           //External function call. It must be after all the internal code; allowing the user to overide 
@@ -7050,7 +7490,7 @@
       }).on('mouseout', function (d, i) {
         if (vm._config.hasOwnProperty('quantiles') && vm._config.quantiles.hasOwnProperty('colorsOnHover')) {
           //OnHover reset default color
-          d3$1.select(this).attr('fill', function (d) {
+          d3.select(this).attr('fill', function (d) {
             return vm._getQuantileColor(d[vm._config.fill], 'default');
           });
         }
@@ -7095,23 +7535,23 @@
           quantile.push(0);
 
           for (var i = 1; i <= vm._config.quantiles.buckets - 1; i++) {
-            quantile.push(d3$1.quantile(aux, i * 1 / (vm._config.quantiles.buckets - 1)));
+            quantile.push(d3.quantile(aux, i * 1 / (vm._config.quantiles.buckets - 1)));
           }
         } else {
-          quantile.push(d3$1.quantile(values, 0));
+          quantile.push(d3.quantile(values, 0));
           for (var j = 1; j <= vm._config.quantiles.buckets; j++) {
-            quantile.push(d3$1.quantile(values, j * 1 / vm._config.quantiles.buckets));
+            quantile.push(d3.quantile(values, j * 1 / vm._config.quantiles.buckets));
           }
         }
       } else {
-        quantile = [d3$1.quantile(values, 0), d3$1.quantile(values, 0.2), d3$1.quantile(values, 0.4), d3$1.quantile(values, 0.6), d3$1.quantile(values, 0.8), d3$1.quantile(values, 1)];
+        quantile = [d3.quantile(values, 0), d3.quantile(values, 0.2), d3.quantile(values, 0.4), d3.quantile(values, 0.6), d3.quantile(values, 0.8), d3.quantile(values, 1)];
       }
 
       //@TODO - VALIDATE WHEN ZEROS NEED TO BE PUT ON QUANTILE 1 AND RECALCULATE NON ZERO VALUES INTO THE REST OF THE BUCKETS
       if (vm._config.quantiles && vm._config.quantiles.buckets && vm._config.quantiles.buckets === 5) {
 
         if (quantile[1] === quantile[2] && quantile[2] === quantile[3] && quantile[3] === quantile[4] && quantile[4] === quantile[5]) {
-          quantile = [d3$1.quantile(values, 0), d3$1.quantile(values, 0.2)];
+          quantile = [d3.quantile(values, 0), d3.quantile(values, 0.2)];
         }
       }
 
@@ -7185,25 +7625,147 @@
   /* Simple timeline example
    * Single and multiline timelines
    */
+  function timeline (config, helper) {
+    var Timeline = Object.create(helper);
 
-  function timeline (config) {
-
-    var parseDate = d3.timeParse('%Y-%m-%d');
-
-    function Timeline(config) {
+    Timeline.init = function (config) {
       var vm = this;
       vm._config = config ? config : {};
       vm._data = [];
       vm._scales = {};
       vm._axes = {};
 
-      vm._line = d3.line().curve(d3.curveBasis).x(function (d) {
+      vm._config.parseDate = d3.timeParse('%Y-%m-%d');
+      vm._config.curve = d3.curveLinear;
+
+      vm._tip = vm.utils.d3.tip().attr('class', 'd3-tip ' + (vm._config.tooltip && vm._config.tooltip.classed ? vm._config.tooltip.classed : '')).html(vm._config.tip && vm._config.tip.html ? vm._config.tip.html : function (d) {
+        var scaleColor = vm._scales.color !== false ? vm._scales.color(d.name) : vm._getQuantileColor(d.name, 'default');
+        if (vm.chart.config.styles) {
+          var html = '<div style=\'\n            line-height: 1; \n            opacity: ' + vm.chart.style.tooltip.opacity + '; \n            font-weight: ' + vm.chart.style.tooltip.text.fontWeight + '; \n            font-size: ' + vm.chart.style.tooltip.text.fontSize + '; \n            color: ' + vm.chart.style.tooltip.text.textColor + ';\n            font-family: ' + vm.chart.style.tooltip.text.fontFamily + ';\n            background-color: ' + vm.chart.style.tooltip.backgroundColor + '; \n            padding: ' + vm.chart.style.tooltip.text.padding + ';   \n            border: ' + vm.chart.style.tooltip.border.width + ' solid ' + vm.chart.style.tooltip.border.color + ';  \n            border-radius:  ' + vm.chart.style.tooltip.border.radius + ';\'>';
+          html += '<strong style=\'color:' + vm.chart.style.tooltip.text.fontColor + ';\'>';
+        } else {
+          var html = '<div> <strong>';
+        }
+        html += '<strong style=\'color:' + scaleColor + '\'>' + d.name + ': </strong>';
+        html += d.y ? '<span >' + (Number.isNaN(+d.y) ? d.y : vm.utils.format(vm._config.yAxis)(d.y)) + '</span>' : '';
+        html += '</div>';
+
+        return html;
+      });
+    };
+
+    //-------------------------------
+    //User config functions
+    Timeline.x = function (col) {
+      var vm = this;
+      vm._config.x = col;
+      return vm;
+    };
+
+    Timeline.parseDate = function (format) {
+      var vm = this;
+      vm._config.parseDate = d3.timeParse(format);
+      return vm;
+    };
+
+    Timeline.y = function (col) {
+      var vm = this;
+      vm._config.y = col;
+      return vm;
+    };
+
+    Timeline.series = function (arr) {
+      var vm = this;
+      vm._config.series = arr;
+      return vm;
+    };
+
+    Timeline.curve = function (curve) {
+      var vm = this;
+      vm._config.curve = curve;
+      return vm;
+    };
+
+    Timeline.fill = function (col) {
+      var vm = this;
+      vm._config.fill = col;
+      return vm;
+    };
+
+    Timeline.colors = function (colors) {
+      var vm = this;
+      if (Array.isArray(colors)) {
+        //Using an array of colors for the range
+        vm._config.colors = colors;
+      } else {
+        //Using a preconfigured d3.scale
+        vm._scales.color = colors;
+      }
+      return vm;
+    };
+
+    Timeline.tip = function (tip) {
+      var vm = this;
+      vm._config.tip = tip;
+      vm._tip.html(vm._config.tip);
+      return vm;
+    };
+
+    //-------------------------------
+    //Triggered by the chart.js;
+    Timeline.data = function (data) {
+      var vm = this;
+
+      vm._data = [];
+      data.forEach(function (d) {
+        var tmp = Object.assign({}, d);
+        if (d[vm._config.x]) {
+          try {
+            d[vm._config.x].getTime();
+            if (!Number.isNaN(d[vm._config.x].getTime())) {
+              tmp.x = d[vm._config.x];
+            }
+          } catch (err) {
+            tmp.x = vm._config.parseDate(d[vm._config.x]);
+          }
+        }
+
+        tmp.color = d[vm._config.fill];
+        delete tmp[vm._config.x];
+        vm._data.push(tmp);
+      });
+
+      //Sort the data by d.x
+      vm._data = vm._data.sort(function (a, b) {
+        return d3.ascending(a.x, b.x);
+      });
+
+      vm._lines = vm._config.y ? vm._config.y : vm._config.series;
+
+      vm._lines = vm._lines.map(function (name) {
+        return {
+          name: name,
+          values: vm._data.map(function (d) {
+            return { x: d.x, y: +d[name] };
+          })
+        };
+      });
+
+      vm._lines.forEach(function (n) {
+        n.values = n.values.filter(function (v) {
+          return !isNaN(v.y);
+        });
+      });
+
+      vm._line = d3.line().curve(vm._config.curve).defined(function (d) {
+        return d.y !== undefined;
+      }).x(function (d) {
         return vm._scales.x(d.x);
       }).y(function (d) {
         return vm._scales.y(d.y);
       });
 
-      vm._area = d3.area().curve(d3.curveBasis).x(function (d) {
+      vm._area = d3.area().curve(vm._config.curve).x(function (d) {
         if (d.alreadyScaled && d.alreadyScaled === true) {
           return d.x;
         } else {
@@ -7216,90 +7778,18 @@
           return vm._scales.y(d.y);
         }
       });
-    }
-
-    //-------------------------------
-    //User config functions
-    Timeline.prototype.x = function (col) {
-      var vm = this;
-      vm._config.x = col;
-      return vm;
-    };
-
-    Timeline.prototype.y = function (col) {
-      var vm = this;
-      vm._config.y = col;
-      return vm;
-    };
-
-    Timeline.prototype.series = function (arr) {
-      var vm = this;
-      vm._config.series = arr;
-      return vm;
-    };
-
-    Timeline.prototype.color = function (col) {
-      var vm = this;
-      vm._config.color = col;
-      return vm;
-    };
-
-    Timeline.prototype.end = function () {
-      var vm = this;
-      return vm._chart;
-    };
-
-    //-------------------------------
-    //Triggered by the chart.js;
-    Timeline.prototype.chart = function (chart) {
-      var vm = this;
-      vm._chart = chart;
-      return vm;
-    };
-
-    Timeline.prototype.data = function (data) {
-      var vm = this;
-
-      vm._data = data.map(function (d) {
-        d.x = parseDate(d[vm._config.x]);
-        d.color = d[vm._config.color];
-        delete d[vm._config.x];
-        return d;
-      });
-
-      vm._lines = vm._config.y ? vm._config.y : vm._config.series;
-
-      vm._lines = vm._lines.map(function (name) {
-        return {
-          name: name,
-          values: data.map(function (d) {
-            return { x: d.x, y: +d[name] };
-          })
-        };
-      });
 
       return vm;
     };
 
-    Timeline.prototype.scales = function (s) {
+    Timeline.scales = function () {
       var vm = this;
-      vm._scales = s;
-      return vm;
-    };
 
-    Timeline.prototype.axes = function (a) {
-      var vm = this;
-      vm._axes = a;
-      return vm;
-    };
-
-    Timeline.prototype.domains = function () {
-      var vm = this;
       vm._xMinMax = d3.extent(vm._data, function (d) {
         return d.x;
       });
 
-      vm._yMinMax = [d3.min(vm._lines, function (c) {
+      vm._yMinMax = [vm._config.yAxis.minZero ? 0 : d3.min(vm._lines, function (c) {
         return d3.min(c.values, function (v) {
           return v.y;
         });
@@ -7309,96 +7799,177 @@
         });
       })];
 
+      config = {
+        column: vm._config.x,
+        type: vm._config.xAxis.scale,
+        range: [0, vm.chart.width],
+        minZero: false
+      };
+      vm._scales.x = vm.utils.generateScale(vm._data, config);
+
+      config = {
+        column: vm._config.y,
+        type: vm._config.yAxis.scale,
+        range: [vm.chart.height, 0],
+        minZero: vm._config.yAxis.minZero
+      };
+      vm._scales.y = vm.utils.generateScale(vm._data, config);
+
       vm._scales.x.domain(vm._xMinMax);
-      vm._scales.y.domain(vm._yMinMax);
+      vm._scales.y.domain(vm._yMinMax).nice();
 
-      console.log(vm._scales.x.domain(), vm._chart._scales.x.domain());
+      if (vm._config.hasOwnProperty('colors')) vm._scales.color = d3.scaleOrdinal(vm._config.colors);else vm._scales.color = d3.scaleOrdinal(d3.schemeCategory10);
 
-      vm._chart._scales = vm._scales;
+      if (vm._scales.x.domain()[0].getTime() == vm._scales.x.domain()[1].getTime()) {
+        // max and min are the same, there's only one datum
+        var oldDomain = vm._scales.x.domain();
+        var oldRange = vm._scales.x.range();
+
+        vm._scales.x.domain([new Date(oldDomain[0].getTime() - 1), oldDomain[0], oldDomain[1]]).range([0, oldRange[0] + (oldRange[1] - oldRange[0]) / 2, oldRange[1]]);
+      }
 
       return vm;
     };
 
-    Timeline.prototype.draw = function () {
+    Timeline.drawLabels = function () {
       var vm = this;
+      var chartW = vm.chart.width;
 
-      var lines = vm._chart._svg.selectAll(".lines").data(vm._lines).enter().append("g").attr("class", "lines");
+      vm.chart.svg().selectAll('.dots').each(function (dat) {
+        var el = this;
+        dat.values.forEach(function (c, index) {
+          d3.select(el).append('text').attr('class', 'dbox-label').attr('text-anchor', 'start').attr('transform', function (d) {
+            if (vm._scales.x(d.values[index].x) >= chartW) {
+              d3.select(this).attr('text-anchor', 'end');
+              return 'translate (' + (vm._scales.x(d.values[index].x) - 10) + ',' + (vm._scales.y(d.values[index].y) + 4) + ')';
+            }
+            d3.select(this).attr('text-anchor', 'start');
+            return 'translate (' + (vm._scales.x(d.values[index].x) + 10) + ',' + (vm._scales.y(d.values[index].y) + 4) + ')';
+          }).text(function () {
+            return c.y ? vm.utils.format(vm._config.yAxis, true)(c.y) : '';
+          });
+        });
+      });
+    };
 
-      var path = vm._chart._svg.selectAll(".lines").append("path").attr("class", "line").attr("d", function (d) {
+    Timeline.draw = function () {
+      var vm = this;
+      //Call the tip
+      vm.chart.svg().call(vm._tip);
+
+      if (vm._scales.x.domain().length === 3) {
+        vm.chart.svg().select('.x.axis .tick').remove();
+      }
+
+      var lines = vm.chart.svg().selectAll('.lines').data(vm._lines).enter().append('g').attr('class', 'lines');
+
+      var path = vm.chart.svg().selectAll('.lines').append('path').attr('class', 'line').attr('d', function (d) {
         return vm._line(d.values);
-      }).style("stroke", function (d) {
-        if (d.name == "Airbus") {
-          return "rgb(000,255,000)";
-        } else {
-          return "#000";
+      }).attr('stroke', function (d) {
+        return vm._scales.color !== false ? vm._scales.color(d.name) : vm._getQuantileColor(d.name, 'default');
+      }).attr('stroke-width', 4).attr('fill', 'none');
+
+      /**By default it draws dots on data points with 4px radius*/
+      var dots = vm.chart.svg().selectAll('.dots').data(vm._lines).enter().append('g').attr('class', 'dots').selectAll('.circle').data(function (d) {
+        d.values.forEach(function (el) {
+          el.name = d.name;
+        });
+        return d.values;
+      }).enter().append('circle').attr('class', 'dot').attr('cx', function (d, i) {
+        return vm._scales.x(d.x);
+      }).attr('cy', function (d) {
+        return vm._scales.y(d.y);
+      }).attr('r', 4).style('stroke', function (d) {
+        return vm._scales.color !== false ? vm._scales.color(d.name) : vm._getQuantileColor(d.name, 'default');
+      }).style('stroke-width', 2).style('fill', '#fff').style('fill-opacity', 0.5).on('mouseover', function (d, i) {
+        if (vm._config.mouseover) {
+          //vm._config.mouseover.call(vm, d, i);
         }
+        vm._tip.show(d, d3.select(this).node());
+      }).on('mouseout', function (d, i) {
+        if (vm._config.mouseout) {
+          //vm._config.mouseout.call(this, d, i);
+        }
+        vm._tip.hide(d, d3.select(this).node());
       });
 
-      var t = textures.lines().thicker();
+      Timeline.drawLabels();
+      //var t = textures.lines().thicker();
 
-      vm._chart._svg.call(t);
+      //vm.chart.svg().call(t);
 
-      vm._area.y0(vm._scales.y(vm._yMinMax[0]));
-
-      var areas = vm._chart._svg.selectAll(".areas").data(vm._lines).enter().append("g").attr("class", "areas");
-
-      var pathArea = vm._chart._svg.selectAll(".areas").append("path").attr("class", "area").attr("d", function (d) {
-        return vm._area(d.values);
-      }).attr("fill", t.url());
+      /* vm._area.y0(vm._scales.y(vm._yMinMax[0]));
+       var areas = vm.chart.svg().selectAll(".areas")
+        .data(vm._lines)
+      .enter().append("g")
+        .attr("class", "areas");
+       var pathArea  = vm.chart.svg().selectAll(".areas").append("path")
+        .attr("class", "area")
+        .attr("d", function(d) {
+          return vm._area(d.values);
+        }) */
+      //.attr("fill", t.url());
 
       return vm;
     };
 
-    return new Timeline(config);
+    Timeline.init(config);
+    return Timeline;
   }
 
   /* 
    * Simple SVG Treemap Chart
    */
+  function treemap (config, helper) {
 
-  function treemap (config) {
-    function Treemap(config) {
+    var Treemap = Object.create(helper);
+
+    Treemap.init = function (config) {
       var vm = this;
       vm._config = config ? config : {};
       vm._config._padding = 3;
-      vm._config._colorScale = d3.scaleOrdinal(d3.schemeCategory20c);
-      vm._config._format = d3.format(",.1f");
-      vm._config._labels = true;
+      vm._config._labels = false;
       vm._config.tip = function (d) {
-        return d.data.name + "\n" + vm._config._format(d.value);
+        var html = '<div>';
+        if (d.parent.data.name && d.parent.data.name !== 'data') {
+
+          html += '<span>' + d.parent.data.name + '</span><br>';
+        }
+        html += '<span>' + d.data.name + '</span><br>';
+        html += '<span>' + vm.utils.format()(d.value) + '</span>';
+        html += '</div>';
+        return html;
       };
       vm._data = [];
-      vm._scales = {};
+      vm._scales = {
+        color: d3.scaleOrdinal(d3.schemeCategory20c)
+      };
       vm._axes = {};
-      vm._tip = d3.tip().attr('class', 'd3-tip tip-treemap').direction('n').html(vm._config.tip);
-    }
-
-    //-------------------------------
-    //User config functions
-    Treemap.prototype.end = function () {
-      var vm = this;
-      return vm._chart;
+      vm._tip = vm.utils.d3.tip().attr('class', 'd3-tip tip-treemap').direction('n').html(vm._config.tip);
     };
 
-    Treemap.prototype.size = function (col) {
+    Treemap.size = function (col) {
       var vm = this;
       vm._config._size = col;
       return vm;
     };
 
-    Treemap.prototype.colorScale = function (arrayOfColors) {
+    Treemap.colors = function (arrayOfColors, domain) {
       var vm = this;
-      vm._config._colorScale = d3.scaleOrdinal(arrayOfColors);
+      vm._scales.color = d3.scaleOrdinal(arrayOfColors);
+      if (domain) {
+        vm._scales.color.domain(domain);
+      }
       return vm;
     };
 
-    Treemap.prototype.padding = function (padding) {
+    Treemap.padding = function (padding) {
       var vm = this;
       vm._config._padding = padding;
       return vm;
     };
 
-    Treemap.prototype.nestBy = function (keys) {
+    Treemap.nestBy = function (keys) {
       var vm = this;
       if (Array.isArray(keys)) {
         if (keys.length == 0) throw "Error: nestBy() array is empty";
@@ -7414,49 +7985,41 @@
       return vm;
     };
 
-    Treemap.prototype.format = function (format) {
+    Treemap.format = function (format) {
       var vm = this;
-      if (typeof format == 'function' || format instanceof Function) vm._config._format = format;else vm._config._format = d3.format(format);
+      if (typeof format == 'function' || format instanceof Function) vm.utils.format = format;else vm.utils.format = d3.format(format, vm._config.decimals);
       return vm;
     };
 
-    Treemap.prototype.labels = function (bool) {
+    Treemap.labels = function (bool) {
       var vm = this;
       vm._config._labels = Boolean(bool);
       return vm;
     };
 
-    Treemap.prototype.tip = function (tip) {
+    Treemap.tip = function (tip) {
       var vm = this;
       vm._config.tip = tip;
       vm._tip.html(vm._config.tip);
       return vm;
     };
 
-    //-------------------------------
-    //Triggered by the chart.js;
-    Treemap.prototype.chart = function (chart) {
-      var vm = this;
-      vm._chart = chart;
-      return vm;
-    };
-
-    Treemap.prototype.scales = function () {
+    Treemap.scales = function (scales) {
       var vm = this;
       return vm;
     };
 
-    Treemap.prototype.axes = function () {
+    Treemap.axes = function () {
       var vm = this;
       return vm;
     };
 
-    Treemap.prototype.domains = function () {
+    Treemap.domains = function () {
       var vm = this;
       return vm;
     };
 
-    Treemap.prototype.isValidStructure = function (datum) {
+    Treemap.isValidStructure = function (datum) {
       var vm = this;
       if ((typeof datum.name === 'string' || datum.name instanceof String) && Array.isArray(datum.children)) {
         var res = true;
@@ -7471,7 +8034,7 @@
       }
     };
 
-    Treemap.prototype.formatNestedData = function (data) {
+    Treemap.formatNestedData = function (data) {
       var vm = this;
       if (data.key) {
         data.name = data.key;
@@ -7501,7 +8064,7 @@
       }));
     }
 
-    Treemap.prototype.data = function (data) {
+    Treemap.data = function (data) {
       var vm = this;
       // Validate structure like [{name: '', children: [{},{}]}]
       if (data) {
@@ -7548,11 +8111,11 @@
       return vm;
     };
 
-    Treemap.prototype.draw = function () {
+    Treemap.draw = function () {
       var vm = this;
-      vm._chart._svg.call(vm._tip);
+      vm.chart.svg().call(vm._tip);
 
-      var treemap = d3.treemap().tile(d3.treemapResquarify).size([vm._chart._width, vm._chart._height]).round(true).paddingInner(vm._config._padding);
+      var treemap = d3.treemap().tile(d3.treemapResquarify).size([vm.chart.width, vm.chart.height]).round(true).paddingInner(vm._config._padding);
 
       var root = d3.hierarchy(vm._data).eachBefore(function (d) {
         d.data.id = (d.parent ? d.parent.data.id + "." : "") + d.data.name;
@@ -7564,7 +8127,7 @@
 
       treemap(root);
 
-      var cell = vm._chart._svg.selectAll("g").data(root.leaves()).enter().append("g").attr("transform", function (d) {
+      var cell = vm.chart.svg().selectAll("g").data(root.leaves()).enter().append("g").attr("transform", function (d) {
         return "translate(" + d.x0 + "," + d.y0 + ")";
       });
 
@@ -7575,7 +8138,7 @@
       }).attr("height", function (d) {
         return d.y1 - d.y0;
       }).attr("fill", function (d) {
-        return vm._config._colorScale(d.data.id);
+        return vm._scales.color(d.data.name);
       });
 
       cell.append("clipPath").attr("id", function (d) {
@@ -7595,7 +8158,7 @@
           } else return '';
         });
         text.append("tspan").attr('class', 'capitalize').attr("x", 8).attr("y", 45).text(function (d) {
-          return d.value > 2 ? vm._config._format(d.value) : '';
+          return d.value > 2 ? vm.utils.format(null, true)(d.value) : '';
         });
       }
 
@@ -7613,7 +8176,9 @@
 
       return vm;
     };
-    return new Treemap(config);
+
+    Treemap.init(config);
+    return Treemap;
   }
 
   /*
