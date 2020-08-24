@@ -5,7 +5,6 @@
 }(this, (function (exports,d3,_$1) { 'use strict';
 
   var d3Tip = require('d3-tip');
-  var _$2 = require('lodash');
 
   function Helper () {
     var vm = this; // Hard binded to chart
@@ -42,33 +41,33 @@
         throw 'Range is not defined';
       }
       // Used in bars.js when we want to create a groupBy or stackBy bar chart
-      if (config.groupBy && config.groupBy == 'parent') {
+      if (config.groupBy && config.groupBy === 'parent') {
         // Axis of type band
         domains = data.map(function (d) {
           return d[config.column];
         });
-      } else if (config.stackBy && config.stackBy == 'parent') {
+      } else if (config.stackBy && config.stackBy === 'parent') {
         domains = data[0].map(function (d) {
           return d.data[config.column];
         });
-      } else if (config.groupBy == 'children') {
+      } else if (config.groupBy === 'children') {
         // GroupBy Columns
         domains = config.column;
-      } else if (config.groupBy == 'data') {
+      } else if (config.groupBy === 'data') {
         // Considering the highest value on all the columns for each groupBy column
         domains = [0, d3.max(data, function (d) {
           return d3.max(config.column, function (column) {
             return d[column];
           });
         })];
-      } else if (config.stackBy == 'data') {
+      } else if (config.stackBy === 'data') {
         // Using a d3.stack()
         domains = [0, d3.max(data, function (serie) {
           return d3.max(serie, function (d) {
             return d[1];
           });
         })];
-      } else if (config.groupBy == undefined && config.type == 'band') {
+      } else if (config.groupBy === undefined && config.type === 'band') {
         // In case the axis is of type band and there is no groupby
         domains = data.map(function (d) {
           return d[config.column];
@@ -348,7 +347,7 @@
             /*
              * Tested values:
              * 240 -> 9 rows
-             * 170 ->13 rows
+             * 170 -> 13 rows
              */
             viewportHeight = parseInt(viewport.style('height')) - 170;
             visibleRows = Math.ceil(viewportHeight / rowHeight);
@@ -376,7 +375,7 @@
             }).on('click', function (d) {
               // Run the custom function
               var i = data.findIndex(function (x) {
-                return x.name == d.name;
+                return x.name === d.name;
               });
               if (typeof vm._config.events.onClickLegend === 'function') {
                 vm._config.events.onClickLegend.call(this, d, i);
@@ -394,13 +393,6 @@
                 return 'translate(0,' + (vm._config.legendTitle && lineNumber > 1 ? lineNumber * lineHeight + i : 1 + i) * 21 + ')';
               });
             });
-
-            /* d3.select('.legendBox')
-              .append('rect')
-              .attr('width', '160px')
-              .attr('height', rowHeight/2 + 'px')
-              .attr('transform', 'translate(0,' + (legendBoxBackgroundHeight - (rowHeight/2)) + ')')
-              .style('fill', 'white'); */
           });
         }
 
@@ -742,7 +734,7 @@
     };
 
     //------------------------
-    //User
+    // User
     /**
      * User can set config object using this method
      * @param {Object} config - Objec with params to configure the chart (user's configure)
@@ -768,28 +760,28 @@
       var vm = this;
       if (sizeObj) {
         if (sizeObj.margin) {
-          if (sizeObj.margin.left == Number(sizeObj.margin.left)) {
+          if (!Number.isNaN(+sizeObj.margin.left)) {
             vm._config.size.margin.left = sizeObj.margin.left;
             vm._margin.left = sizeObj.margin.left;
           }
-          if (sizeObj.margin.right == Number(sizeObj.margin.right)) {
+          if (!Number.isNaN(+sizeObj.margin.right)) {
             vm._config.size.margin.right = sizeObj.margin.right;
             vm._margin.right = sizeObj.margin.right;
           }
-          if (sizeObj.margin.top == Number(sizeObj.margin.top)) {
+          if (!Number.isNaN(+sizeObj.margin.top)) {
             vm._config.size.margin.top = sizeObj.margin.top;
             vm._margin.top = sizeObj.margin.top;
           }
-          if (sizeObj.margin.bottom == Number(sizeObj.margin.bottom)) {
+          if (!Number.isNaN(+sizeObj.margin.bottom)) {
             vm._config.size.margin.bottom = sizeObj.margin.bottom;
             vm._margin.bottom = sizeObj.margin.bottom;
           }
         }
-        if (sizeObj.width == Number(sizeObj.width)) {
+        if (!Number.isNaN(+sizeObj.width)) {
           vm._config.size.width = sizeObj.width;
           vm._width = sizeObj.width;
         }
-        if (sizeObj.height == Number(sizeObj.height)) {
+        if (!Number.isNaN(+sizeObj.height)) {
           vm._config.size.height = sizeObj.height;
           vm._height = sizeObj.height;
         }
@@ -870,7 +862,7 @@
       var layer;
       var config = _config ? _config : vm._config;
       if (_layer === undefined && _layer === null) {
-        //@Todo Throw Error
+        /** @todo Throw Error */
       } else {
         layer = _layer(config, vm.helper);
         vm.layers.push(layer);
@@ -887,14 +879,14 @@
       var vm = this,
           q;
       vm._scales = vm.scales();
-      //vm._axes   = vm.axes(); CALL THE AXES AFTER DATA LOADING IN ORDER TO UPDATE THE DOMAINS OF THE SCALES
+      // vm._axes   = vm.axes(); // CALL THE AXES AFTER DATA LOADING IN ORDER TO UPDATE THE DOMAINS OF THE SCALES
 
       q = vm.loadData();
 
       q.awaitAll(function (error, results) {
         if (error) throw error;
 
-        if (Array.isArray(results) && results.length == 1) {
+        if (Array.isArray(results) && results.length === 1) {
           vm._data = results[0];
         } else {
           vm._data = results;
@@ -903,14 +895,14 @@
         vm.initLayers();
         vm.drawSVG();
 
-        //@TODO, ONE MAIN AXES THEN ADD THE POSSIBILITY FOR THE LAYER TO OVERRIDE
+        /** @todo ONE MAIN AXES THEN ADD THE POSSIBILITY FOR THE LAYER TO OVERRIDE */
         vm._axes = vm.axes();
         vm.drawAxes();
 
-        //Draw layers after axes
+        // Draw layers after axes
         vm.drawLayers();
 
-        //Trigger load chart event
+        // Trigger load chart event
         if (vm._config.events && vm._config.events.load) {
           vm.dispatch.on('load.chart', vm._config.events.load(vm));
         }
@@ -963,7 +955,7 @@
         scales.x = d3.scaleLinear().range([0, vm._width]);
       }
 
-      //yAxis scale
+      // yAxis scale
       if (vm._config.yAxis && vm._config.yAxis.scale) {
         switch (vm._config.yAxis.scale) {
           case 'linear':
@@ -1014,11 +1006,11 @@
       axes.x = d3.axisBottom(vm._scales.x);
       axes.y = d3.axisLeft(vm._scales.y);
 
-      //remove corners in axis line
+      // Remove corners in axis line
       axes.x.tickSizeOuter(0);
       axes.y.tickSizeOuter(0);
 
-      //Replaced with *addStyle -check
+      // Replaced with *addStyle -check
       if (vm._config.xAxis && vm._config.xAxis.ticks && vm._config.xAxis.ticks.enabled === true && vm._config.xAxis.ticks.style) {
         switch (vm._config.xAxis.ticks.style) {
           case 'straightLine':
@@ -1029,7 +1021,7 @@
             break;
         }
       }
-      //addStyle
+      // addStyle
       if (vm._addStyle.xAxis.ticks.grid) {
         switch (vm._addStyle.xAxis.ticks.grid) {
           case 'straight':
@@ -1057,7 +1049,7 @@
         axes.x.tickFormat(vm._config.xAxis.ticks.format);
       }
 
-      //Replaced with *addStyle -check
+      // Replaced with *addStyle -check
       if (vm._config.yAxis && vm._config.yAxis.ticks && vm._config.yAxis.ticks.enabled === true && vm._config.yAxis.ticks.style) {
         switch (vm._config.yAxis.ticks.style) {
           case 'straightLine':
@@ -1123,7 +1115,7 @@
       vm.layers.forEach(function (ly) {
         ly.data(vm._data).scales();
 
-        //@TODO validate domains from multiple layers
+        /** @todo validate domains from multiple layers */
         vm._scales = ly._scales;
       });
     };
@@ -1131,16 +1123,16 @@
     Chart.drawSVG = function () {
       var vm = this;
 
-      //Remove any previous svg
+      // Remove any previous svg
       d3.select(vm._config.bindTo).select('svg').remove();
       d3.select(vm._config.bindTo).html('');
 
-      //Add the css template class
+      // Add the css template class
       if (vm._config.template) {
         d3.select(vm._config.bindTo).classed(vm._config.template, true);
       }
 
-      //Add title to the chart
+      // Add title to the chart
       if (vm._config && vm._config.title) {
         d3.select(vm._config.bindTo).append('div').attr('class', 'chart-title').html(vm._config.title).style('display', 'flex').style('justify-content', 'center').style('align-items', 'center').style('font-size', vm._addStyle.title.fontSize).style('font-weight', vm._addStyle.title.fontWeight).style('color', vm._addStyle.title.textColor).style('text-align', vm._addStyle.title.textAlign);
 
@@ -1149,9 +1141,9 @@
         }
       }
 
-      //Add Legend to the chart
-      //@TODO - PASS THE STYLES TO DBOX.CSS
-      //@TODO - ALLOW DIFFERENT POSSITIONS FOR THE LEGEND
+      // Add Legend to the chart
+      /** @todo PASS THE STYLES TO DBOX.CSS */
+      /** @todo ALLOW DIFFERENT POSSITIONS FOR THE LEGEND */
       if (vm._config.legend && vm._config.legend.enabled === true && vm._config.legend.position === 'top') {
         var legend = d3.select(vm._config.bindTo).append('div').attr('class', 'chart-legend-top');
 
@@ -1166,15 +1158,10 @@
 
       var width = vm._width + vm._margin.left + vm._margin.right;
       var height = vm._height + vm._margin.top + vm._margin.bottom;
-      //Create the svg
+      // Create the svg
       vm._fullSvg = d3.select(vm._config.bindTo).append('svg').style('font-size', vm._config.chart ? vm._config.chart['font-size'] ? vm._config.chart['font-size'] : '12px' : '12px').attr('width', width).attr('height', height).attr('viewBox', '0 0 ' + width + ' ' + height);
 
       vm._svg = vm._fullSvg.append('g').attr('transform', 'translate(' + vm._margin.left + ',' + vm._margin.top + ')');
-
-      // Call the tip function
-      /*if (vm._config.data.tip){
-        vm._svg.call(vm._tip);
-      }*/
 
       //Apply background color
 
@@ -1226,7 +1213,7 @@
           return o.name;
         }));
       }
-      //Create information tips for each legend
+      // Create information tips for each legend
       var legendTip = vm.helper.utils.d3.tip().html(function (d) {
         return '<div class="title-tip">' + (d.name || d) + '</div>';
       });
@@ -1237,7 +1224,7 @@
       // Add legends title (on top of legendBox)
       if (vm._config.legendTitle) {
         legendBox.append('g').attr('width', '150px').append('text').attr('class', 'legend-title').attr('x', 5).style('font-weight', 'bold').text(vm._config.legendTitle);
-        // wrap legend title if text size exceeds 70% of container
+        // Wrap legend title if text size exceeds 70% of container
         var lWidth = vm._config.size.margin.right;
         var text = d3.selectAll('.legend-title'),
             words = text.text().split(/\s+/).reverse(),
@@ -1262,10 +1249,10 @@
         }
       }
 
-      //Label width
+      // Label width
       var lbWidth = vm._config.size.margin.right * 0.8;
       if (vm._config.legendType === 'checkbox') {
-        //Size and position of every checkbox
+        // Size and position of every checkbox
         var size = 18,
             x = 0,
             _y = 0,
@@ -1296,7 +1283,7 @@
             return d.y;
           });
 
-          //Mark (inside checkbox)
+          // Mark (inside checkbox)
           legendCheck.append('path').attr('d', line(coordinates)).attr('stroke-width', markStrokeWidth).attr('stroke', 'white').attr('fill', 'none').attr('class', 'mark').property('checked', function (d) {
             // External function call. It must be after all the internal code; allowing the user to overide
             return d.active;
@@ -1321,7 +1308,7 @@
             return d.name;
           });
 
-          //cut label text if text size exceeds 80% of container
+          // Cut label text if text size exceeds 80% of container
           legendCheck.selectAll('text').each(function (d) {
             var _this = this;
 
@@ -1343,7 +1330,7 @@
               }
             }
           });
-        }; //legendEnter ends
+        }; // legendEnter ends
 
         // Let scroll legendBox from anywhere inside g container
         legendBox.append('rect').attr('class', 'legendBoxBackground').attr('width', '160px').attr('height', '90%').attr('transform', 'translate(0,0)').style('fill', 'transparent');
@@ -1392,13 +1379,13 @@
         });
         legendBox.call(virtualScroller);
 
-        //End of checkbox case
+        // End of checkbox case
       } else {
         var legend;
         if (vm._config.styles && vm._addStyle.legend.position === 'bottom') {
           legend = legendBox.selectAll('.legend').data(vm._config.legend).enter().append('g').attr('class', 'legend').attr('width', vm._width / (vm._config.legend.length + 1)).attr('transform', function (d, i) {
-            //horizontal position
-            //what if there are too many legends?
+            // Horizontal position
+            // What if there are too many legends?
             return 'translate(' + vm._width / (vm._config.legend.length + 1) * i + ',' + (vm._config.legendTitle && lineNumber > 1 ? lineNumber * lineHeight : 0) * 19 + ')';
           });
         } else {
@@ -1420,11 +1407,11 @@
         }
 
         legend.append('text').attr('x', 20).attr('y', 9).attr('dy', '.35em').attr('text-anchor', 'start').text(function (d) {
-          //External function call. It must be after all the internal code; allowing the user to overide
+          // External function call. It must be after all the internal code; allowing the user to overide
           return d.name;
         });
 
-        //cut label text if text size exceeds 80% of container
+        // Cut label text if text size exceeds 80% of container
         var _lbWidth = vm._config.size.margin.right - 19;
         legend.selectAll('text').each(function (d) {
           var _this3 = this;
@@ -1454,7 +1441,7 @@
 
       legendBox.selectAll('.legend text').attr('fill', vm._addStyle.legend.text.textColor).attr('font-size', vm._addStyle.legend.text.fontSize).attr('font-weight', vm._addStyle.legend.text.fontWeight);
 
-      //Prevent default scrolling of all elements inside legendBox
+      // Prevent default scrolling of all elements inside legendBox
       var isFirefox = typeof InstallTrigger !== 'undefined';
       var support = 'onwheel' in d3.select('.legendBox') ? 'wheel' // Modern browsers support 'wheel'
       : document.onmousewheel !== undefined ? 'mousewheel' // Webkit and IE support at least 'mousewheel'
@@ -1538,7 +1525,7 @@
             d3.selectAll('g.y.axis .tick').remove();
           } else if (vm._config.yAxis.domain.enabled === false && vm._config.yAxis.ticks.enabled === true) {
             d3.select('g.y.axis .domain').remove();
-            //d3.selectAll('g.y.axis .tick text').remove();
+            // d3.selectAll('g.y.axis .tick text').remove();
           }
         } else {
           if (vm._config.yAxis.domain.enabled === false) {
@@ -1574,7 +1561,7 @@
         });
       }
 
-      //Dropdown Y axis
+      // Dropdown Y axis
       if (vm._config.yAxis && vm._config.yAxis.dropdown && vm._config.yAxis.dropdown.enabled === true) {
         var yAxisDropDown = d3.select(vm._config.bindTo).append('div').attr('class', 'dbox-yAxis-select').append('select').on('change', function () {
           vm.updateAxis('y', this.value);
@@ -1646,12 +1633,12 @@
           vm._xAxis.select('.domain').attr('transform', 'translate(0,-' + Math.abs(vm._scales.y.range()[0] - vm._scales.y(0)) + ')');
         }
 
-        //Do not show line if axis is disabled
-        if (vm._config.xAxis.line && vm._config.xAxis.line.enabled == false) {
+        // Do not show line if axis is disabled
+        if (vm._config.xAxis.line && vm._config.xAxis.line.enabled === false) {
           vm._xAxis.selectAll('path').style('display', 'none');
         }
 
-        //Set custom position for ticks
+        // Set custom position for ticks
         if (vm._config.xAxis.ticks && vm._config.xAxis.ticks.x) {
           vm._xAxis.selectAll('text').attr('dx', vm._config.xAxis.ticks.x);
         }
@@ -1660,7 +1647,7 @@
           vm._xAxis.selectAll('text').attr('dy', vm._config.xAxis.ticks.y);
         }
 
-        //Disable ticks when set to false
+        // Disable ticks when set to false
         if (vm._config.xAxis.ticks && vm._config.xAxis.ticks.line && vm._config.xAxis.ticks.line.enabled === false) {
           vm._xAxis.selectAll('line').style('display', 'none');
         }
@@ -1681,7 +1668,7 @@
             d3.selectAll('g.x.axis .tick').remove();
           } else if (vm._config.xAxis.domain.enabled === false && vm._config.xAxis.ticks.enabled === true) {
             d3.select(vm._config.bindTo + ' g.x.axis .domain').remove();
-            //d3.selectAll('g.x.axis .tick text').remove();
+            // d3.selectAll('g.x.axis .tick text').remove();
           }
         } else {
           if (vm._config.xAxis.domain.enabled === false) {
@@ -1691,7 +1678,7 @@
         }
       }
 
-      //Dropdown X axis
+      // Dropdown X axis
       if (vm._config.xAxis && vm._config.xAxis.dropdown && vm._config.xAxis.dropdown.enabled === true) {
         var xAxisDropDown = d3.select(vm._config.bindTo).append('div').attr('class', 'dbox-xAxis-select').append('select').on('change', function () {
           vm.updateAxis('x', this.value);
@@ -1740,40 +1727,40 @@
       /**
        * Let's style axes
        */
-      //Style Y axis
+      // Style Y axis
       if (vm._config.yAxis.enabled !== false && vm._addStyle.yAxis.enabled) {
-        //axis line
+        // Axis line
         yAxis.selectAll('.domain').attr('stroke-linecap', 'round').attr('stroke-width', vm._addStyle.yAxis.axis.strokeWidth).attr('stroke', vm._addStyle.yAxis.axis.strokeColor).attr('opacity', vm._addStyle.yAxis.axis.strokeOpacity);
 
         //axis title
         yAxis.selectAll('.axis-title').attr('font-size', vm._addStyle.yAxis.title.fontSize).attr('font-weight', vm._addStyle.yAxis.title.fontWeight).attr('fill', vm._addStyle.yAxis.title.textColor).attr('text-anchor', vm._addStyle.yAxis.title.textAnchor);
 
-        //tick lines
+        // Tick lines
         yAxis.selectAll('.tick line').attr('stroke-width', vm._addStyle.yAxis.ticks.strokeWidth).attr('stroke', vm._addStyle.yAxis.ticks.strokeColor).attr('stroke-opacity', vm._addStyle.yAxis.ticks.opacity).attr('width', vm._addStyle.yAxis.ticks.tickWidth)
-        //condition gridline
+        // Condition gridline
         .attr('stroke-dasharray', vm._addStyle.yAxis.ticks.gridDashed).attr('transform', 'translate(-' + vm._addStyle.yAxis.axis.paddingTick + ', 0)');
-        //don't draw first tick when styled as grid
+        // Don't draw first tick when styled as grid
         if (vm._addStyle.yAxis.ticks.grid) {
           yAxis.selectAll('.tick:first-of-type line:first-of-type').attr('stroke', 'none');
         }
 
-        //tick text
+        // Tick text
         yAxis.selectAll('.tick text').attr('font-size', vm._addStyle.yAxis.labels.fontSize).attr('font-weight', vm._addStyle.yAxis.labels.fontWeight).attr('fill', vm._addStyle.yAxis.labels.textColor).attr('text-anchor', vm._addStyle.yAxis.labels.textAnchor).attr('transform', 'translate(-' + vm._addStyle.yAxis.axis.paddingTick + ', 0)');
       }
 
-      //Style X axis
+      // Style X axis
       if (vm._config.xAxis.enabled !== false && vm._addStyle.xAxis.enabled) {
-        //axis line
+        // Axis line
         vm._xAxis.selectAll('.domain').attr('stroke-linecap', 'round').attr('stroke-width', vm._addStyle.xAxis.axis.strokeWidth).attr('stroke', vm._addStyle.xAxis.axis.strokeColor).attr('opacity', vm._addStyle.xAxis.axis.strokeOpacity);
 
-        //tick lines
+        // Tick lines
         vm._xAxis.selectAll('.tick line').attr('stroke-width', vm._addStyle.xAxis.ticks.strokeWidth).attr('stroke', vm._addStyle.xAxis.ticks.strokeColor).attr('transform', 'translate(0, ' + vm._addStyle.xAxis.axis.paddingTick + ')');
-        //don't draw first tick when styled as grid
+        // Don't draw first tick when styled as grid
         if (vm._addStyle.xAxis.ticks.grid) {
           vm._xAxis.selectAll('.tick:first-of-type line:first-of-type').attr('stroke', 'none');
         }
 
-        //tick text
+        // Tick text
         vm._xAxis.selectAll('.tick text').attr('font-size', vm._addStyle.xAxis.labels.fontSize).attr('font-weight', vm._addStyle.xAxis.labels.fontWeight).attr('fill', vm._addStyle.xAxis.labels.textColor).attr('text-anchor', vm._addStyle.xAxis.labels.textAnchor).attr('transform', vm._addStyle.xAxis.labels.rotate ? 'translate(0,55) rotate(' + vm._addStyle.xAxis.axis.labels.rotate + ')' : 'translate(0, ' + vm._addStyle.xAxis.axis.paddingTick + ')');
       }
 
@@ -1817,7 +1804,7 @@
       }
 
       if (vm._config.xAxis.enabled !== false && vm._addStyle.xAxis.enabled) {
-        //axis title
+        // Axis title
         vm._xAxis.selectAll('.axis-title').attr('font-size', vm._addStyle.xAxis.title.fontSize).attr('font-weight', vm._addStyle.xAxis.title.fontWeight).attr('fill', vm._addStyle.xAxis.title.textColor).attr('text-anchor', vm._addStyle.xAxis.title.textAnchor).attr('transform', 'translate(0, ' + (vm._addStyle.xAxis.labels.rotate ? d3.min([vm._config.size.margin.bottom * 0.7, biggestLabelWidth]) : vm._addStyle.xAxis.axis.paddingTick) + ')');
       }
 
@@ -1840,7 +1827,7 @@
         }
       }*/
 
-      //Set ticks straight or dashed, to be replaced with *addStyle -checked
+      // Set ticks straight or dashed, to be replaced with *addStyle -checked
       if (vm._config.yAxis.ticks && vm._config.yAxis.ticks.enabled && vm._config.yAxis.ticks.style) {
         switch (vm._config.yAxis.ticks.style) {
           case 'straightLine':
@@ -1850,12 +1837,12 @@
             break;
         }
       }
-      //To be replaced with *addStyle -checked
+      // To be replaced with *addStyle -checked
       if (vm._config.yAxis.domain && vm._config.yAxis.domain.enabled && vm._config.yAxis.domain.stroke) {
         d3.select('g.y.axis .domain').attr('stroke', vm._config.yAxis.domain.stroke);
       }
 
-      //To be replaced with *addStyle -checked
+      // To be replaced with *addStyle -checked
       if (vm._config.yAxis.domain && vm._config.yAxis.domain.enabled && vm._config.yAxis.domain['stroke-width']) {
         d3.select('g.y.axis .domain').attr('stroke-width', vm._config.yAxis.domain['stroke-width']);
       }
@@ -1867,19 +1854,19 @@
       // x
 
       if (!vm._config.xAxis || vm._config.xAxis && vm._config.xAxis.enabled !== false) {
-        //To be replaced with *addStyle -checked
+        // To be replaced with *addStyle -checked
         if (vm._config.xAxis.ticks && vm._config.xAxis.ticks.style) {
           Object.keys(vm._config.xAxis.ticks.style).forEach(function (k) {
             vm._xAxis.selectAll('text').style(k, vm._config.xAxis.ticks.style[k]);
           });
         }
 
-        //Set rotation for ticks, to be replaced with *addStyle -checked
+        // Set rotation for ticks, to be replaced with *addStyle -checked
         if (vm._config.xAxis.ticks && vm._config.xAxis.ticks.rotate) {
           vm._xAxis.selectAll('text').attr('text-anchor', 'end').attr('transform', 'rotate(' + vm._config.xAxis.ticks.rotate + ')');
         }
 
-        //Set ticks straight or dashed, to be replaced with *addStyle -checked
+        // Set ticks straight or dashed, to be replaced with *addStyle -checked
         if (vm._config.xAxis.ticks && vm._config.xAxis.ticks.enabled && vm._config.xAxis.ticks.style) {
           switch (vm._config.xAxis.ticks.style) {
             case 'straightLine':
@@ -1891,12 +1878,12 @@
         }
       }
 
-      //to be replaced with *addStyle -checked
+      // To be replaced with *addStyle -checked
       if (vm._config.xAxis.domain && vm._config.xAxis.domain.enabled && vm._config.xAxis.domain.stroke) {
         d3.select(vm._config.bindTo + ' g.x.axis .domain').attr('stroke', vm._config.xAxis.domain.stroke);
       }
 
-      //to be replaced with *addStyle -checked
+      // To be replaced with *addStyle -checked
       if (vm._config.xAxis.domain && vm._config.xAxis.domain.enabled && vm._config.xAxis.domain['stroke-width']) {
         d3.select(vm._config.bindTo + ' g.x.axis .domain').attr('stroke-width', vm._config.xAxis.domain['stroke-width']);
       }
@@ -1958,7 +1945,7 @@
         return vm.utils.sortAscending(a.x, b.x);
       };
 
-      // if applying sort
+      // If applying sort
       if (vm._config.data.sort && vm._config.data.sort.order) {
         switch (vm._config.data.sort.order) {
           case 'asc':
@@ -2014,7 +2001,7 @@
             break;
 
           case 'quantile':
-            //The xAxis order depends on the yAxis values
+            // The xAxis order depends on the yAxis values
             if (vm._config.data.sort && vm._config.data.sort.axis === 'y') {
               sorted = data.sort(sortFunctionY);
             } else {
@@ -2044,7 +2031,7 @@
         domains.x = minMax;
       }
 
-      //yAxis
+      // yAxis
       if (vm._config.yAxis && vm._config.yAxis.scale) {
         switch (vm._config.yAxis.scale) {
           case 'linear':
@@ -2052,8 +2039,8 @@
               return d.y;
             });
 
-            //Adjust for min values greater than zero
-            //set the min value to -10%
+            // Adjust for min values greater than zero
+            // Set the min value to -10%
             if (minMax[0] > 0) {
               minMax[0] = minMax[0] - (minMax[1] - minMax[0]) * 0.1;
             }
