@@ -13,8 +13,7 @@ export default {
     babel(babelrc())
   ],
   external: external,
-  output:
-  {
+  output: {
     file: pkg.main,
     format: 'umd',
     name: 'dbox',
@@ -23,7 +22,9 @@ export default {
       'lodash': '_',
       'd3': 'd3',
       'cartodb': 'cartodb',
-      'textures': 'textures'
+      'textures': 'textures',
+      'topojson': 'topojson',
+      'leaflet': 'L'
     },
   }
 };
