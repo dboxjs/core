@@ -18,6 +18,15 @@ pull:
 		cd ../core; \
 	done
 
+pull_master: 
+	for file in ../*/ ; \
+	do \
+		echo "$$file"; \
+		cd $$file; \
+		git pull origin master; \
+		cd ../core; \
+	done
+
 checkout_dev:
 	for file in ../*/ ; \
 	do \
@@ -41,6 +50,6 @@ fetch:
 	do \
 		echo "$$file"; \
 		cd $$file; \
-		git fetch --prune; \
+		git fetch --all --prune; \
 		cd ../core; \
 	done
