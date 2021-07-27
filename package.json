@@ -1,6 +1,6 @@
 {
   "name": "@dboxjs/core",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "A library to create easy reusable charts",
   "main": "dist/dbox.js",
   "module": "dist/dbox.mjs",
@@ -43,6 +43,7 @@
     "d3-queue": "^3.0.7",
     "d3-tip": "^0.9.1",
     "lodash": "^4.17.21",
+    "leaflet": "^1.3.1",
     "textures": "^1.0.4",
     "topojson": "^2.2.0"
   },
@@ -55,7 +56,7 @@
     "@dboxjs/bars": "0",
     "@dboxjs/distro": "0",
     "@dboxjs/heatmap": "0",
-    "@dboxjs/leaflet": "0",
+    "@dboxjs/leaflet": "^0.1.1",
     "@dboxjs/map": "0",
     "@dboxjs/radar": "0",
     "@dboxjs/scatter": "0",

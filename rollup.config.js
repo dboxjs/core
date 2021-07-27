@@ -7,23 +7,20 @@ let external = Object.keys(pkg.dependencies);
 
 export default {
   input: 'index.js',
-  plugins: [
-    resolve(),
-    'external-helpers',
-    babel(babelrc())
-  ],
+  plugins: [resolve(), 'external-helpers', babel(babelrc())],
   external: external,
-  output:
-  {
+  output: {
     file: pkg.main,
     format: 'umd',
     name: 'dbox',
     sourcemap: true,
     globals: {
-      'lodash': '_',
-      'd3': 'd3',
-      'cartodb': 'cartodb',
-      'textures': 'textures'
+      lodash: '_',
+      d3: 'd3',
+      cartodb: 'cartodb',
+      textures: 'textures',
+      topojson: 'topojson',
+      leaflet: 'L',
     },
-  }
+  },
 };
