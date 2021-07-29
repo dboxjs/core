@@ -1,13 +1,17 @@
-import resolve from 'rollup-plugin-node-resolve';
-import babel from 'rollup-plugin-babel';
-import babelrc from 'babelrc-rollup';
+import resolve from '@rollup/plugin-node-resolve';
+import babel from '@rollup/plugin-babel';
 
-let pkg = require('./package.json');
-let external = Object.keys(pkg.dependencies);
+const pkg = require('./package.json');
+
+const external = Object.keys(pkg.dependencies);
+
 
 export default {
   input: 'index.js',
-  plugins: [resolve(), 'external-helpers', babel(babelrc())],
+  plugins: [
+    resolve(),
+    babel({ babelHelpers: 'bundled' })
+  ],
   external: external,
   output: {
     file: pkg.main,
