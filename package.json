@@ -1,6 +1,6 @@
 {
   "name": "@dboxjs/core",
-  "version": "0.1.7",
+  "version": "0.1.9",
   "description": "A library to create easy reusable charts",
   "main": "dist/dbox.js",
   "module": "dist/dbox.mjs",
@@ -10,7 +10,6 @@
     "build": "rollup -c rollup.config.js; uglifyjs ./dist/dbox.js -c -m -o ./dist/dbox.min.js",
     "dev": "rollup -c rollup.config.dev.js -w",
     "pretest": "npm run build",
-    "test": "mocha",
     "docs": "jsdoc -c jsdocs.config.json"
   },
   "repository": {
@@ -56,7 +55,7 @@
     "@dboxjs/bars": "0",
     "@dboxjs/distro": "0",
     "@dboxjs/heatmap": "0",
-    "@dboxjs/leaflet": "^0.1.1",
+    "@dboxjs/leaflet": "^0.1.2",
     "@dboxjs/map": "0",
     "@dboxjs/radar": "0",
     "@dboxjs/scatter": "0",
